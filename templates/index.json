@@ -251,6 +251,10 @@
         "padding-block-end": 100
       }
     },
+    "trust_strip_main": {
+      "type": "trust-strip",
+      "settings": {}
+    },
     "product_list_themegen": {
       "type": "product-list",
       "blocks": {
@@ -568,6 +572,7 @@
   },
   "order": [
     "hero_p9CmMG",
+    "trust_strip_main",
     "product_list_themegen"
   ]
 }

@@ -1,0 +1,158 @@
+{% comment %}
+  Trust strip — 4-column section under hero.
+  Each column: a value in display weight + a mono uppercase label.
+  Type-led; no icons by design (per design-implementation-brief §2.4).
+{% endcomment %}
+
+<section
+  class="trust-strip color-{{ section.settings.color_scheme }}"
+  style="
+    --trust-strip-padding-block-start: {{ section.settings['padding-block-start'] }}px;
+    --trust-strip-padding-block-end: {{ section.settings['padding-block-end'] }}px;
+  "
+>
+  <div class="trust-strip__inner">
+    {%- if section.settings.eyebrow != blank -%}
+      <p class="trust-strip__eyebrow">{{ section.settings.eyebrow }}</p>
+    {%- endif -%}
+    <div class="trust-strip__grid">
+      {%- for i in (1..4) -%}
+        {%- assign value_key = 'value_' | append: i -%}
+        {%- assign label_key = 'label_' | append: i -%}
+        {%- assign value = section.settings[value_key] -%}
+        {%- assign label = section.settings[label_key] -%}
+        {%- if value != blank -%}
+          <div class="trust-strip__column">
+            <div class="trust-strip__value">{{ value }}</div>
+            {%- if label != blank -%}
+              <div class="trust-strip__label">{{ label }}</div>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .trust-strip {
+    padding-block-start: var(--trust-strip-padding-block-start, 96px);
+    padding-block-end: var(--trust-strip-padding-block-end, 96px);
+    background: var(--color-background);
+    color: var(--color-foreground);
+  }
+
+  .trust-strip__inner {
+    max-width: 1440px;
+    margin-inline: auto;
+    padding-inline: clamp(1rem, 4vw, 4rem);
+  }
+
+  .trust-strip__eyebrow {
+    font-family: var(--font-mono--family);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.55;
+    margin: 0 0 2.5rem 0;
+  }
+
+  .trust-strip__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    border-block-start: 1px solid currentColor;
+    padding-block-start: 2.5rem;
+  }
+
+  .trust-strip__column {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+  }
+
+  .trust-strip__value {
+    font-family: var(--font-heading--family);
+    font-weight: 400;
+    font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+    line-height: 1;
+    letter-spacing: -0.01em;
+  }
+
+  .trust-strip__label {
+    font-family: var(--font-mono--family);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.55;
+    line-height: 1.3;
+  }
+
+  @media (max-width: 749px) {
+    .trust-strip__grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem 1.5rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Trust strip",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Content" },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow (optional, mono caps)"
+    },
+    { "type": "header", "content": "Column 1" },
+    { "type": "text", "id": "value_1", "label": "Value", "default": "99.97%" },
+    { "type": "text", "id": "label_1", "label": "Label", "default": "Average purity" },
+    { "type": "header", "content": "Column 2" },
+    { "type": "text", "id": "value_2", "label": "Value", "default": "HPLC + MS" },
+    { "type": "text", "id": "label_2", "label": "Label", "default": "Tested per batch" },
+    { "type": "header", "content": "Column 3" },
+    { "type": "text", "id": "value_3", "label": "Value", "default": "Phoenix, AZ" },
+    { "type": "text", "id": "label_3", "label": "Label", "default": "Lab origin" },
+    { "type": "header", "content": "Column 4" },
+    { "type": "text", "id": "value_4", "label": "Value", "default": "24 hr" },
+    { "type": "text", "id": "label_4", "label": "Label", "default": "Dispatch" },
+    { "type": "header", "content": "Layout" },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 8,
+      "unit": "px",
+      "default": 96
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 8,
+      "unit": "px",
+      "default": 96
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trust strip"
+    }
+  ]
+}
+{% endschema %}
