@@ -1,0 +1,168 @@
+{% comment %}
+  Brand typography for Simms Research.
+  Loads Satoshi (body), PP Neue Montreal (display/headings), Geist Mono (specs)
+  and overrides Horizon's CSS variable cascade so theme presets pick up the brand stack.
+
+  Render after `theme-styles-variables` and `color-schemes` in layout/theme.liquid
+  so the :root override wins over the default Inter assignment.
+{% endcomment %}
+
+{% style %}
+  /* Satoshi — body / subheading */
+  @font-face {
+    font-family: 'Satoshi';
+    font-style: normal;
+    font-weight: 300;
+    font-display: swap;
+    src: url('{{ "Satoshi-Light.otf" | asset_url }}') format('opentype');
+  }
+  @font-face {
+    font-family: 'Satoshi';
+    font-style: italic;
+    font-weight: 300;
+    font-display: swap;
+    src: url('{{ "Satoshi-LightItalic.otf" | asset_url }}') format('opentype');
+  }
+  @font-face {
+    font-family: 'Satoshi';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('{{ "Satoshi-Regular.otf" | asset_url }}') format('opentype');
+  }
+  @font-face {
+    font-family: 'Satoshi';
+    font-style: italic;
+    font-weight: 400;
+    font-display: swap;
+    src: url('{{ "Satoshi-Italic.otf" | asset_url }}') format('opentype');
+  }
+  @font-face {
+    font-family: 'Satoshi';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('{{ "Satoshi-Medium.otf" | asset_url }}') format('opentype');
+  }
+  @font-face {
+    font-family: 'Satoshi';
+    font-style: italic;
+    font-weight: 500;
+    font-display: swap;
+    src: url('{{ "Satoshi-MediumItalic.otf" | asset_url }}') format('opentype');
+  }
+  @font-face {
+    font-family: 'Satoshi';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('{{ "Satoshi-Bold.otf" | asset_url }}') format('opentype');
+  }
+  @font-face {
+    font-family: 'Satoshi';
+    font-style: italic;
+    font-weight: 700;
+    font-display: swap;
+    src: url('{{ "Satoshi-BoldItalic.otf" | asset_url }}') format('opentype');
+  }
+  @font-face {
+    font-family: 'Satoshi';
+    font-style: normal;
+    font-weight: 900;
+    font-display: swap;
+    src: url('{{ "Satoshi-Black.otf" | asset_url }}') format('opentype');
+  }
+  @font-face {
+    font-family: 'Satoshi';
+    font-style: italic;
+    font-weight: 900;
+    font-display: swap;
+    src: url('{{ "Satoshi-BlackItalic.otf" | asset_url }}') format('opentype');
+  }
+
+  /* PP Neue Montreal — heading / accent */
+  @font-face {
+    font-family: 'PP Neue Montreal';
+    font-style: normal;
+    font-weight: 100;
+    font-display: swap;
+    src: url('{{ "ppneuemontreal-thin.otf" | asset_url }}') format('opentype');
+  }
+  @font-face {
+    font-family: 'PP Neue Montreal';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('{{ "ppneuemontreal-book.otf" | asset_url }}') format('opentype');
+  }
+  @font-face {
+    font-family: 'PP Neue Montreal';
+    font-style: italic;
+    font-weight: 400;
+    font-display: swap;
+    src: url('{{ "ppneuemontreal-italic.otf" | asset_url }}') format('opentype');
+  }
+  @font-face {
+    font-family: 'PP Neue Montreal';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('{{ "ppneuemontreal-medium.otf" | asset_url }}') format('opentype');
+  }
+  @font-face {
+    font-family: 'PP Neue Montreal';
+    font-style: italic;
+    font-weight: 600;
+    font-display: swap;
+    src: url('{{ "ppneuemontreal-semibolditalic.otf" | asset_url }}') format('opentype');
+  }
+  @font-face {
+    font-family: 'PP Neue Montreal';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('{{ "ppneuemontreal-bold.otf" | asset_url }}') format('opentype');
+  }
+
+  /* Geist Mono — specs / numbers / micro-labels only */
+  @font-face {
+    font-family: 'Geist Mono';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('{{ "GeistMono-Regular.woff2" | asset_url }}') format('woff2');
+  }
+  @font-face {
+    font-family: 'Geist Mono';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('{{ "GeistMono-Medium.woff2" | asset_url }}') format('woff2');
+  }
+  @font-face {
+    font-family: 'Geist Mono';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('{{ "GeistMono-SemiBold.woff2" | asset_url }}') format('woff2');
+  }
+
+  /* Override Horizon's font-family CSS variables so all theme presets (h1–h6, paragraph,
+     button, cart, menu, etc.) pick up the brand stack. Must render after
+     theme-styles-variables.liquid and color-schemes.liquid for source order to win. */
+  :root {
+    --font-body--family: 'Satoshi', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-body--weight: 400;
+    --font-subheading--family: 'Satoshi', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-subheading--weight: 500;
+    --font-heading--family: 'PP Neue Montreal', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-heading--weight: 500;
+    --font-accent--family: 'PP Neue Montreal', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-accent--weight: 400;
+
+    /* New token introduced for spec/number contexts. Reference via var(--font-mono--family)
+       in subsequent moves (product card, COA table, eyebrows, prices). */
+    --font-mono--family: 'Geist Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+    --font-mono--weight: 400;
+  }
+{% endstyle %}
