@@ -1,7 +1,6 @@
 {% comment %}
   Trust strip — 3-column section under hero.
   Each column: a value in display weight + a mono uppercase label.
-  Per-column hairline rules sit flush with the column's content width.
   Type-led; no icons by design (per design-implementation-brief §2.4).
 {% endcomment %}
 
@@ -24,12 +23,10 @@
         {%- assign label = section.settings[label_key] -%}
         {%- if value != blank -%}
           <div class="trust-strip__column">
-            <div class="trust-strip__column-inner">
-              <div class="trust-strip__value">{{ value }}</div>
-              {%- if label != blank -%}
-                <div class="trust-strip__label">{{ label }}</div>
-              {%- endif -%}
-            </div>
+            <div class="trust-strip__value">{{ value }}</div>
+            {%- if label != blank -%}
+              <div class="trust-strip__label">{{ label }}</div>
+            {%- endif -%}
           </div>
         {%- endif -%}
       {%- endfor -%}
@@ -63,21 +60,18 @@
 
   .trust-strip__grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
+    grid-template-columns: repeat(3, auto);
+    justify-content: center;
+    column-gap: clamp(3rem, 7vw, 5.5rem);
+    row-gap: 2rem;
+    border-block-start: 1px solid currentColor;
+    padding-block-start: 2.5rem;
   }
 
   .trust-strip__column {
     display: flex;
-  }
-
-  .trust-strip__column-inner {
-    display: inline-flex;
     flex-direction: column;
     gap: 0.875rem;
-    width: fit-content;
-    border-block-start: 1px solid currentColor;
-    padding-block-start: 1.25rem;
   }
 
   .trust-strip__value {
@@ -101,7 +95,7 @@
   @media (max-width: 749px) {
     .trust-strip__grid {
       grid-template-columns: 1fr;
-      gap: 2rem;
+      column-gap: 0;
     }
   }
 {% endstylesheet %}
