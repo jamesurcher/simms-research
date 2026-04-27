@@ -1,8 +1,13 @@
 {% liquid
   assign override_text = blank
   assign product_resource = closest.product
+  assign is_product_spec_text = false
 
-  if product_resource != blank and block.id contains 'text_spec_placeholder'
+  if block.id contains 'text_spec_placeholder' or block.id contains 'text_pdp_spec'
+    assign is_product_spec_text = true
+  endif
+
+  if product_resource != blank and is_product_spec_text
     assign dosage_option = blank
     for product_option in product_resource.options_with_values
       if product_option.name == 'Dosage' and product_option.values.size > 0
