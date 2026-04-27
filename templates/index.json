@@ -417,7 +417,7 @@
                 "border": "none",
                 "border_width": 1,
                 "border_opacity": 100,
-                "border_radius": 15,
+                "border_radius": 16,
                 "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
@@ -464,6 +464,32 @@
                 "padding-inline-end": 0
               },
               "blocks": {
+                "text_spec_placeholder": {
+                  "type": "text",
+                  "name": "t:names.text",
+                  "settings": {
+                    "text": "<p>10MG · 99.7%</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "custom",
+                    "font": "var(--font-mono--family)",
+                    "font_size": "0.6875rem",
+                    "line_height": "normal",
+                    "letter_spacing": "loose",
+                    "case": "uppercase",
+                    "wrap": "pretty",
+                    "color": "rgb(var(--color-foreground-rgb) / 0.6)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 6,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                },
                 "text_MEKzFi": {
                   "type": "text",
                   "name": "t:names.text",
@@ -475,16 +501,42 @@
                     "type_preset": "custom",
                     "font": "var(--font-body--family)",
                     "font_size": "1rem",
-                    "line_height": "loose",
+                    "line_height": "normal",
                     "letter_spacing": "normal",
-                    "case": "uppercase",
+                    "case": "none",
                     "wrap": "balance",
                     "color": "",
                     "background": false,
                     "background_color": "#00000026",
                     "corner_radius": 0,
                     "padding-block-start": 0,
-                    "padding-block-end": 5,
+                    "padding-block-end": 4,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                },
+                "text_cas_placeholder": {
+                  "type": "text",
+                  "name": "t:names.text",
+                  "settings": {
+                    "text": "<p>CAS 137525-51-0</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "custom",
+                    "font": "var(--font-mono--family)",
+                    "font_size": "0.75rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "rgb(var(--color-foreground-rgb) / 0.5)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 8,
                     "padding-inline-start": 0,
                     "padding-inline-end": 0
                   },
@@ -500,8 +552,8 @@
                     "type_preset": "custom",
                     "width": "100%",
                     "alignment": "left",
-                    "font": "var(--font-body--family)",
-                    "font_size": "0.875rem",
+                    "font": "var(--font-mono--family)",
+                    "font_size": "0.9375rem",
                     "line_height": "normal",
                     "letter_spacing": "normal",
                     "case": "none",
@@ -529,7 +581,9 @@
                 }
               },
               "block_order": [
+                "text_spec_placeholder",
                 "text_MEKzFi",
+                "text_cas_placeholder",
                 "price_37riDf",
                 "swatches_87VJC8"
               ]
@@ -545,8 +599,7 @@
         "group_LWax37"
       ],
       "custom_css": [
-        ".section-resource-list {max-width: clamp(320px, 85%, 1600px); margin-left: auto; margin-right: auto;}",
-        ".section-resource-list .price {font-weight: 600;}"
+        ".section-resource-list {max-width: clamp(320px, 85%, 1600px); margin-left: auto; margin-right: auto;}"
       ],
       "name": "Popular Products",
       "settings": {

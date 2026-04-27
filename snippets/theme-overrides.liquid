@@ -1,0 +1,137 @@
+{% comment %}
+  Brand overrides for Simms Research.
+  Targets Horizon defaults that conflict with the design-implementation-brief
+  (e.g. icon-only quick-add CTA → labeled pill, hover-only reveals, etc.).
+
+  Render after `custom-fonts` in layout/theme.liquid so source order wins.
+{% endcomment %}
+
+{% style %}
+  /* ---- Product card: labeled CTA pill ----------------------------------
+     Default Horizon quick-add is a 36px icon overlay positioned over the
+     image, only revealed on hover. Per brief §3 move 4, replace with an
+     always-visible labeled CTA below the card content. */
+
+  .product-grid__card .quick-add {
+    position: static;
+    inset: auto;
+    pointer-events: auto;
+  }
+
+  product-card .quick-add__product-form-component .shopify-product-form {
+    display: block;
+    width: 100%;
+  }
+
+  product-card add-to-cart-component {
+    width: 100%;
+  }
+
+  product-card .quick-add__button,
+  product-card .quick-add__button.add-to-cart-button {
+    display: flex;
+    position: static;
+    opacity: 1;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    padding: 0;
+    border-radius: 999px;
+    border: 1px solid currentColor;
+    backdrop-filter: none;
+    background: transparent;
+    margin-block-start: 0.75rem;
+  }
+
+  product-card .quick-add__button .add-to-cart-text {
+    background: transparent;
+    border-radius: 999px;
+    width: 100%;
+    height: auto;
+    padding: 0.875rem 1rem;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  product-card .quick-add__button .add-to-cart-icon {
+    display: none;
+  }
+
+  product-card .quick-add__button .add-to-cart-text__content {
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  product-card .quick-add__button .add-to-cart-text__content > span {
+    min-width: 0;
+    width: 100%;
+  }
+
+  product-card .quick-add__button .add-to-cart-text__content span span {
+    opacity: 1;
+    translate: 0 0;
+    filter: blur(0);
+    padding-right: 0;
+    font-family: var(--font-mono--family);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  product-card .quick-add__button .add-to-cart-text__content .is-visually-hidden-mobile {
+    position: static !important;
+    width: auto !important;
+    height: auto !important;
+    overflow: visible !important;
+    clip: auto !important;
+    white-space: normal !important;
+  }
+
+  product-card .quick-add__button:hover {
+    scale: 1;
+    background: currentColor;
+  }
+
+  product-card .quick-add__button:hover .add-to-cart-text__content span span {
+    color: var(--color-background);
+  }
+
+  /* Card content stretches and CTA sticks to bottom */
+  .product-grid__card {
+    align-items: stretch;
+  }
+
+  /* Round the IMAGE area only, not the gallery box.
+     The gallery's height grows to include our static quick-add pill,
+     so its rounded bottom corners end up below the visible image.
+     Move the radius onto slideshow-container (image-only), and let
+     the gallery itself flow without clipping. */
+  .product-card .card-gallery {
+    overflow: visible;
+    border-radius: 0;
+  }
+
+  .product-card .card-gallery slideshow-container {
+    overflow: hidden;
+    border-radius: var(--border-radius, 16px);
+  }
+
+  /* Restore Horizon's add/choose toggle.
+     My .quick-add__button display:flex rule above ties Horizon's default
+     hide rules on specificity, and source order would let display:flex
+     win — so re-assert the hide logic at the end of the file with
+     equivalent specificity but later source order. */
+  product-card [data-quick-add-button='choose'] add-to-cart-component,
+  product-card [data-quick-add-button='choose'] .quick-add__button--add {
+    display: none;
+  }
+
+  product-card [data-quick-add-button='add'] .quick-add__button--choose {
+    display: none;
+  }
+
+  product-card [data-quick-add-button='add'] add-to-cart-component {
+    display: block;
+  }
+{% endstyle %}
