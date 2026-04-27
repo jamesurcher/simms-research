@@ -1,6 +1,40 @@
+{% liquid
+  assign override_text = blank
+  assign product_resource = closest.product
 
+  if product_resource != blank and block.id contains 'text_spec_placeholder'
+    assign dosage_option = blank
+    for product_option in product_resource.options_with_values
+      if product_option.name == 'Dosage' and product_option.values.size > 0
+        assign dosage_option = product_option
+        break
+      endif
+    endfor
 
-{% render 'text', block: block %}
+    capture override_text
+      echo '<p>'
+      if dosage_option != blank
+        assign min_d = dosage_option.values | first
+        assign max_d = dosage_option.values | last
+        if min_d == max_d
+          echo min_d | append: 'MG'
+        else
+          echo min_d | append: '–' | append: max_d | append: 'MG'
+        endif
+      endif
+
+      if product_resource.metafields.spec.purity.value != blank
+        if dosage_option != blank
+          echo ' · '
+        endif
+        echo product_resource.metafields.spec.purity.value
+      endif
+      echo '</p>'
+    endcapture
+  endif
+%}
+
+{% render 'text', block: block, override_text: override_text %}
 
 {% schema %}
 {

@@ -477,7 +477,7 @@
                     "font_size": "0.6875rem",
                     "line_height": "normal",
                     "letter_spacing": "loose",
-                    "case": "uppercase",
+                    "case": "none",
                     "wrap": "pretty",
                     "color": "rgb(var(--color-foreground-rgb) / 0.6)",
                     "background": false,
@@ -511,32 +511,6 @@
                     "corner_radius": 0,
                     "padding-block-start": 0,
                     "padding-block-end": 4,
-                    "padding-inline-start": 0,
-                    "padding-inline-end": 0
-                  },
-                  "blocks": {}
-                },
-                "text_cas_placeholder": {
-                  "type": "text",
-                  "name": "t:names.text",
-                  "settings": {
-                    "text": "<p>CAS 137525-51-0</p>",
-                    "width": "100%",
-                    "max_width": "normal",
-                    "alignment": "left",
-                    "type_preset": "custom",
-                    "font": "var(--font-mono--family)",
-                    "font_size": "0.75rem",
-                    "line_height": "normal",
-                    "letter_spacing": "normal",
-                    "case": "none",
-                    "wrap": "pretty",
-                    "color": "rgb(var(--color-foreground-rgb) / 0.5)",
-                    "background": false,
-                    "background_color": "#00000026",
-                    "corner_radius": 0,
-                    "padding-block-start": 0,
-                    "padding-block-end": 8,
                     "padding-inline-start": 0,
                     "padding-inline-end": 0
                   },
@@ -583,7 +557,6 @@
               "block_order": [
                 "text_spec_placeholder",
                 "text_MEKzFi",
-                "text_cas_placeholder",
                 "price_37riDf",
                 "swatches_87VJC8"
               ]
