@@ -2,9 +2,14 @@
   assign override_text = blank
   assign product_resource = closest.product
   assign is_product_spec_text = false
+  assign is_batch_verification_text = false
 
   if block.id contains 'text_spec_placeholder' or block.id contains 'text_pdp_spec'
     assign is_product_spec_text = true
+  endif
+
+  if block.id contains 'text_batch_verification'
+    assign is_batch_verification_text = true
   endif
 
   if product_resource != blank and is_product_spec_text
@@ -39,7 +44,11 @@
   endif
 %}
 
-{% render 'text', block: block, override_text: override_text %}
+{% if is_batch_verification_text %}
+  {% render 'batch-verification', product_resource: product_resource, block: block %}
+{% else %}
+  {% render 'text', block: block, override_text: override_text %}
+{% endif %}
 
 {% schema %}
 {

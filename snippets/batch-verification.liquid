@@ -1,0 +1,479 @@
+{%- doc -%}
+  Renders the PDP batch verification / COA module.
+
+  Expected backend model:
+  - product metafield `coa.batches` as a list of `coa_batch` metaobject references.
+  - each metaobject can include: variant_label, batch_id, purity, avg_purity,
+    vials_tested, labeled_content, net_content, net_content_delta, endotoxins,
+    heavy_metals, sterility, tested_at, coa_file, coa_url, is_current.
+
+  @param {object} product_resource - Product to render COA batches for.
+  @param {object} [block] - Theme block object for editor attributes.
+{%- enddoc -%}
+
+{% liquid
+  assign product_resource = product_resource | default: closest.product | default: product
+  assign selected_variant = product_resource.selected_or_first_available_variant
+  assign selected_variant_label = selected_variant.title | default: blank
+  assign selected_dosage_label = blank
+
+  for product_option in product_resource.options_with_values
+    assign option_name = product_option.name | downcase
+    if option_name == 'dosage'
+      assign selected_dosage_label = product_option.selected_value
+      break
+    endif
+  endfor
+
+  assign selected_variant_key = selected_variant_label | downcase | remove: ' ' | remove: '-' | remove: '_' | remove: 'mg'
+  assign selected_dosage_key = selected_dosage_label | downcase | remove: ' ' | remove: '-' | remove: '_' | remove: 'mg'
+  assign batches = product_resource.metafields.coa.batches.value
+  assign single_batch = product_resource.metafields.coa.batch.value
+  assign current_batch = blank
+  assign exact_current_batch = blank
+  assign exact_first_batch = blank
+  assign fallback_current_batch = blank
+  assign fallback_first_batch = blank
+  assign use_product_level_batches = false
+  assign batch_source = 'none'
+  assign debug_first_batch_variant_label = blank
+  assign debug_first_batch_id = blank
+
+  if batches != blank
+    assign batch_source = 'coa.batches'
+    for batch in batches
+      assign debug_first_batch_variant_label = batch.variant_label.value | default: blank
+      assign debug_first_batch_id = batch.batch_id.value | default: blank
+      break
+    endfor
+  elsif single_batch != blank
+    assign batch_source = 'coa.batch'
+    assign debug_first_batch_variant_label = single_batch.variant_label.value | default: blank
+    assign debug_first_batch_id = single_batch.batch_id.value | default: blank
+  endif
+
+  if batches != blank
+    for batch in batches
+      assign batch_variant_label = batch.variant_label.value | default: blank
+      assign batch_variant_key = batch_variant_label | downcase | remove: ' ' | remove: '-' | remove: '_' | remove: 'mg'
+      assign matches_selected_key = false
+
+      if selected_variant_key != blank and batch_variant_key == selected_variant_key
+        assign matches_selected_key = true
+      elsif selected_dosage_key != blank and batch_variant_key == selected_dosage_key
+        assign matches_selected_key = true
+      endif
+
+      if matches_selected_key
+        if exact_first_batch == blank
+          assign exact_first_batch = batch
+        endif
+
+        if batch.is_current.value == true and exact_current_batch == blank
+          assign exact_current_batch = batch
+        endif
+      elsif batch_variant_key == blank
+        if fallback_first_batch == blank
+          assign fallback_first_batch = batch
+        endif
+
+        if batch.is_current.value == true and fallback_current_batch == blank
+          assign fallback_current_batch = batch
+        endif
+      endif
+    endfor
+  endif
+
+  if current_batch == blank and single_batch != blank
+    assign single_batch_variant_label = single_batch.variant_label.value | default: blank
+    assign single_batch_variant_key = single_batch_variant_label | downcase | remove: ' ' | remove: '-' | remove: '_' | remove: 'mg'
+    assign single_batch_matches = false
+
+    if single_batch_variant_key == blank
+      assign single_batch_matches = true
+      assign use_product_level_batches = true
+    elsif selected_variant_key != blank and single_batch_variant_key == selected_variant_key
+      assign single_batch_matches = true
+    elsif selected_dosage_key != blank and single_batch_variant_key == selected_dosage_key
+      assign single_batch_matches = true
+    endif
+
+    if single_batch_matches
+      assign current_batch = single_batch
+    endif
+  endif
+
+  if exact_current_batch != blank
+    assign current_batch = exact_current_batch
+  elsif exact_first_batch != blank
+    assign current_batch = exact_first_batch
+  elsif fallback_current_batch != blank
+    assign current_batch = fallback_current_batch
+    assign use_product_level_batches = true
+  elsif fallback_first_batch != blank
+    assign current_batch = fallback_first_batch
+    assign use_product_level_batches = true
+  endif
+
+  assign current_batch_id = current_batch.batch_id.value
+  assign current_purity = current_batch.purity.value | default: current_batch.avg_purity.value
+  assign current_avg_purity = current_batch.avg_purity.value | default: current_purity
+  assign current_vials_tested = current_batch.vials_tested.value
+  assign current_labeled_content = current_batch.labeled_content.value
+  assign current_net_content = current_batch.net_content.value
+  assign current_net_delta = current_batch.net_content_delta.value
+  assign calculated_net_delta = blank
+  assign current_labeled_basis = selected_dosage_label | default: current_labeled_content
+  assign current_labeled_number = current_labeled_basis | downcase | remove: 'mg' | remove: ' ' | remove: ',' | plus: 0.0
+  assign current_net_number = current_net_content | downcase | remove: 'mg' | remove: ' ' | remove: ',' | plus: 0.0
+
+  if current_net_content != blank and current_labeled_basis != blank and current_labeled_number > 0
+    assign net_delta_amount = current_net_number | minus: current_labeled_number
+    assign net_delta_percent = net_delta_amount | times: 100.0 | divided_by: current_labeled_number | round
+    assign net_delta_prefix = ''
+
+    if net_delta_percent > 0
+      assign net_delta_prefix = '+'
+    endif
+
+    assign calculated_net_delta = '(' | append: net_delta_prefix | append: net_delta_percent | append: '%)'
+  endif
+
+  if calculated_net_delta != blank
+    assign current_net_delta = calculated_net_delta
+  elsif current_net_delta != blank
+    assign current_net_delta_downcase = current_net_delta | downcase
+    unless current_net_delta contains '(' or current_net_delta_downcase == 'n/a'
+      assign current_net_delta_prefix = ''
+      unless current_net_delta contains '+' or current_net_delta contains '-'
+        assign current_net_delta_prefix = '+'
+      endunless
+      assign current_net_delta = '(' | append: current_net_delta_prefix | append: current_net_delta | append: ')'
+    endunless
+  endif
+  assign current_endotoxins = current_batch.endotoxins.value
+  assign current_heavy_metals = current_batch.heavy_metals.value
+  assign current_sterility = current_batch.sterility.value
+  assign current_tested_at = current_batch.tested_at.value
+  assign current_test_type = current_batch.test_type.value | default: 'HPLC / Mass Spec'
+  assign current_coa_file = current_batch.coa_file.value
+  assign current_coa_url = current_coa_file.url
+  if current_coa_url == blank and current_coa_file != blank
+    assign current_coa_url = current_coa_file | image_url: width: 2400
+  endif
+  if current_coa_url == blank
+    assign current_coa_url = current_batch.coa_url.value
+  endif
+  assign previous_batches_count = 0
+
+  if current_batch != blank and batches != blank
+    for batch in batches
+      assign batch_id = batch.batch_id.value
+      assign batch_variant_label = batch.variant_label.value | default: blank
+      assign batch_variant_key = batch_variant_label | downcase | remove: ' ' | remove: '-' | remove: '_' | remove: 'mg'
+      assign variant_matches = false
+
+      if use_product_level_batches and batch_variant_key == blank
+        assign variant_matches = true
+      elsif use_product_level_batches == false
+        if selected_variant_key != blank and batch_variant_key == selected_variant_key
+          assign variant_matches = true
+        elsif selected_dosage_key != blank and batch_variant_key == selected_dosage_key
+          assign variant_matches = true
+        endif
+      endif
+
+      if variant_matches and batch_id != current_batch_id
+        assign previous_batches_count = previous_batches_count | plus: 1
+      endif
+    endfor
+  endif
+%}
+
+{% if current_batch == blank %}
+  <batch-verification
+    hidden
+    data-batch-verification-product-id="{{ product_resource.id }}"
+    data-batch-source="{{ batch_source }}"
+    data-selected-variant-key="{{ selected_variant_key }}"
+    data-selected-dosage-key="{{ selected_dosage_key }}"
+    data-has-batches="{% if batches != blank or single_batch != blank %}true{% else %}false{% endif %}"
+    data-first-batch-variant-label="{{ debug_first_batch_variant_label | escape }}"
+    data-first-batch-id="{{ debug_first_batch_id | escape }}"
+    {% if block != blank %}
+      {{ block.shopify_attributes }}
+    {% endif %}
+  ></batch-verification>
+{% else %}
+  <batch-verification
+    class="batch-verification"
+    data-batch-verification-product-id="{{ product_resource.id }}"
+    data-batch-source="{{ batch_source }}"
+    data-current-coa-url="{% if current_coa_url != blank %}true{% else %}false{% endif %}"
+    {% if block != blank %}
+      {{ block.shopify_attributes }}
+    {% endif %}
+  >
+    <details class="batch-verification__panel" open>
+      <summary class="batch-verification__summary">
+        <span class="batch-verification__summary-main">
+          <span class="batch-verification__status-dot" aria-hidden="true"></span>
+          <span class="batch-verification__title">Certificate of Analysis</span>
+        </span>
+
+        {% if current_purity != blank %}
+          {% liquid
+            assign current_purity_downcase = current_purity | downcase
+            assign current_purity_label = current_purity
+            unless current_purity_downcase contains 'pure'
+              assign current_purity_label = current_purity | append: ' Pure'
+            endunless
+          %}
+          <span class="batch-verification__purity-pill">{{ current_purity_label }}</span>
+        {% endif %}
+
+        <span class="batch-verification__chevron" aria-hidden="true"></span>
+      </summary>
+
+      <div class="batch-verification__body">
+        <dl class="batch-verification__metrics">
+          {% if current_avg_purity != blank %}
+            <div class="batch-verification__metric">
+              <dt>Avg Purity</dt>
+              <dd class="batch-verification__value">{{ current_avg_purity }}</dd>
+            </div>
+          {% endif %}
+
+          {% if current_vials_tested != blank %}
+            <div class="batch-verification__metric">
+              <dt>Vials Tested</dt>
+              <dd>{{ current_vials_tested }}</dd>
+            </div>
+          {% endif %}
+
+          {% if current_net_content != blank %}
+            <div class="batch-verification__metric">
+              <dt>Net Content</dt>
+              <dd class="batch-verification__value">
+                {{ current_net_content -}}
+                {%- if current_net_delta != blank -%}
+                  <span class="batch-verification__delta">{{ current_net_delta }}</span>
+                {% endif %}
+              </dd>
+            </div>
+          {% elsif current_labeled_content != blank %}
+            <div class="batch-verification__metric">
+              <dt>Labeled Content</dt>
+              <dd>{{ current_labeled_content }}</dd>
+            </div>
+          {% endif %}
+
+          {% if current_endotoxins != blank %}
+            {% liquid
+              assign current_endotoxins_key = current_endotoxins | downcase
+            %}
+            <div class="batch-verification__metric">
+              <dt>Endotoxins</dt>
+              <dd class="{% if current_endotoxins_key contains 'pass' %}batch-verification__value--verified{% endif %}">
+                {{ current_endotoxins }}
+              </dd>
+            </div>
+          {% endif %}
+
+          {% if current_heavy_metals != blank %}
+            <div class="batch-verification__metric">
+              <dt>Heavy Metals</dt>
+              <dd>{{ current_heavy_metals }}</dd>
+            </div>
+          {% endif %}
+
+          {% if current_sterility != blank %}
+            <div class="batch-verification__metric">
+              <dt>Sterility</dt>
+              <dd>{{ current_sterility }}</dd>
+            </div>
+          {% endif %}
+
+          {% if current_tested_at != blank %}
+            <div class="batch-verification__metric">
+              <dt>Last Tested</dt>
+              <dd>{{ current_tested_at | date: '%b %-d, %Y' }}</dd>
+            </div>
+          {% endif %}
+        </dl>
+
+        {% if current_coa_url != blank %}
+          <a class="batch-verification__button" href="{{ current_coa_url }}" target="_blank" rel="noopener" data-coa-open>
+            View Full COA
+          </a>
+        {% endif %}
+
+        {% if previous_batches_count > 0 %}
+          <div class="batch-verification__previous" aria-label="Previous batches">
+            <p class="batch-verification__previous-title">Previous Batches ({{ previous_batches_count }})</p>
+
+            <div class="batch-verification__previous-list">
+              {% liquid
+                assign previous_batches_rendered = 0
+              %}
+              {% for batch in batches %}
+                {% liquid
+                  assign batch_id = batch.batch_id.value
+                  assign batch_variant_label = batch.variant_label.value | default: blank
+                  assign batch_variant_key = batch_variant_label | downcase | remove: ' ' | remove: '-' | remove: '_' | remove: 'mg'
+                  assign variant_matches = false
+
+                  if use_product_level_batches and batch_variant_key == blank
+                    assign variant_matches = true
+                  elsif use_product_level_batches == false
+                    if selected_variant_key != blank and batch_variant_key == selected_variant_key
+                      assign variant_matches = true
+                    elsif selected_dosage_key != blank and batch_variant_key == selected_dosage_key
+                      assign variant_matches = true
+                    endif
+                  endif
+
+                  assign previous_purity = batch.purity.value | default: batch.avg_purity.value
+                  assign previous_labeled_content = batch.labeled_content.value
+                  assign previous_net_content = batch.net_content.value | default: previous_labeled_content
+                  assign previous_tested_at = batch.tested_at.value
+                  assign previous_coa_file = batch.coa_file.value
+                  assign previous_coa_url = previous_coa_file.url
+                  if previous_coa_url == blank and previous_coa_file != blank
+                    assign previous_coa_url = previous_coa_file | image_url: width: 2400
+                  endif
+                  if previous_coa_url == blank
+                    assign previous_coa_url = batch.coa_url.value
+                  endif
+                %}
+
+                {% if variant_matches and batch_id != current_batch_id and previous_batches_rendered < 3 %}
+                  <div class="batch-verification__previous-row">
+                    <span class="batch-verification__previous-batch">{{ batch_id }}</span>
+                    <span class="batch-verification__previous-purity">{{ previous_purity }}</span>
+                    <span>{{ previous_net_content }}</span>
+                    <time datetime="{{ previous_tested_at | date: '%Y-%m-%d' }}">
+                      {{ previous_tested_at | date: '%b %-d, %Y' }}
+                    </time>
+                    <span>
+                      {% if previous_coa_url != blank %}
+                        <a href="{{ previous_coa_url }}" target="_blank" rel="noopener" data-coa-open>View COA</a>
+                      {% endif %}
+                    </span>
+                  </div>
+
+                  {% liquid
+                    assign previous_batches_rendered = previous_batches_rendered | plus: 1
+                  %}
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+
+        <div class="batch-verification__footer">
+          <span aria-hidden="true"></span>
+          <p>{{ current_test_type }} verified</p>
+          {% if product_resource.metafields.coa.library_url.value != blank %}
+            <a href="{{ product_resource.metafields.coa.library_url.value }}">View All Lab Tests</a>
+          {% endif %}
+        </div>
+      </div>
+    </details>
+
+    {% if current_coa_url != blank %}
+      <dialog class="batch-verification__dialog" aria-label="Certificate of analysis" data-coa-dialog>
+        <div class="batch-verification__dialog-shell">
+          <div class="batch-verification__dialog-header">
+            <p>Certificate of Analysis</p>
+            <button type="button" class="batch-verification__dialog-close" aria-label="Close COA" data-coa-close>
+              ×
+            </button>
+          </div>
+          <div class="batch-verification__dialog-body" data-coa-dialog-body>
+            <img
+              src="{{ current_coa_url }}"
+              alt="Certificate of analysis for {{ product_resource.title | escape }}"
+              width="2400"
+              height="3200"
+              loading="lazy"
+            >
+          </div>
+        </div>
+      </dialog>
+    {% endif %}
+  </batch-verification>
+{% endif %}
+
+<script>
+  if (!customElements.get('batch-verification')) {
+    customElements.define(
+      'batch-verification',
+      class BatchVerification extends HTMLElement {
+        connectedCallback() {
+          this.dialog = this.querySelector('[data-coa-dialog]');
+          this.dialogBody = this.querySelector('[data-coa-dialog-body]');
+
+          this.handleCoaClick = (event) => {
+            const trigger = event.target?.closest?.('[data-coa-open]');
+            if (!trigger || !this.dialog) return;
+
+            event.preventDefault();
+            this.openDialog(trigger.href);
+          };
+
+          this.handleCloseClick = (event) => {
+            if (event.target?.closest?.('[data-coa-close]')) this.closeDialog();
+          };
+
+          this.handleBackdropClick = (event) => {
+            if (event.target === this.dialog) this.closeDialog();
+          };
+
+          this.handleVariantUpdate = (event) => {
+            const productId = this.getAttribute('data-batch-verification-product-id');
+            const eventProductId = event.detail?.data?.productId;
+            const html = event.detail?.data?.html;
+
+            if (!productId || !html || (eventProductId && eventProductId !== productId)) return;
+
+            const next = html.querySelector(`batch-verification[data-batch-verification-product-id="${productId}"]`);
+            if (next) this.replaceWith(next);
+          };
+
+          this.addEventListener('click', this.handleCoaClick);
+          this.addEventListener('click', this.handleCloseClick);
+          this.dialog?.addEventListener('click', this.handleBackdropClick);
+          document.addEventListener('variant:update', this.handleVariantUpdate);
+        }
+
+        disconnectedCallback() {
+          this.removeEventListener('click', this.handleCoaClick);
+          this.removeEventListener('click', this.handleCloseClick);
+          this.dialog?.removeEventListener('click', this.handleBackdropClick);
+          document.removeEventListener('variant:update', this.handleVariantUpdate);
+        }
+
+        openDialog(url) {
+          if (!this.dialog || !url) return;
+
+          const image = this.dialogBody?.querySelector('img');
+
+          if (image) image.src = url;
+
+          if (typeof this.dialog.showModal === 'function') {
+            this.dialog.showModal();
+            document.documentElement.setAttribute('scroll-lock', '');
+          } else {
+            window.open(url, '_blank', 'noopener');
+          }
+        }
+
+        closeDialog() {
+          this.dialog?.close();
+          document.documentElement.removeAttribute('scroll-lock');
+        }
+      }
+    );
+  }
+</script>
