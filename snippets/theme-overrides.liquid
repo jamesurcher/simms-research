@@ -90,11 +90,12 @@
 
   product-card .quick-add__button:hover {
     scale: 1;
-    background: currentColor;
+    background: var(--color-primary-button-hover-background);
+    border-color: var(--color-primary-button-hover-border);
   }
 
   product-card .quick-add__button:hover .add-to-cart-text__content span span {
-    color: var(--color-background);
+    color: var(--color-primary-button-hover-text);
   }
 
   /* Card content stretches and CTA sticks to bottom */
@@ -140,6 +141,111 @@
       max-width: 35rem;
       margin-inline-start: auto;
     }
+  }
+
+  /* ---- PDP research profile / technical specs -------------------------
+     Amino-inspired content hierarchy, translated into the sparse Simms
+     system: mono labels, quiet rules, no icon badges, no marketing chrome. */
+
+  .product-research-details {
+    display: block;
+    width: 100%;
+  }
+
+  .product-research-details__section {
+    width: 100%;
+  }
+
+  .product-research-details__section + .product-research-details__section {
+    margin-block-start: 1.45rem;
+    padding-block-start: 1.35rem;
+    border-top: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
+  }
+
+  .product-research-details__eyebrow {
+    margin: 0 0 0.78rem;
+    color: rgb(var(--color-foreground-rgb) / 0.48);
+    font-family: var(--font-mono--family);
+    font-size: 0.6875rem;
+    font-weight: var(--font-mono--weight);
+    letter-spacing: 0.14em;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .product-research-details__lead,
+  .product-research-details__body {
+    display: block;
+    color: rgb(var(--color-foreground-rgb) / 0.78);
+  }
+
+  .product-research-details__lead {
+    font-size: 1.02rem;
+    line-height: 1.46;
+  }
+
+  .product-research-details__body {
+    margin-block-start: 0.85rem;
+    color: rgb(var(--color-foreground-rgb) / 0.68);
+    font-size: 0.9375rem;
+    line-height: 1.55;
+  }
+
+  .product-research-details__lead :is(p, ul, ol),
+  .product-research-details__body :is(p, ul, ol) {
+    margin-block: 0;
+  }
+
+  .product-research-details__body :is(p, ul, ol) + :is(p, ul, ol) {
+    margin-block-start: 0.78rem;
+  }
+
+  .product-research-details__spec-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+    margin: 0;
+    border-top: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
+  }
+
+  .product-research-details__spec {
+    min-width: 0;
+    padding: 0.82rem 0.9rem 0.82rem 0;
+    border-bottom: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
+  }
+
+  .product-research-details__spec dt {
+    margin: 0 0 0.28rem;
+    color: rgb(var(--color-foreground-rgb) / 0.42);
+    font-family: var(--font-mono--family);
+    font-size: 0.6875rem;
+    font-weight: var(--font-mono--weight);
+    letter-spacing: 0.13em;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .product-research-details__spec dd {
+    margin: 0;
+    color: rgb(var(--color-foreground-rgb) / 0.76);
+    font-family: var(--font-mono--family);
+    font-size: 0.875rem;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+
+  .product-research-details__note,
+  .product-research-details__notice {
+    color: rgb(var(--color-foreground-rgb) / 0.68);
+    font-size: 0.9375rem;
+    line-height: 1.5;
+  }
+
+  .product-research-details__notice {
+    padding: 0.9rem 1rem;
+    border: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
+    border-radius: 14px;
+    background: rgb(var(--color-foreground-rgb) / 0.025);
   }
 
   /* ---- PDP batch verification / COA module -----------------------------
@@ -482,6 +588,19 @@
   }
 
   @media screen and (max-width: 749px) {
+    .product-research-details__section + .product-research-details__section {
+      margin-block-start: 1.25rem;
+      padding-block-start: 1.15rem;
+    }
+
+    .product-research-details__spec-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .product-research-details__spec {
+      padding-inline-end: 0;
+    }
+
     .batch-verification__summary {
       grid-template-columns: minmax(0, 1fr) auto;
     }
