@@ -107,6 +107,9 @@
     "
   >
     {{ children }}
+    {%- if has_quick_add or has_mobile_quick_add -%}
+      {% render 'quick-add', product: product, section_id: section.id %}
+    {%- endif -%}
   </div>
 </product-card>
 
