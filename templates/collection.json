@@ -158,14 +158,14 @@
           "type": "filters",
           "static": true,
           "settings": {
-            "enable_filtering": true,
+            "enable_filtering": false,
             "filter_style": "horizontal",
             "filter_width": "centered",
             "text_label_case": "default",
             "show_swatch_label": false,
             "show_filter_label": false,
-            "enable_sorting": true,
-            "enable_grid_density": true,
+            "enable_sorting": false,
+            "enable_grid_density": false,
             "inherit_color_scheme": true,
             "color_scheme": "",
             "padding-block-start": 8,
@@ -278,10 +278,19 @@
         "padding-block-start": 0,
         "padding-block-end": 32
       }
+    },
+    "collection_filter": {
+      "type": "collection-filter",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "padding-block-start": 0,
+        "padding-block-end": 24
+      }
     }
   },
   "order": [
     "section",
+    "collection_filter",
     "main"
   ]
 }
