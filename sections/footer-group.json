@@ -259,7 +259,7 @@
                       "type": "text",
                       "name": "t:names.text",
                       "settings": {
-                        "text": "<p>Home</p><p>About</p><p>Shop</p><p>COA's & Lab Results</p><p>FAQ</p><p>Partners</p>",
+                        "text": "<p>Home</p><p>About</p><p>Shop</p><p><a href=\"/pages/lab-results\">Lab Results</a></p><p>FAQ</p><p>Partners</p>",
                         "width": "fit-content",
                         "max_width": "normal",
                         "alignment": "left",

@@ -1,0 +1,118 @@
+{%- doc -%}
+  Renders one row of the lab-results detail table.
+
+  @param {object} batch — coa_batch metaobject (fields read via `.value`)
+  @param {object} product — parent product, for COA dialog title
+{%- enddoc -%}
+
+{%- liquid
+  assign b_id            = batch.batch_id.value
+  assign b_purity        = batch.purity.value | default: batch.avg_purity.value
+  assign b_vials         = batch.vials_tested.value
+  assign b_labeled       = batch.labeled_content.value
+  assign b_net           = batch.net_content.value | default: b_labeled
+  assign b_net_delta     = batch.net_content_delta.value
+  assign b_endo          = batch.endotoxins.value
+  assign b_heavy         = batch.heavy_metals.value
+  assign b_sterility     = batch.sterility.value
+  assign b_tested        = batch.tested_at.value
+  assign b_is_current    = batch.is_current.value
+  assign b_file          = batch.coa_file.value
+
+  assign b_url = b_file.url
+  if b_url == blank and b_file != blank
+    assign b_url = b_file | image_url: width: 2400
+  endif
+  if b_url == blank
+    assign b_url = batch.coa_url.value
+  endif
+
+  # Auto-calculate net delta if both labeled and net are populated and delta is blank
+  if b_net_delta == blank and b_net != blank and b_labeled != blank
+    assign labeled_n = b_labeled | downcase | remove: 'mg' | remove: ' ' | remove: ',' | plus: 0.0
+    assign net_n     = b_net     | downcase | remove: 'mg' | remove: ' ' | remove: ',' | plus: 0.0
+    if labeled_n > 0
+      assign delta_amt = net_n | minus: labeled_n
+      assign delta_pct = delta_amt | times: 100.0 | divided_by: labeled_n | round
+      assign delta_prefix = ''
+      if delta_pct > 0
+        assign delta_prefix = '+'
+      endif
+      assign b_net_delta = delta_prefix | append: delta_pct | append: '%'
+    endif
+  endif
+
+  assign endo_pass     = false
+  assign heavy_pass    = false
+  assign sterility_pass = false
+  if b_endo != blank
+    assign endo_lc = b_endo | downcase
+    if endo_lc contains 'pass'
+      assign endo_pass = true
+    endif
+  endif
+  if b_heavy != blank
+    assign heavy_lc = b_heavy | downcase
+    if heavy_lc contains 'pass'
+      assign heavy_pass = true
+    endif
+  endif
+  if b_sterility != blank
+    assign sterility_lc = b_sterility | downcase
+    if sterility_lc contains 'pass'
+      assign sterility_pass = true
+    endif
+  endif
+-%}
+
+<tr>
+  <td>
+    {%- if b_id != blank -%}#{{ b_id | escape }}{%- else -%}—{%- endif -%}
+    {%- if b_is_current == true -%}
+      <span class="lab-results__pill">Latest</span>
+    {%- endif -%}
+  </td>
+  <td class="lab-results__td--purity">
+    {{ b_purity | default: '—' | escape }}
+  </td>
+  <td>{{ b_vials | default: '—' | escape }}</td>
+  <td>
+    {%- if b_net != blank -%}
+      {{ b_net | escape }}
+      {%- if b_net_delta != blank -%}
+        <span class="lab-results__delta">({{ b_net_delta | escape }})</span>
+      {%- endif -%}
+    {%- else -%}
+      —
+    {%- endif -%}
+  </td>
+  <td class="{% if endo_pass %}lab-results__td--pass{% endif %}">
+    {{ b_endo | default: '—' | escape }}
+  </td>
+  <td class="{% if heavy_pass %}lab-results__td--pass{% endif %}">
+    {{ b_heavy | default: '—' | escape }}
+  </td>
+  <td class="{% if sterility_pass %}lab-results__td--pass{% endif %}">
+    {{ b_sterility | default: '—' | escape }}
+  </td>
+  <td>
+    {%- if b_tested != blank -%}
+      {{ b_tested | date: '%b %-d, %Y' }}
+    {%- else -%}
+      —
+    {%- endif -%}
+  </td>
+  <td>
+    {%- if b_url != blank -%}
+      <button
+        type="button"
+        class="lab-results__td-coa"
+        data-lab-coa
+        data-coa-url="{{ b_url | escape }}"
+        data-coa-title="{{ product.title | escape }} — #{{ b_id | escape }}"
+      >View COA</button>
+    {%- else -%}
+      —
+    {%- endif -%}
+  </td>
+</tr>

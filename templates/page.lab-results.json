@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "main": {
+      "type": "lab-results-index",
+      "settings": {}
+    }
+  },
+  "order": ["main"]
+}
