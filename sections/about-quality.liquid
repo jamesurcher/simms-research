@@ -1,0 +1,600 @@
+{%- comment -%}about-quality section{%- endcomment -%}
+{%- assign differentiators = section.blocks | where: 'type', 'differentiator' -%}
+{%- assign steps = section.blocks | where: 'type', 'step' -%}
+{%- assign commitments = section.blocks | where: 'type', 'commitment' -%}
+
+<section
+  class="about-quality section section--page-width color-{{ section.settings.color_scheme }}"
+  style="
+    --about-quality-padding-block-start: {{ section.settings['padding-block-start'] }}px;
+    --about-quality-padding-block-end: {{ section.settings['padding-block-end'] }}px;
+  "
+>
+  <div class="about-quality__inner">
+
+    <header class="about-quality__hero">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="about-quality__eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      <h1 class="about-quality__heading">{{ section.settings.heading | newline_to_br }}</h1>
+      {%- if section.settings.subhead != blank -%}
+        <p class="about-quality__subhead">{{ section.settings.subhead }}</p>
+      {%- endif -%}
+    </header>
+
+    {%- if differentiators.size > 0 -%}
+      <div class="about-quality__diffs">
+        {%- for block in differentiators -%}
+          <div class="about-quality__diff" {{ block.shopify_attributes }}>
+            {%- if block.settings.eyebrow != blank -%}
+              <p class="about-quality__diff-eyebrow">{{ block.settings.eyebrow }}</p>
+            {%- endif -%}
+            <p class="about-quality__diff-title">{{ block.settings.title }}</p>
+            {%- if block.settings.body != blank -%}
+              <p class="about-quality__diff-body">{{ block.settings.body }}</p>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    {%- if steps.size > 0 -%}
+      <div class="about-quality__process">
+        <div class="about-quality__section-header">
+          {%- if section.settings.process_eyebrow != blank -%}
+            <p class="about-quality__eyebrow">{{ section.settings.process_eyebrow }}</p>
+          {%- endif -%}
+          {%- if section.settings.process_heading != blank -%}
+            <p class="about-quality__section-heading">{{ section.settings.process_heading }}</p>
+          {%- endif -%}
+        </div>
+        <ol class="about-quality__steps">
+          {%- for block in steps -%}
+            {%- assign step_num = forloop.index | prepend: '0' -%}
+            {%- assign step_num = step_num | slice: -2, 2 -%}
+            <li class="about-quality__step" {{ block.shopify_attributes }}>
+              <span class="about-quality__step-num">{{ step_num }}</span>
+              <div class="about-quality__step-body">
+                <p class="about-quality__step-title">{{ block.settings.title }}</p>
+                {%- if block.settings.body != blank -%}
+                  <p class="about-quality__step-desc">{{ block.settings.body }}</p>
+                {%- endif -%}
+              </div>
+            </li>
+          {%- endfor -%}
+        </ol>
+      </div>
+    {%- endif -%}
+
+    {%- if commitments.size > 0 -%}
+      <div class="about-quality__commitments">
+        <div class="about-quality__section-header">
+          {%- if section.settings.commitments_eyebrow != blank -%}
+            <p class="about-quality__eyebrow">{{ section.settings.commitments_eyebrow }}</p>
+          {%- endif -%}
+          {%- if section.settings.commitments_heading != blank -%}
+            <p class="about-quality__section-heading">{{ section.settings.commitments_heading }}</p>
+          {%- endif -%}
+        </div>
+        <div class="about-quality__commitment-grid">
+          {%- for block in commitments -%}
+            <div class="about-quality__commitment" {{ block.shopify_attributes }}>
+              <svg class="about-quality__check" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <polyline points="3,8 6.5,11.5 13,4.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <div>
+                <p class="about-quality__commitment-title">{{ block.settings.title }}</p>
+                {%- if block.settings.body != blank -%}
+                  <p class="about-quality__commitment-body">{{ block.settings.body }}</p>
+                {%- endif -%}
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+    {%- endif -%}
+
+    <div class="about-quality__cta">
+      {%- if section.settings.cta_eyebrow != blank -%}
+        <p class="about-quality__eyebrow">{{ section.settings.cta_eyebrow }}</p>
+      {%- endif -%}
+      {%- if section.settings.cta_heading != blank -%}
+        <p class="about-quality__cta-heading">{{ section.settings.cta_heading }}</p>
+      {%- endif -%}
+      <div class="about-quality__cta-buttons">
+        {%- if section.settings.cta_primary_label != blank -%}
+          <a
+            href="{{ section.settings.cta_primary_url | default: '/pages/lab-results' }}"
+            class="about-quality__btn about-quality__btn--primary"
+          >{{ section.settings.cta_primary_label }}</a>
+        {%- endif -%}
+        {%- if section.settings.cta_secondary_label != blank -%}
+          <a
+            href="{{ section.settings.cta_secondary_url | default: '/collections/all' }}"
+            class="about-quality__btn about-quality__btn--secondary"
+          >{{ section.settings.cta_secondary_label }}</a>
+        {%- endif -%}
+      </div>
+    </div>
+
+  </div>
+</section>
+
+{% stylesheet %}
+  .about-quality {
+    padding-block-start: var(--about-quality-padding-block-start, 48px);
+    padding-block-end: var(--about-quality-padding-block-end, 120px);
+  }
+
+  .about-quality__inner {
+    width: 85%;
+    margin-inline: auto;
+  }
+
+  /* ── Shared eyebrow ── */
+  .about-quality__eyebrow {
+    font-family: var(--font-mono--family);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgb(var(--color-foreground-rgb) / 0.5);
+    margin: 0 0 1rem 0;
+  }
+
+  /* ── Hero ── */
+  .about-quality__hero {
+    padding-block-end: 5rem;
+    border-bottom: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
+    margin-block-end: 5rem;
+  }
+
+  .about-quality__heading {
+    font-family: var(--font-heading--family);
+    font-size: clamp(2.25rem, 5vw, 4.25rem);
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin: 0 0 1.5rem 0;
+    max-width: 18ch;
+  }
+
+  .about-quality__subhead {
+    font-family: var(--font-body--family);
+    font-size: clamp(1rem, 1.4vw, 1.125rem);
+    line-height: 1.6;
+    color: rgb(var(--color-foreground-rgb) / 0.65);
+    max-width: 52ch;
+    margin: 0;
+  }
+
+  /* ── Differentiators ── */
+  .about-quality__diffs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: rgb(var(--color-foreground-rgb) / 0.1);
+    border: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-block-end: 5rem;
+  }
+
+  .about-quality__diff {
+    background: var(--color-background);
+    padding: 2rem 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+
+  .about-quality__diff-eyebrow {
+    font-family: var(--font-mono--family);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgb(var(--color-foreground-rgb) / 0.45);
+    margin: 0;
+  }
+
+  .about-quality__diff-title {
+    font-family: var(--font-heading--family);
+    font-size: 1.1875rem;
+    font-weight: 500;
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  .about-quality__diff-body {
+    font-family: var(--font-body--family);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: rgb(var(--color-foreground-rgb) / 0.65);
+    margin: 0;
+  }
+
+  /* ── Section header (process + commitments) ── */
+  .about-quality__section-header {
+    margin-block-end: 3rem;
+  }
+
+  .about-quality__section-heading {
+    font-family: var(--font-body--family);
+    font-size: 1.375rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin: 0;
+    color: rgb(var(--color-foreground-rgb) / 0.85);
+  }
+
+  /* ── Process steps ── */
+  .about-quality__process {
+    margin-block-end: 5rem;
+  }
+
+  .about-quality__steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .about-quality__step {
+    display: flex;
+    align-items: baseline;
+    gap: 2rem;
+    padding-block: 1.5rem;
+    border-top: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
+  }
+
+  .about-quality__step:last-child {
+    border-bottom: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
+  }
+
+  .about-quality__step-num {
+    font-family: var(--font-mono--family);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: rgb(var(--color-foreground-rgb) / 0.35);
+    flex-shrink: 0;
+    width: 2rem;
+  }
+
+  .about-quality__step-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  .about-quality__step-title {
+    font-family: var(--font-heading--family);
+    font-size: 1.0625rem;
+    font-weight: 500;
+    margin: 0;
+  }
+
+  .about-quality__step-desc {
+    font-family: var(--font-body--family);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: rgb(var(--color-foreground-rgb) / 0.6);
+    margin: 0;
+    max-width: 60ch;
+  }
+
+  /* ── Commitments ── */
+  .about-quality__commitments {
+    margin-block-end: 5rem;
+  }
+
+  .about-quality__commitment-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .about-quality__commitment {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    border: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
+    border-radius: 12px;
+    padding: 1.5rem;
+  }
+
+  .about-quality__check {
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+    color: var(--color-foreground);
+    opacity: 0.7;
+  }
+
+  .about-quality__commitment-title {
+    font-family: var(--font-heading--family);
+    font-size: 1rem;
+    font-weight: 500;
+    margin: 0 0 0.375rem 0;
+  }
+
+  .about-quality__commitment-body {
+    font-family: var(--font-body--family);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: rgb(var(--color-foreground-rgb) / 0.6);
+    margin: 0;
+  }
+
+  /* ── CTA ── */
+  .about-quality__cta {
+    text-align: center;
+    padding-block: 4rem;
+    border-top: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
+  }
+
+  .about-quality__cta .about-quality__eyebrow {
+    margin-block-end: 0.75rem;
+  }
+
+  .about-quality__cta-heading {
+    font-family: var(--font-heading--family);
+    font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    margin: 0 0 2rem 0;
+  }
+
+  .about-quality__cta-buttons {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .about-quality__btn {
+    display: inline-block;
+    font-family: var(--font-body--family);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    text-decoration: none;
+    border-radius: 999px;
+    padding: 0.75rem 2rem;
+    transition: border-color 150ms ease, background 150ms ease, color 150ms ease;
+  }
+
+  .about-quality__btn--primary {
+    background: var(--color-foreground);
+    color: var(--color-background);
+    border: 1px solid var(--color-foreground);
+  }
+
+  .about-quality__btn--primary:hover {
+    background: transparent;
+    color: var(--color-foreground);
+    border-color: #e4f5ff;
+  }
+
+  .about-quality__btn--secondary {
+    background: transparent;
+    color: var(--color-foreground);
+    border: 1px solid rgb(var(--color-foreground-rgb) / 0.25);
+  }
+
+  .about-quality__btn--secondary:hover {
+    border-color: #e4f5ff;
+  }
+
+  /* ── Mobile ── */
+  @media (max-width: 749px) {
+    .about-quality__inner {
+      width: 100%;
+    }
+
+    .about-quality__heading {
+      max-width: none;
+    }
+
+    .about-quality__diffs {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .about-quality__commitment-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .about-quality__step {
+      gap: 1.25rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .about-quality__diffs {
+      grid-template-columns: 1fr;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "About / Quality",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    { "type": "header", "content": "Hero" },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Simms Research · Phoenix, AZ"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "We don't sell supplements.\nWe supply research-grade peptides."
+    },
+    {
+      "type": "textarea",
+      "id": "subhead",
+      "label": "Subhead",
+      "default": "Every vial we ship is third-party tested, batch-labeled, and documented — before it leaves our facility."
+    },
+    { "type": "header", "content": "Process section" },
+    {
+      "type": "text",
+      "id": "process_eyebrow",
+      "label": "Eyebrow",
+      "default": "How We Verify Every Batch"
+    },
+    {
+      "type": "text",
+      "id": "process_heading",
+      "label": "Subhead",
+      "default": "From synthesis to shipment."
+    },
+    { "type": "header", "content": "Commitments section" },
+    {
+      "type": "text",
+      "id": "commitments_eyebrow",
+      "label": "Eyebrow",
+      "default": "Our Commitments"
+    },
+    {
+      "type": "text",
+      "id": "commitments_heading",
+      "label": "Subhead",
+      "default": "What you can always expect."
+    },
+    { "type": "header", "content": "CTA" },
+    {
+      "type": "text",
+      "id": "cta_eyebrow",
+      "label": "Eyebrow",
+      "default": "See The Results"
+    },
+    {
+      "type": "text",
+      "id": "cta_heading",
+      "label": "Heading",
+      "default": "Every batch. Every test."
+    },
+    {
+      "type": "text",
+      "id": "cta_primary_label",
+      "label": "Primary button label",
+      "default": "View Lab Results"
+    },
+    {
+      "type": "url",
+      "id": "cta_primary_url",
+      "label": "Primary button URL"
+    },
+    {
+      "type": "text",
+      "id": "cta_secondary_label",
+      "label": "Secondary button label",
+      "default": "Shop the Catalog"
+    },
+    {
+      "type": "url",
+      "id": "cta_secondary_url",
+      "label": "Secondary button URL"
+    },
+    { "type": "header", "content": "Spacing" },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 8,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 200,
+      "step": 8,
+      "unit": "px",
+      "default": 120
+    }
+  ],
+  "blocks": [
+    {
+      "type": "differentiator",
+      "name": "Differentiator",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow",
+          "default": "Sourcing"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "American API only"
+        },
+        {
+          "type": "textarea",
+          "id": "body",
+          "label": "Body",
+          "default": "We source exclusively from US-licensed manufacturers with documented synthesis chains."
+        }
+      ]
+    },
+    {
+      "type": "step",
+      "name": "Process step",
+      "limit": 8,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Raw material sourcing"
+        },
+        {
+          "type": "textarea",
+          "id": "body",
+          "label": "Body",
+          "default": "Peptides sourced from US-licensed manufacturers with documented synthesis chains."
+        }
+      ]
+    },
+    {
+      "type": "commitment",
+      "name": "Commitment",
+      "limit": 6,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "No proprietary blends"
+        },
+        {
+          "type": "textarea",
+          "id": "body",
+          "label": "Body",
+          "default": "Every product is a single compound at a stated concentration. No blends, no ambiguity."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "About / Quality"
+    }
+  ]
+}
+{% endschema %}
