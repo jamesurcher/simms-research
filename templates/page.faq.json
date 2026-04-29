@@ -1,0 +1,186 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "faq_page": {
+      "type": "faq-page",
+      "blocks": {
+        "general_research_compounds": {
+          "type": "faq",
+          "settings": {
+            "category": "general",
+            "question": "What are research compounds?",
+            "answer": "Research compounds are materials supplied for laboratory, analytical, or research use only. They are not sold for human or veterinary use."
+          }
+        },
+        "general_who_can_order": {
+          "type": "faq",
+          "settings": {
+            "category": "general",
+            "question": "Who can order from Simms Research?",
+            "answer": "Customers are responsible for understanding and following all laws, regulations, and institutional requirements that apply to their research."
+          }
+        },
+        "general_human_use": {
+          "type": "faq",
+          "settings": {
+            "category": "general",
+            "question": "Are your products intended for human use?",
+            "answer": "No. Products sold by Simms Research are strictly for research use only and are not intended for human consumption, medical use, or veterinary use."
+          }
+        },
+        "quality_tested": {
+          "type": "faq",
+          "settings": {
+            "category": "quality",
+            "question": "Are your compounds tested for purity?",
+            "answer": "Products are supported by batch-level testing where available, including Certificates of Analysis and product specification data."
+          }
+        },
+        "quality_coa": {
+          "type": "faq",
+          "settings": {
+            "category": "quality",
+            "question": "Where can I find Certificates of Analysis?",
+            "answer": "Certificates of Analysis are displayed on product pages when batch records are available."
+          }
+        },
+        "quality_purity": {
+          "type": "faq",
+          "settings": {
+            "category": "quality",
+            "question": "What purity level can I expect?",
+            "answer": "Purity details are listed on the product page and reflected in available batch verification data."
+          }
+        },
+        "shipping_when": {
+          "type": "faq",
+          "settings": {
+            "category": "shipping",
+            "question": "When do orders ship?",
+            "answer": "Orders are processed during business days. Shipping timelines depend on order volume, carrier service, and cutoff timing."
+          }
+        },
+        "shipping_free": {
+          "type": "faq",
+          "settings": {
+            "category": "shipping",
+            "question": "Do you offer free shipping?",
+            "answer": "Free shipping eligibility is shown in the site announcement bar and at checkout when applicable."
+          }
+        },
+        "shipping_from": {
+          "type": "faq",
+          "settings": {
+            "category": "shipping",
+            "question": "Where do you ship from?",
+            "answer": "Orders are fulfilled from the United States."
+          }
+        },
+        "orders_status": {
+          "type": "faq",
+          "settings": {
+            "category": "orders",
+            "question": "How do I check my order status?",
+            "answer": "Use your order confirmation email or contact support with your order number for help locating the latest status."
+          }
+        },
+        "orders_change_cancel": {
+          "type": "faq",
+          "settings": {
+            "category": "orders",
+            "question": "Can I change or cancel an order?",
+            "answer": "Contact support as soon as possible. Once an order is processed or handed to the carrier, changes may not be available."
+          }
+        },
+        "orders_payment": {
+          "type": "faq",
+          "settings": {
+            "category": "orders",
+            "question": "What payment methods are accepted?",
+            "answer": "Available payment methods are shown at checkout."
+          }
+        },
+        "returns_damaged": {
+          "type": "faq",
+          "settings": {
+            "category": "returns",
+            "question": "What if my order arrives damaged?",
+            "answer": "Contact support with your order number and photos of the package and product so the issue can be reviewed."
+          }
+        },
+        "returns_wrong_item": {
+          "type": "faq",
+          "settings": {
+            "category": "returns",
+            "question": "What if I received the wrong item?",
+            "answer": "Contact support with your order number and a photo of the item received. We will review the order and resolve the issue."
+          }
+        },
+        "returns_policy": {
+          "type": "faq",
+          "settings": {
+            "category": "returns",
+            "question": "Do you accept returns?",
+            "answer": "Return eligibility depends on the product condition, order status, and applicable policy terms."
+          }
+        },
+        "compliance_research_only": {
+          "type": "faq",
+          "settings": {
+            "category": "compliance",
+            "question": "Are products for research use only?",
+            "answer": "Yes. Simms Research products are sold for research and laboratory use only."
+          }
+        },
+        "compliance_personal": {
+          "type": "faq",
+          "settings": {
+            "category": "compliance",
+            "question": "Can I use these products personally?",
+            "answer": "No. Products are not intended for personal use, human consumption, medical use, or veterinary use."
+          }
+        },
+        "compliance_guidance": {
+          "type": "faq",
+          "settings": {
+            "category": "compliance",
+            "question": "Do you provide usage or dosing guidance?",
+            "answer": "No. Simms Research does not provide dosing, administration, or personal-use guidance."
+          }
+        }
+      },
+      "block_order": [
+        "general_research_compounds",
+        "general_who_can_order",
+        "general_human_use",
+        "quality_tested",
+        "quality_coa",
+        "quality_purity",
+        "shipping_when",
+        "shipping_free",
+        "shipping_from",
+        "orders_status",
+        "orders_change_cancel",
+        "orders_payment",
+        "returns_damaged",
+        "returns_wrong_item",
+        "returns_policy",
+        "compliance_research_only",
+        "compliance_personal",
+        "compliance_guidance"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "faq_page"
+  ]
+}
