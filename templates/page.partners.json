@@ -1,0 +1,72 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "partners_page": {
+      "type": "partners-page",
+      "blocks": {
+        "faq_commission": {
+          "type": "faq",
+          "settings": {
+            "question": "What is the commission rate?",
+            "answer": "Research partners start at 15% commission on every referred sale."
+          }
+        },
+        "faq_payout": {
+          "type": "faq",
+          "settings": {
+            "question": "When do I get paid?",
+            "answer": "Payouts are processed weekly once your account reaches the $250 minimum payout threshold."
+          }
+        },
+        "faq_payment": {
+          "type": "faq",
+          "settings": {
+            "question": "What payment methods are available?",
+            "answer": "Payment details are confirmed during partner approval so payouts can be routed to the correct account."
+          }
+        },
+        "faq_promoting": {
+          "type": "faq",
+          "settings": {
+            "question": "What am I promoting exactly?",
+            "answer": "Simms Research sells research-grade compounds for laboratory research use only, supported by product specifications and Certificates of Analysis."
+          }
+        },
+        "faq_approval": {
+          "type": "faq",
+          "settings": {
+            "question": "Is there an approval process?",
+            "answer": "Yes. Applications are reviewed before approval to keep the partner program aligned with research-use-only guidelines."
+          }
+        },
+        "faq_social": {
+          "type": "faq",
+          "settings": {
+            "question": "Can I promote on social media?",
+            "answer": "Yes, with compliant language. Partners may not make health claims or imply human use."
+          }
+        }
+      },
+      "block_order": [
+        "faq_commission",
+        "faq_payout",
+        "faq_payment",
+        "faq_promoting",
+        "faq_approval",
+        "faq_social"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "partners_page"
+  ]
+}

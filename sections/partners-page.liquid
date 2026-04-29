@@ -1,0 +1,823 @@
+{% liquid
+  assign apply_url = section.settings.apply_url | default: 'mailto:support@simmsresearch.com?subject=Research%20Partners%20Application'
+  assign secondary_url = section.settings.secondary_url | default: '/pages/contact'
+%}
+
+<section class="partners-page color-{{ section.settings.color_scheme }}">
+  <div class="partners-page__shell">
+    <header class="partners-page__hero">
+      <p class="partners-page__eyebrow">{{ section.settings.hero_eyebrow }}</p>
+      <h1 class="partners-page__title">{{ section.settings.hero_heading }}</h1>
+      <div class="partners-page__subhead">
+        {{ section.settings.hero_subhead }}
+      </div>
+      <div class="partners-page__actions">
+        <a class="button partners-page__button" href="{{ apply_url }}">
+          {{ section.settings.hero_button_label }}
+          <span aria-hidden="true">→</span>
+        </a>
+        <a class="partners-page__secondary" href="{{ secondary_url }}">
+          {{ section.settings.secondary_label }}
+        </a>
+      </div>
+      <p class="partners-page__micro">{{ section.settings.hero_microcopy }}</p>
+    </header>
+
+    <div class="partners-page__stats" aria-label="Partner program highlights">
+      <div class="partners-page__stat">
+        <p>{{ section.settings.stat_1_value }}</p>
+        <span>{{ section.settings.stat_1_label }}</span>
+      </div>
+      <div class="partners-page__stat">
+        <p>{{ section.settings.stat_2_value }}</p>
+        <span>{{ section.settings.stat_2_label }}</span>
+      </div>
+      <div class="partners-page__stat">
+        <p>{{ section.settings.stat_3_value }}</p>
+        <span>{{ section.settings.stat_3_label }}</span>
+      </div>
+      <div class="partners-page__stat">
+        <p>{{ section.settings.stat_4_value }}</p>
+        <span>{{ section.settings.stat_4_label }}</span>
+      </div>
+    </div>
+
+    <section class="partners-page__section" aria-labelledby="PartnersHowItWorks">
+      <p class="partners-page__eyebrow">{{ section.settings.steps_eyebrow }}</p>
+      <h2 id="PartnersHowItWorks" class="partners-page__section-title">{{ section.settings.steps_heading }}</h2>
+      <div class="partners-page__steps">
+        <article class="partners-page__step">
+          <p class="partners-page__step-number">01</p>
+          <h3>{{ section.settings.step_1_title }}</h3>
+          <p>{{ section.settings.step_1_body }}</p>
+        </article>
+        <article class="partners-page__step">
+          <p class="partners-page__step-number">02</p>
+          <h3>{{ section.settings.step_2_title }}</h3>
+          <p>{{ section.settings.step_2_body }}</p>
+        </article>
+        <article class="partners-page__step">
+          <p class="partners-page__step-number">03</p>
+          <h3>{{ section.settings.step_3_title }}</h3>
+          <p>{{ section.settings.step_3_body }}</p>
+        </article>
+        <article class="partners-page__step">
+          <p class="partners-page__step-number">04</p>
+          <h3>{{ section.settings.step_4_title }}</h3>
+          <p>{{ section.settings.step_4_body }}</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="partners-page__section" aria-labelledby="PartnersBenefits">
+      <p class="partners-page__eyebrow">{{ section.settings.benefits_eyebrow }}</p>
+      <h2 id="PartnersBenefits" class="partners-page__section-title">{{ section.settings.benefits_heading }}</h2>
+      <div class="partners-page__benefits">
+        <article class="partners-page__card">
+          <h3>{{ section.settings.benefit_1_title }}</h3>
+          <p>{{ section.settings.benefit_1_body }}</p>
+        </article>
+        <article class="partners-page__card">
+          <h3>{{ section.settings.benefit_2_title }}</h3>
+          <p>{{ section.settings.benefit_2_body }}</p>
+        </article>
+        <article class="partners-page__card">
+          <h3>{{ section.settings.benefit_3_title }}</h3>
+          <p>{{ section.settings.benefit_3_body }}</p>
+        </article>
+        <article class="partners-page__card">
+          <h3>{{ section.settings.benefit_4_title }}</h3>
+          <p>{{ section.settings.benefit_4_body }}</p>
+        </article>
+        <article class="partners-page__card">
+          <h3>{{ section.settings.benefit_5_title }}</h3>
+          <p>{{ section.settings.benefit_5_body }}</p>
+        </article>
+        <article class="partners-page__card">
+          <h3>{{ section.settings.benefit_6_title }}</h3>
+          <p>{{ section.settings.benefit_6_body }}</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="partners-page__section partners-page__section--faq" aria-labelledby="PartnersFaq">
+      <p class="partners-page__eyebrow">{{ section.settings.faq_eyebrow }}</p>
+      <h2 id="PartnersFaq" class="partners-page__section-title">{{ section.settings.faq_heading }}</h2>
+      <div class="partners-page__faq">
+        {% for block in section.blocks %}
+          <details class="partners-page__faq-item" {{ block.shopify_attributes }}>
+            <summary>
+              <span aria-hidden="true">›</span>
+              {{ block.settings.question }}
+            </summary>
+            <div class="partners-page__faq-answer">
+              {{ block.settings.answer }}
+            </div>
+          </details>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="partners-page__final-cta" aria-label="Apply to the research partner program">
+      <p class="partners-page__eyebrow">{{ section.settings.cta_eyebrow }}</p>
+      <h2>{{ section.settings.cta_heading }}</h2>
+      <div class="partners-page__cta-copy">
+        {{ section.settings.cta_body }}
+      </div>
+      <a class="button partners-page__button" href="{{ apply_url }}">
+        {{ section.settings.cta_button_label }}
+        <span aria-hidden="true">→</span>
+      </a>
+    </section>
+  </div>
+</section>
+
+{% stylesheet %}
+  .partners-page {
+    padding-block: clamp(3rem, 6vw, 5.5rem);
+    background:
+      radial-gradient(circle at 50% 0%, rgb(var(--color-foreground-rgb) / 0.035), transparent 28rem),
+      rgb(var(--color-background-rgb));
+  }
+
+  .partners-page__shell {
+    width: min(100% - 2rem, 85rem);
+    margin-inline: auto;
+  }
+
+  @media screen and (min-width: 750px) {
+    .partners-page__shell {
+      width: min(72.25vw, 85rem);
+    }
+  }
+
+  .partners-page__hero {
+    display: grid;
+    justify-items: center;
+    max-width: 48rem;
+    min-height: clamp(22rem, 42vw, 33rem);
+    margin-inline: auto;
+    padding-block: clamp(3rem, 6vw, 5.5rem);
+    text-align: center;
+  }
+
+  .partners-page__eyebrow,
+  .partners-page__micro,
+  .partners-page__stat span,
+  .partners-page__step h3,
+  .partners-page__card h3,
+  .partners-page__faq summary {
+    font-family: var(--font-mono--family);
+    font-weight: var(--font-mono--weight);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .partners-page__eyebrow {
+    margin: 0;
+    color: rgb(var(--color-foreground-rgb) / 0.48);
+    font-size: 0.75rem;
+    line-height: 1.2;
+  }
+
+  .partners-page__title {
+    max-width: 46rem;
+    margin: 1.2rem 0 0;
+    font-size: clamp(2.9rem, 5.8vw, 5.4rem);
+    letter-spacing: -0.07em;
+    line-height: 0.9;
+    text-transform: uppercase;
+  }
+
+  .partners-page__subhead {
+    max-width: 40rem;
+    margin-block-start: 1.25rem;
+    color: rgb(var(--color-foreground-rgb) / 0.58);
+    font-size: clamp(1.05rem, 1.55vw, 1.35rem);
+    line-height: 1.45;
+  }
+
+  .partners-page__subhead p,
+  .partners-page__cta-copy p {
+    margin: 0;
+  }
+
+  .partners-page__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-block-start: 1.75rem;
+  }
+
+  .partners-page__button {
+    min-width: 12.5rem;
+    min-height: 3.6rem;
+    border-radius: 999px;
+    background: var(--color-primary-button-background);
+    color: var(--color-primary-button-text);
+  }
+
+  .partners-page__button:hover {
+    background: var(--color-primary-button-hover-background);
+    border-color: var(--color-primary-button-hover-border);
+    color: var(--color-primary-button-hover-text);
+  }
+
+  .partners-page__button span {
+    margin-inline-start: 0.7rem;
+  }
+
+  .partners-page__secondary {
+    color: rgb(var(--color-foreground-rgb) / 0.62);
+    font-size: 0.9375rem;
+    text-decoration: underline;
+    text-underline-offset: 0.28em;
+  }
+
+  .partners-page__secondary:hover {
+    color: var(--color-foreground);
+  }
+
+  .partners-page__micro {
+    margin: 1.4rem 0 0;
+    color: rgb(var(--color-foreground-rgb) / 0.34);
+    font-size: 0.6875rem;
+    line-height: 1.2;
+  }
+
+  .partners-page__stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border-block: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
+  }
+
+  .partners-page__stat {
+    display: grid;
+    justify-items: center;
+    gap: 0.6rem;
+    padding: clamp(1.4rem, 3vw, 2.25rem) 1rem;
+    text-align: center;
+  }
+
+  .partners-page__stat + .partners-page__stat {
+    border-inline-start: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
+  }
+
+  .partners-page__stat p {
+    margin: 0;
+    color: rgb(var(--color-foreground-rgb) / 0.82);
+    font-family: var(--font-mono--family);
+    font-size: clamp(2rem, 3vw, 2.8rem);
+    line-height: 0.95;
+  }
+
+  .partners-page__stat span {
+    color: rgb(var(--color-foreground-rgb) / 0.42);
+    font-size: 0.6875rem;
+    line-height: 1.2;
+  }
+
+  .partners-page__section {
+    padding-block: clamp(3.5rem, 7vw, 6rem);
+    border-block-end: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
+  }
+
+  .partners-page__section-title {
+    max-width: 60rem;
+    margin: 1rem auto 0;
+    font-size: clamp(2.15rem, 4.1vw, 4.2rem);
+    letter-spacing: -0.06em;
+    line-height: 0.95;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .partners-page__section > .partners-page__eyebrow {
+    text-align: center;
+  }
+
+  .partners-page__steps {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(1.25rem, 3vw, 2.2rem);
+    margin-block-start: clamp(2.2rem, 4.5vw, 3.75rem);
+  }
+
+  .partners-page__step {
+    display: grid;
+    gap: 0.75rem;
+    padding-block-start: 1rem;
+    border-block-start: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
+  }
+
+  .partners-page__step-number {
+    margin: 0;
+    color: rgb(var(--color-foreground-rgb) / 0.18);
+    font-family: var(--font-mono--family);
+    font-size: clamp(2.8rem, 5vw, 4.5rem);
+    line-height: 0.9;
+  }
+
+  .partners-page__step h3,
+  .partners-page__card h3 {
+    margin: 0;
+    color: rgb(var(--color-foreground-rgb) / 0.86);
+    font-size: 0.875rem;
+    line-height: 1.35;
+  }
+
+  .partners-page__step p:last-child,
+  .partners-page__card p,
+  .partners-page__faq-answer {
+    margin: 0;
+    color: rgb(var(--color-foreground-rgb) / 0.56);
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+
+  .partners-page__benefits {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.2rem;
+    margin-block-start: clamp(2.2rem, 4.5vw, 3.75rem);
+  }
+
+  .partners-page__card,
+  .partners-page__final-cta {
+    border: 1px solid rgb(var(--color-foreground-rgb) / 0.12);
+    border-radius: 18px;
+    background:
+      linear-gradient(rgb(var(--color-foreground-rgb) / 0.028), rgb(var(--color-foreground-rgb) / 0.028)),
+      rgb(var(--color-background-rgb));
+  }
+
+  .partners-page__card {
+    display: grid;
+    gap: 1rem;
+    min-height: 12rem;
+    padding: clamp(1.25rem, 2.5vw, 1.8rem);
+  }
+
+  .partners-page__section--faq {
+    border-block-end: 0;
+  }
+
+  .partners-page__faq {
+    max-width: 58rem;
+    margin: clamp(2.2rem, 4vw, 3.5rem) auto 0;
+  }
+
+  .partners-page__faq-item {
+    border-block-start: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
+  }
+
+  .partners-page__faq-item:last-child {
+    border-block-end: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
+  }
+
+  .partners-page__faq summary {
+    display: flex;
+    gap: 1.1rem;
+    padding-block: 1.45rem;
+    color: rgb(var(--color-foreground-rgb) / 0.86);
+    cursor: pointer;
+    font-size: 0.875rem;
+    line-height: 1.35;
+    list-style: none;
+  }
+
+  .partners-page__faq summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .partners-page__faq summary span {
+    color: rgb(var(--color-foreground-rgb) / 0.42);
+    transition: transform 180ms ease;
+  }
+
+  .partners-page__faq-item[open] summary span {
+    transform: rotate(90deg);
+  }
+
+  .partners-page__faq-answer {
+    max-width: 48rem;
+    padding: 0 0 1.45rem 2rem;
+  }
+
+  .partners-page__final-cta {
+    display: grid;
+    justify-items: center;
+    gap: 1.3rem;
+    max-width: 58rem;
+    margin: clamp(3.5rem, 7vw, 6rem) auto 0;
+    padding: clamp(1.75rem, 4vw, 3rem);
+    text-align: center;
+  }
+
+  .partners-page__final-cta h2 {
+    max-width: 42rem;
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 4rem);
+    letter-spacing: -0.06em;
+    line-height: 0.95;
+    text-transform: uppercase;
+  }
+
+  .partners-page__cta-copy {
+    max-width: 38rem;
+    color: rgb(var(--color-foreground-rgb) / 0.58);
+    font-size: clamp(1rem, 1.4vw, 1.2rem);
+    line-height: 1.45;
+  }
+
+  @media screen and (max-width: 989px) {
+    .partners-page__stats,
+    .partners-page__steps,
+    .partners-page__benefits {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .partners-page__stat:nth-child(3) {
+      border-inline-start: 0;
+      border-block-start: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
+    }
+
+    .partners-page__stat:nth-child(4) {
+      border-block-start: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .partners-page {
+      padding-block: 2.5rem 4rem;
+    }
+
+    .partners-page__hero {
+      min-height: auto;
+      padding-block: 2.75rem 4rem;
+    }
+
+    .partners-page__title {
+      font-size: clamp(2.6rem, 12vw, 3.8rem);
+    }
+
+    .partners-page__stats,
+    .partners-page__steps,
+    .partners-page__benefits {
+      grid-template-columns: 1fr;
+    }
+
+    .partners-page__stat + .partners-page__stat,
+    .partners-page__stat:nth-child(3),
+    .partners-page__stat:nth-child(4) {
+      border-inline-start: 0;
+      border-block-start: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
+    }
+
+    .partners-page__actions {
+      align-items: stretch;
+      flex-direction: column;
+      width: 100%;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Partners page",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "text",
+      "id": "apply_url",
+      "label": "Apply URL",
+      "default": "mailto:support@simmsresearch.com?subject=Research%20Partners%20Application"
+    },
+    {
+      "type": "header",
+      "content": "Hero"
+    },
+    {
+      "type": "text",
+      "id": "hero_eyebrow",
+      "label": "Eyebrow",
+      "default": "Research Partner Program"
+    },
+    {
+      "type": "text",
+      "id": "hero_heading",
+      "label": "Heading",
+      "default": "Earn With Simms Research"
+    },
+    {
+      "type": "richtext",
+      "id": "hero_subhead",
+      "label": "Subhead",
+      "default": "<p>Refer researchers to a trusted source of premium research compounds and earn 15% commission on every sale — paid out every week.</p>"
+    },
+    {
+      "type": "text",
+      "id": "hero_button_label",
+      "label": "Primary button label",
+      "default": "Apply Now"
+    },
+    {
+      "type": "text",
+      "id": "secondary_label",
+      "label": "Secondary link label",
+      "default": "Questions? Contact"
+    },
+    {
+      "type": "url",
+      "id": "secondary_url",
+      "label": "Secondary link"
+    },
+    {
+      "type": "text",
+      "id": "hero_microcopy",
+      "label": "Microcopy",
+      "default": "For research use only"
+    },
+    {
+      "type": "header",
+      "content": "Stats"
+    },
+    {
+      "type": "text",
+      "id": "stat_1_value",
+      "label": "Stat 1 value",
+      "default": "15%"
+    },
+    {
+      "type": "text",
+      "id": "stat_1_label",
+      "label": "Stat 1 label",
+      "default": "Starting commission"
+    },
+    {
+      "type": "text",
+      "id": "stat_2_value",
+      "label": "Stat 2 value",
+      "default": "$250"
+    },
+    {
+      "type": "text",
+      "id": "stat_2_label",
+      "label": "Stat 2 label",
+      "default": "Minimum payout"
+    },
+    {
+      "type": "text",
+      "id": "stat_3_value",
+      "label": "Stat 3 value",
+      "default": "Weekly"
+    },
+    {
+      "type": "text",
+      "id": "stat_3_label",
+      "label": "Stat 3 label",
+      "default": "Payout schedule"
+    },
+    {
+      "type": "text",
+      "id": "stat_4_value",
+      "label": "Stat 4 value",
+      "default": "Real-Time"
+    },
+    {
+      "type": "text",
+      "id": "stat_4_label",
+      "label": "Stat 4 label",
+      "default": "Earnings dashboard"
+    },
+    {
+      "type": "header",
+      "content": "How it works"
+    },
+    {
+      "type": "text",
+      "id": "steps_eyebrow",
+      "label": "Eyebrow",
+      "default": "Simple Process"
+    },
+    {
+      "type": "text",
+      "id": "steps_heading",
+      "label": "Heading",
+      "default": "How It Works"
+    },
+    {
+      "type": "text",
+      "id": "step_1_title",
+      "label": "Step 1 title",
+      "default": "Apply & get approved"
+    },
+    {
+      "type": "textarea",
+      "id": "step_1_body",
+      "label": "Step 1 body",
+      "default": "Fill out a quick application. We review every research partner to keep the program high-quality and well-supported."
+    },
+    {
+      "type": "text",
+      "id": "step_2_title",
+      "label": "Step 2 title",
+      "default": "Get your unique link"
+    },
+    {
+      "type": "textarea",
+      "id": "step_2_body",
+      "label": "Step 2 body",
+      "default": "Once approved, you receive a personal tracking link to share with your research audience."
+    },
+    {
+      "type": "text",
+      "id": "step_3_title",
+      "label": "Step 3 title",
+      "default": "Drive traffic"
+    },
+    {
+      "type": "textarea",
+      "id": "step_3_body",
+      "label": "Step 3 body",
+      "default": "Refer researchers and scientists to Simms Research. Our product pages and COA visibility support conversion."
+    },
+    {
+      "type": "text",
+      "id": "step_4_title",
+      "label": "Step 4 title",
+      "default": "Get paid weekly"
+    },
+    {
+      "type": "textarea",
+      "id": "step_4_body",
+      "label": "Step 4 body",
+      "default": "Commissions are tracked in real time. Once you hit the $250 minimum threshold, payouts go out every week."
+    },
+    {
+      "type": "header",
+      "content": "Benefits"
+    },
+    {
+      "type": "text",
+      "id": "benefits_eyebrow",
+      "label": "Eyebrow",
+      "default": "Why Join"
+    },
+    {
+      "type": "text",
+      "id": "benefits_heading",
+      "label": "Heading",
+      "default": "Built For Serious Research Partners"
+    },
+    {
+      "type": "text",
+      "id": "benefit_1_title",
+      "label": "Benefit 1 title",
+      "default": "Commission from day one"
+    },
+    {
+      "type": "textarea",
+      "id": "benefit_1_body",
+      "label": "Benefit 1 body",
+      "default": "Start earning 15% on every referred sale immediately — no ramp-up period, no tiers to unlock."
+    },
+    {
+      "type": "text",
+      "id": "benefit_2_title",
+      "label": "Benefit 2 title",
+      "default": "Products people trust"
+    },
+    {
+      "type": "textarea",
+      "id": "benefit_2_body",
+      "label": "Benefit 2 body",
+      "default": "Promote research compounds backed by product specifications, batch verification, and Certificates of Analysis."
+    },
+    {
+      "type": "text",
+      "id": "benefit_3_title",
+      "label": "Benefit 3 title",
+      "default": "Weekly payouts"
+    },
+    {
+      "type": "textarea",
+      "id": "benefit_3_body",
+      "label": "Benefit 3 body",
+      "default": "Payouts are processed weekly once your account reaches the $250 minimum payout threshold."
+    },
+    {
+      "type": "text",
+      "id": "benefit_4_title",
+      "label": "Benefit 4 title",
+      "default": "Real-time dashboard"
+    },
+    {
+      "type": "textarea",
+      "id": "benefit_4_body",
+      "label": "Benefit 4 body",
+      "default": "Track clicks, conversions, and commission activity through your research partner dashboard."
+    },
+    {
+      "type": "text",
+      "id": "benefit_5_title",
+      "label": "Benefit 5 title",
+      "default": "No cap on earnings"
+    },
+    {
+      "type": "textarea",
+      "id": "benefit_5_body",
+      "label": "Benefit 5 body",
+      "default": "There is no ceiling. Drive more qualified traffic and your commission scales with your effort."
+    },
+    {
+      "type": "text",
+      "id": "benefit_6_title",
+      "label": "Benefit 6 title",
+      "default": "Long cookie window"
+    },
+    {
+      "type": "textarea",
+      "id": "benefit_6_body",
+      "label": "Benefit 6 body",
+      "default": "Referral attribution remains active for returning customers within the program cookie window."
+    },
+    {
+      "type": "header",
+      "content": "FAQ"
+    },
+    {
+      "type": "text",
+      "id": "faq_eyebrow",
+      "label": "Eyebrow",
+      "default": "Questions"
+    },
+    {
+      "type": "text",
+      "id": "faq_heading",
+      "label": "Heading",
+      "default": "Common Questions"
+    },
+    {
+      "type": "header",
+      "content": "Final CTA"
+    },
+    {
+      "type": "text",
+      "id": "cta_eyebrow",
+      "label": "Eyebrow",
+      "default": "Ready to earn"
+    },
+    {
+      "type": "text",
+      "id": "cta_heading",
+      "label": "Heading",
+      "default": "Start earning 15% from your first sale"
+    },
+    {
+      "type": "richtext",
+      "id": "cta_body",
+      "label": "Body",
+      "default": "<p>Apply to become a Simms Research partner, get your tracking link, and start earning weekly commissions on every research compound sale you refer.</p>"
+    },
+    {
+      "type": "text",
+      "id": "cta_button_label",
+      "label": "Button label",
+      "default": "Apply Now"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "FAQ item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Question"
+        },
+        {
+          "type": "textarea",
+          "id": "answer",
+          "label": "Answer",
+          "default": "Answer"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Partners page"
+    }
+  ]
+}
+{% endschema %}
