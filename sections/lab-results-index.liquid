@@ -79,6 +79,23 @@
         <p class="lab-results__subhead">{{ section.settings.subhead | escape }}</p>
       {%- endif -%}
 
+      {%- # 2. Search -%}
+      <div class="lab-results__search" data-lab-search-wrap>
+        <svg class="lab-results__search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.25"/>
+          <path d="m11 11 3 3" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/>
+        </svg>
+        <input
+          type="search"
+          class="lab-results__search-input"
+          placeholder="Search compound, CAS, or batch ID"
+          aria-label="Search lab results"
+          data-lab-search
+          autocomplete="off"
+          spellcheck="false"
+        >
+      </div>
+
       <dl class="lab-results__stats">
         <div class="lab-results__stat">
           <dt>Batches tested</dt>
@@ -98,23 +115,6 @@
         </div>
       </dl>
     </header>
-
-    {%- # 2. Search -%}
-    <div class="lab-results__search" data-lab-search-wrap>
-      <svg class="lab-results__search-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-        <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.25"/>
-        <path d="m11 11 3 3" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/>
-      </svg>
-      <input
-        type="search"
-        class="lab-results__search-input"
-        placeholder="Search by compound, batch ID, or CAS"
-        aria-label="Search lab results"
-        data-lab-search
-        autocomplete="off"
-        spellcheck="false"
-      >
-    </div>
 
     {%- if entries_present -%}
 
@@ -271,7 +271,8 @@
         {%- endfor -%}
 
         <li class="lab-results__no-results" data-lab-no-results hidden>
-          <p>No matches. Try a different compound, batch ID, or CAS.</p>
+          <p>No matching lab records.</p>
+          <button type="button" data-lab-clear-search>Clear search</button>
         </li>
       </ul>
 
@@ -452,6 +453,11 @@
             this.clearHash();
             return;
           }
+          if (event.target.closest('[data-lab-clear-search]')) {
+            event.preventDefault();
+            this.clearSearch();
+            return;
+          }
         }
 
         applyHash() {
@@ -490,6 +496,13 @@
         scheduleSearch() {
           if (this.searchTimer) cancelAnimationFrame(this.searchTimer);
           this.searchTimer = requestAnimationFrame(() => this.applySearch());
+        }
+
+        clearSearch() {
+          if (!this.searchInput) return;
+          this.searchInput.value = '';
+          this.applySearch();
+          this.searchInput.focus();
         }
 
         applySearch() {
@@ -566,14 +579,14 @@
   /* ---------- Hero ---------- */
 
   .lab-results__hero {
-    margin-block-end: clamp(2.5rem, 5vw, 4rem);
+    margin-block-end: clamp(2rem, 4vw, 3rem);
   }
 
   .lab-results__eyebrow {
     font-family: var(--font-mono--family);
     font-size: 0.6875rem;
     font-weight: 500;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     color: rgb(var(--color-foreground-rgb) / 0.55);
     margin: 0 0 1.25rem 0;
@@ -595,17 +608,17 @@
     line-height: 1.5;
     color: rgb(var(--color-foreground-rgb) / 0.55);
     max-width: 56ch;
-    margin: 0 0 clamp(2.5rem, 4vw, 3.5rem) 0;
+    margin: 0 0 1.5rem 0;
   }
 
   .lab-results__stats {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: clamp(1rem, 3vw, 2.5rem);
+    gap: clamp(0.875rem, 2vw, 1.5rem);
     border: 1px solid rgb(var(--color-foreground-rgb) / 0.08);
     border-radius: 16px;
     background: rgb(var(--color-foreground-rgb) / 0.04);
-    padding: clamp(1.75rem, 3vw, 2.5rem);
+    padding: clamp(1.25rem, 2.2vw, 1.75rem);
     margin: 0;
   }
 
@@ -621,7 +634,7 @@
     font-family: var(--font-mono--family);
     font-size: 0.6875rem;
     font-weight: 500;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     color: rgb(var(--color-foreground-rgb) / 0.5);
     margin: 0;
@@ -641,8 +654,8 @@
 
   .lab-results__search {
     position: relative;
-    max-width: 720px;
-    margin-block-end: clamp(1.75rem, 3vw, 2.5rem);
+    max-width: 56rem;
+    margin-block-end: 1rem;
   }
 
   .lab-results__search-icon {
@@ -688,14 +701,14 @@
     padding: 0;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1.25rem;
+    gap: 1rem;
   }
 
   .lab-results__grid[hidden] { display: none; }
 
   .lab-results__no-results {
     grid-column: 1 / -1;
-    padding: 3rem 1rem;
+    padding: 2.5rem 1rem;
     text-align: center;
     color: rgb(var(--color-foreground-rgb) / 0.5);
     font-family: var(--font-mono--family);
@@ -704,14 +717,34 @@
 
   .lab-results__no-results p { margin: 0; }
 
+  .lab-results__no-results button {
+    appearance: none;
+    margin-block-start: 1rem;
+    border: 1px solid rgb(var(--color-foreground-rgb) / 0.2);
+    border-radius: 999px;
+    background: transparent;
+    padding: 0.65rem 1rem;
+    color: var(--color-foreground);
+    cursor: pointer;
+    font: inherit;
+    transition: border-color 120ms ease, background 120ms ease;
+  }
+
+  .lab-results__no-results button:hover,
+  .lab-results__no-results button:focus-visible {
+    border-color: var(--color-foreground);
+    background: #e4f5ff;
+    outline: none;
+  }
+
   .lab-card {
     list-style: none;
     border: 1px solid rgb(var(--color-foreground-rgb) / 0.08);
     border-radius: 16px;
-    padding: 1.5rem 1.5rem 1.25rem 1.5rem;
+    padding: 1.25rem 1.25rem 1rem 1.25rem;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.85rem;
     transition: border-color 160ms ease, background 160ms ease;
     background: rgb(var(--color-foreground-rgb) / 0.04);
   }
@@ -739,7 +772,7 @@
     font-family: var(--font-mono--family);
     font-size: 0.6875rem;
     font-weight: 500;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     color: rgb(var(--color-foreground-rgb) / 0.5);
     margin: 0;
@@ -763,7 +796,7 @@
     align-items: center;
     column-gap: 1rem;
     row-gap: 0.4rem;
-    padding-block: 0.875rem;
+    padding-block: 0.72rem;
     border-block-end: 1px solid rgb(var(--color-foreground-rgb) / 0.08);
     font-family: var(--font-mono--family);
     font-size: 0.8125rem;
@@ -857,7 +890,7 @@
     color: rgb(var(--color-foreground-rgb) / 0.66);
     text-decoration: none;
     border-block-start: 1px solid rgb(var(--color-foreground-rgb) / 0.08);
-    padding-block-start: 0.875rem;
+    padding-block-start: 0.75rem;
     width: 100%;
     transition: color 120ms ease;
   }
@@ -966,7 +999,7 @@
 
   .lab-results__table th,
   .lab-results__table td {
-    padding: 0.875rem 1rem;
+    padding: 0.72rem 0.875rem;
     text-align: left;
     border-block-end: 1px solid rgb(var(--color-foreground-rgb) / 0.08);
     vertical-align: middle;
@@ -980,7 +1013,7 @@
   .lab-results__table th {
     font-size: 0.6875rem;
     font-weight: 500;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     color: rgb(var(--color-foreground-rgb) / 0.5);
     background: rgb(var(--color-foreground-rgb) / 0.025);
@@ -1070,7 +1103,7 @@
     font-family: var(--font-mono--family);
     font-size: 0.6875rem;
     font-weight: 500;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     color: rgb(var(--color-foreground-rgb) / 0.5);
     margin: 0;
@@ -1151,7 +1184,7 @@
     font-family: var(--font-mono--family);
     font-size: 0.75rem;
     font-weight: 500;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     color: rgb(var(--color-foreground-rgb) / 0.66);
     margin: 0;
