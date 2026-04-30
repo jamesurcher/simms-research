@@ -7,6 +7,32 @@
 {% endcomment %}
 
 {% style %}
+  /* ---- Homepage transparent header ------------------------------------
+     Horizon subtracts header height from full-screen heroes. When the
+     homepage header is transparent, the hero already sits underneath it, so
+     removing the offset prevents the white band at the bottom of the fold. */
+
+  body:has(> #header-group > .header-section > #header-component[transparent])
+    .content-for-layout > .shopify-section:first-child .hero-wrapper:first-child {
+    --hero-height-offset: 0px;
+  }
+
+  body:has(> #header-group > .header-section > #header-component[transparent])
+    .content-for-layout > .shopify-section:first-child .hero {
+    min-height: var(--hero-min-height, 100svh) !important;
+  }
+
+  #header-component[transparent='not-sticky']:not([data-sticky-state='active']):not(:hover):not(:focus-within)
+    :is(.menu-list__link, .header-actions__action, .account-button__icon, .account-button__text) {
+    color: rgb(255 255 255 / 1);
+  }
+
+  #header-component[transparent='not-sticky']:not([data-sticky-state='active']):not(:hover):not(:focus-within)
+    .header__row {
+    --button-color: rgb(255 255 255 / 1);
+    --color-account-icon: rgb(255 255 255 / 1);
+  }
+
   /* ---- Product card: labeled CTA pill ----------------------------------
      Default Horizon quick-add is a 36px icon overlay positioned over the
      image, only revealed on hover. Per brief §3 move 4, replace with an
@@ -138,8 +164,18 @@
 
   @media screen and (min-width: 1200px) {
     .product-information__media media-gallery {
-      max-width: 35rem;
+      max-width: min(35rem, 42vw);
       margin-inline-start: auto;
+    }
+
+    .product-information__media .product-media-container,
+    .product-information__media .product-media {
+      max-height: min(72dvh, 46rem);
+    }
+
+    .product-information__media .product-media img {
+      max-height: min(72dvh, 46rem);
+      object-fit: contain;
     }
   }
 
@@ -160,6 +196,10 @@
     margin-block-start: 1.45rem;
     padding-block-start: 1.35rem;
     border-top: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
+  }
+
+  .product-research-details__section + .product-research-details__section--specs {
+    border-top: 0;
   }
 
   .product-research-details__eyebrow {
@@ -205,13 +245,16 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0;
     margin: 0;
-    border-top: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
   }
 
   .product-research-details__spec {
     min-width: 0;
     padding: 0.82rem 0.9rem 0.82rem 0;
     border-bottom: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
+  }
+
+  .product-research-details__spec:nth-last-child(-n + 2) {
+    border-bottom: 0;
   }
 
   .product-research-details__spec dt {
@@ -234,18 +277,10 @@
     overflow-wrap: anywhere;
   }
 
-  .product-research-details__note,
-  .product-research-details__notice {
+  .product-research-details__note {
     color: rgb(var(--color-foreground-rgb) / 0.68);
     font-size: 0.9375rem;
     line-height: 1.5;
-  }
-
-  .product-research-details__notice {
-    padding: 0.9rem 1rem;
-    border: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
-    border-radius: 14px;
-    background: rgb(var(--color-foreground-rgb) / 0.025);
   }
 
   /* ---- PDP batch verification / COA module -----------------------------

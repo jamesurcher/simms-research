@@ -259,7 +259,7 @@
                       "type": "text",
                       "name": "t:names.text",
                       "settings": {
-                        "text": "<p>Home</p><p>About</p><p>Shop</p><p><a href=\"/pages/lab-results\">Lab Results</a></p><p>FAQ</p><p>Partners</p>",
+                        "text": "<p><a href=\"/\">Home</a></p><p><a href=\"/pages/about\">About</a></p><p><a href=\"/collections/all\">Shop</a></p><p><a href=\"/pages/lab-results\">Lab Results</a></p><p><a href=\"/pages/faq\">FAQ</a></p><p><a href=\"/pages/partners\">Partners</a></p>",
                         "width": "fit-content",
                         "max_width": "normal",
                         "alignment": "left",
@@ -357,7 +357,7 @@
                       "type": "text",
                       "name": "t:names.text",
                       "settings": {
-                        "text": "<p>Terms & Conditions</p><p>Privacy Policy</p><p>Refund & Return</p><p>Shipping Policy</p>",
+                        "text": "<p><a href=\"/pages/terms-conditions\">Terms & Conditions</a></p><p><a href=\"/pages/privacy-policy\">Privacy Policy</a></p><p><a href=\"/pages/refund-return\">Refund & Return</a></p><p><a href=\"/pages/shipping-policy\">Shipping Policy</a></p>",
                         "width": "fit-content",
                         "max_width": "normal",
                         "alignment": "left",
@@ -455,7 +455,7 @@
                       "type": "text",
                       "name": "t:names.text",
                       "settings": {
-                        "text": "<p>support@simmsresearch.com</p><p>Arizona, United States</p>",
+                        "text": "<p><a href=\"mailto:support@simmsresearch.com\">support@simmsresearch.com</a></p><p>Arizona, United States</p>",
                         "width": "fit-content",
                         "max_width": "normal",
                         "alignment": "left",

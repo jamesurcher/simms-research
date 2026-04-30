@@ -2,8 +2,14 @@
   assign form_id = 'ContactPageForm-' | append: section.id
 %}
 
-<section class="contact-page color-{{ section.settings.color_scheme }}">
-  <div class="contact-page__shell">
+<section
+  class="contact-page section section--page-width color-{{ section.settings.color_scheme }}"
+  style="
+    --contact-page-padding-block-start: {{ section.settings.padding_block_start }}px;
+    --contact-page-padding-block-end: {{ section.settings.padding_block_end }}px;
+  "
+>
+  <div class="contact-page__inner">
     <div class="contact-page__header">
       <p class="contact-page__eyebrow">{{ section.settings.eyebrow }}</p>
       <h1 class="contact-page__title">{{ section.settings.heading }}</h1>
@@ -144,23 +150,18 @@
 
 {% stylesheet %}
   .contact-page {
-    padding-block: clamp(3rem, 7vw, 6.5rem);
+    padding-block-start: var(--contact-page-padding-block-start, 48px);
+    padding-block-end: var(--contact-page-padding-block-end, 120px);
     background:
       radial-gradient(circle at 15% 10%, rgb(var(--color-foreground-rgb) / 0.035), transparent 28rem),
       rgb(var(--color-background-rgb));
   }
 
-  .contact-page__shell {
+  .contact-page__inner {
     display: grid;
     gap: clamp(2rem, 4vw, 3.8rem);
-    width: min(100% - 2rem, 85rem);
+    width: 85%;
     margin-inline: auto;
-  }
-
-  @media screen and (min-width: 750px) {
-    .contact-page__shell {
-      width: min(72.25vw, 85rem);
-    }
   }
 
   .contact-page__header {
@@ -183,9 +184,9 @@
   .contact-page__title {
     max-width: 40rem;
     margin: 0.85rem 0 0;
-    font-size: clamp(3rem, 4.2vw, 4rem);
-    letter-spacing: -0.055em;
-    line-height: 0.96;
+    font-size: clamp(2rem, 3.6vw, 2.75rem);
+    letter-spacing: -0.045em;
+    line-height: 1;
   }
 
   .contact-page__intro {
@@ -347,12 +348,12 @@
   }
 
   @media screen and (max-width: 749px) {
-    .contact-page {
-      padding-block: 2.5rem 4rem;
+    .contact-page__inner {
+      width: 100%;
     }
 
     .contact-page__title {
-      font-size: clamp(2.8rem, 16vw, 4rem);
+      font-size: clamp(2.25rem, 11vw, 2.75rem);
     }
 
     .contact-page__row,
@@ -376,6 +377,30 @@
       "id": "color_scheme",
       "label": "Color scheme",
       "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_block_start",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 8,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_block_end",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 240,
+      "step": 8,
+      "unit": "px",
+      "default": 120
     },
     {
       "type": "text",

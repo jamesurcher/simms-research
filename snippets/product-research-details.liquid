@@ -1,0 +1,159 @@
+{%- doc -%}
+  Renders the PDP research profile and technical detail stack.
+
+  Expected backend model:
+  - product description supplies the research profile prose.
+  - product metafields in the `details` namespace supply technical rows:
+    cas, formula, molecular_weight, sequence, form, solubility, storage.
+  - product metafield `spec.purity` supplies purity.
+
+  @param {object} product_resource - Product to render details for.
+  @param {object} [block] - Theme block object for editor attributes.
+{%- enddoc -%}
+
+{% liquid
+  assign product_resource = product_resource | default: closest.product | default: product
+  assign description_html = product_resource.description | default: blank
+  assign normalized_description = description_html | replace: '<p>&nbsp;</p>', '' | strip
+  assign research_lead = blank
+
+  capture research_body
+    if normalized_description != blank
+      assign description_parts = normalized_description | split: '</p>'
+      for description_part in description_parts
+        assign cleaned_part = description_part | strip
+        if cleaned_part != blank
+          unless cleaned_part contains '<p'
+            assign cleaned_part = '<p>' | append: cleaned_part
+          endunless
+          assign paragraph_html = cleaned_part | append: '</p>'
+
+          if research_lead == blank
+            assign research_lead = paragraph_html
+          else
+            echo paragraph_html
+          endif
+        endif
+      endfor
+    endif
+  endcapture
+
+  assign research_body = research_body | strip
+
+  assign details_cas = product_resource.metafields.spec.cas.value | default: product_resource.metafields.details.cas.value
+  assign details_formula = product_resource.metafields.details.formula.value
+  assign details_molecular_weight = product_resource.metafields.details.molecular_weight.value
+  assign details_sequence = product_resource.metafields.details.sequence.value
+  assign details_form = product_resource.metafields.details.form.value
+  assign details_solubility = product_resource.metafields.details.solubility.value
+  assign details_storage = product_resource.metafields.details.storage.value
+  assign specs_count = 0
+  if details_cas != blank
+    assign specs_count = specs_count | plus: 1
+  endif
+  if details_formula != blank
+    assign specs_count = specs_count | plus: 1
+  endif
+  if details_molecular_weight != blank
+    assign specs_count = specs_count | plus: 1
+  endif
+  if details_sequence != blank
+    assign specs_count = specs_count | plus: 1
+  endif
+  if details_form != blank
+    assign specs_count = specs_count | plus: 1
+  endif
+  if details_solubility != blank
+    assign specs_count = specs_count | plus: 1
+  endif
+  if details_storage != blank
+    assign specs_count = specs_count | plus: 1
+  endif
+%}
+
+<product-research-details
+  class="product-research-details"
+  {% if block != blank %}
+    {{ block.shopify_attributes }}
+  {% endif %}
+>
+  {% if research_lead != blank %}
+    <section class="product-research-details__section product-research-details__section--profile">
+      <p class="product-research-details__eyebrow">Research Profile</p>
+      <rte-formatter class="product-research-details__lead rte">
+        {{ research_lead }}
+      </rte-formatter>
+
+      {% if research_body != blank %}
+        <rte-formatter class="product-research-details__body rte">
+          {{ research_body }}
+        </rte-formatter>
+      {% endif %}
+    </section>
+  {% endif %}
+
+  {% if specs_count >= 2 %}
+    <section class="product-research-details__section product-research-details__section--specs">
+      <p class="product-research-details__eyebrow">Technical Specifications</p>
+      <dl class="product-research-details__spec-grid">
+        {% if details_cas != blank %}
+          <div class="product-research-details__spec">
+            <dt>CAS Number</dt>
+            <dd>{{ details_cas | escape }}</dd>
+          </div>
+        {% endif %}
+
+        {% if details_formula != blank %}
+          <div class="product-research-details__spec">
+            <dt>Molecular Formula</dt>
+            <dd>{{ details_formula | escape }}</dd>
+          </div>
+        {% endif %}
+
+        {% if details_molecular_weight != blank %}
+          <div class="product-research-details__spec">
+            <dt>Molecular Weight</dt>
+            <dd>{{ details_molecular_weight | escape }}</dd>
+          </div>
+        {% endif %}
+
+        {% if details_sequence != blank %}
+          <div class="product-research-details__spec">
+            <dt>Sequence</dt>
+            <dd>{{ details_sequence | escape }}</dd>
+          </div>
+        {% endif %}
+
+        {% if details_form != blank %}
+          <div class="product-research-details__spec">
+            <dt>Form</dt>
+            <dd>{{ details_form | escape }}</dd>
+          </div>
+        {% endif %}
+
+        {% if details_solubility != blank %}
+          <div class="product-research-details__spec">
+            <dt>Solubility</dt>
+            <dd>{{ details_solubility | escape }}</dd>
+          </div>
+        {% endif %}
+
+        {% if details_storage != blank %}
+          <div class="product-research-details__spec">
+            <dt>Storage</dt>
+            <dd>{{ details_storage | escape | newline_to_br }}</dd>
+          </div>
+        {% endif %}
+      </dl>
+    </section>
+  {% endif %}
+
+  {% if details_storage != blank %}
+    <section class="product-research-details__section product-research-details__section--handling">
+      <p class="product-research-details__eyebrow">Handling / Storage</p>
+      <div class="product-research-details__note">
+        {{ details_storage | escape | newline_to_br }}
+      </div>
+    </section>
+  {% endif %}
+</product-research-details>

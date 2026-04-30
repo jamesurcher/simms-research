@@ -246,7 +246,7 @@
             },
             "text_batch_verification": {
               "type": "text",
-              "name": "Lab test results",
+              "name": "Certificate of Analysis",
               "settings": {
                 "text": "<p>Certificate of Analysis</p>",
                 "width": "100%",
@@ -270,15 +270,15 @@
               },
               "blocks": {}
             },
-            "text_aEtTtq": {
+            "text_product_research_details": {
               "type": "text",
-              "name": "Product description",
+              "name": "Research details",
               "settings": {
-                "text": "{{ closest.product.description }}",
+                "text": "<p>Research details</p>",
                 "width": "100%",
                 "max_width": "normal",
                 "alignment": "left",
-                "type_preset": "rte",
+                "type_preset": "paragraph",
                 "font": "var(--font-primary--family)",
                 "font_size": "",
                 "line_height": "normal",
@@ -302,7 +302,7 @@
             "divider_VJhene",
             "variant_picker_R3rGDr",
             "buy_buttons_eYQEYi",
-            "text_aEtTtq",
+            "text_product_research_details",
             "text_batch_verification"
           ]
         }

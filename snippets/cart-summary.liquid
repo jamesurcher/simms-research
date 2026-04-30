@@ -220,6 +220,38 @@
   {% endif %}
 
   {%- liquid
+    assign free_shipping_threshold = 25000
+    assign free_shipping_remaining = free_shipping_threshold | minus: cart.total_price
+    assign free_shipping_progress = cart.total_price | times: 100 | divided_by: free_shipping_threshold
+    if free_shipping_progress > 100
+      assign free_shipping_progress = 100
+    endif
+  -%}
+
+  <div class="cart-conversion">
+    <div class="cart-free-shipping">
+      <div class="cart-free-shipping__label">
+        {%- if free_shipping_remaining > 0 -%}
+          <span>{{ free_shipping_remaining | money }} away from free shipping</span>
+          <span>$250 threshold</span>
+        {%- else -%}
+          <span>Free shipping unlocked</span>
+          <span>$250 threshold met</span>
+        {%- endif -%}
+      </div>
+      <div class="cart-free-shipping__track" aria-hidden="true">
+        <span style="--cart-free-shipping-progress: {{ free_shipping_progress }}%;"></span>
+      </div>
+    </div>
+
+    <ul class="cart-reassurance" role="list">
+      <li>Research use only</li>
+      <li>Secure Shopify checkout</li>
+      <li>Shipping calculated at checkout</li>
+    </ul>
+  </div>
+
+  {%- liquid
     if settings.currency_code_enabled_cart_total
       assign total_price = cart.total_price | money_with_currency
     else
@@ -364,7 +396,7 @@
   .cart-totals {
     display: flex;
     flex-direction: column;
-    gap: var(--gap-xl);
+    gap: var(--gap-lg);
     width: 100%;
     border-block-start: none;
 
@@ -471,6 +503,91 @@
     width: 100%;
     height: clamp(25px, var(--height-buy-buttons), 55px);
     padding-inline: var(--padding-4xl);
+    border-radius: 999px;
+    background: #000;
+    color: #fff;
+  }
+
+  .cart__ctas .cart__checkout-button:hover,
+  .cart__ctas .cart__checkout-button:focus-visible {
+    background: #e4f5ff;
+    border-color: #111;
+    color: #111;
+  }
+
+  .cart-conversion {
+    display: grid;
+    gap: 0.9rem;
+    padding: 1rem;
+    border: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
+    border-radius: 16px;
+    background: rgb(var(--color-foreground-rgb) / 0.035);
+  }
+
+  .cart-free-shipping {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .cart-free-shipping__label {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    font-family: var(--font-mono--family);
+    font-size: 0.75rem;
+    line-height: 1.25;
+    color: rgb(var(--color-foreground-rgb) / 0.7);
+  }
+
+  .cart-free-shipping__label span:first-child {
+    color: var(--color-foreground);
+  }
+
+  .cart-free-shipping__label span:last-child {
+    color: rgb(var(--color-foreground-rgb) / 0.45);
+  }
+
+  .cart-free-shipping__track {
+    overflow: hidden;
+    height: 0.45rem;
+    border-radius: 999px;
+    background: rgb(var(--color-foreground-rgb) / 0.08);
+  }
+
+  .cart-free-shipping__track span {
+    display: block;
+    width: var(--cart-free-shipping-progress);
+    height: 100%;
+    border-radius: inherit;
+    background: #009b57;
+  }
+
+  .cart-reassurance {
+    display: grid;
+    gap: 0.35rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--font-mono--family);
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgb(var(--color-foreground-rgb) / 0.5);
+  }
+
+  .cart-reassurance li {
+    display: flex;
+    gap: 0.45rem;
+    align-items: center;
+  }
+
+  .cart-reassurance li::before {
+    content: "";
+    width: 0.35rem;
+    height: 0.35rem;
+    border-radius: 999px;
+    background: rgb(var(--color-foreground-rgb) / 0.32);
   }
 
   .cart-drawer__summary .cart-totals:not(:has(.cart-totals__original-container:empty)) {

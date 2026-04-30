@@ -16,14 +16,14 @@
           "type": "faq",
           "settings": {
             "question": "What is the commission rate?",
-            "answer": "Research partners start at 15% commission on every referred sale."
+            "answer": "Research partners start at 20% commission on every referred sale."
           }
         },
         "faq_payout": {
           "type": "faq",
           "settings": {
             "question": "When do I get paid?",
-            "answer": "Payouts are processed weekly once your account reaches the $250 minimum payout threshold."
+            "answer": "Payouts are processed on a bi-weekly cadence."
           }
         },
         "faq_payment": {
