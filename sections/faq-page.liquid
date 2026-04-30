@@ -2,8 +2,14 @@
   assign contact_url = section.settings.contact_url | default: '/pages/contact'
 %}
 
-<section class="faq-page color-{{ section.settings.color_scheme }}">
-  <div class="faq-page__shell">
+<section
+  class="faq-page section section--page-width color-{{ section.settings.color_scheme }}"
+  style="
+    --faq-page-padding-block-start: {{ section.settings.padding_block_start }}px;
+    --faq-page-padding-block-end: {{ section.settings.padding_block_end }}px;
+  "
+>
+  <div class="faq-page__inner">
     <header class="faq-page__hero">
       <p class="faq-page__eyebrow">{{ section.settings.eyebrow }}</p>
       <h1 class="faq-page__title">{{ section.settings.heading }}</h1>
@@ -161,21 +167,16 @@
 
 {% stylesheet %}
   .faq-page {
-    padding-block: clamp(3rem, 6vw, 6rem);
+    padding-block-start: var(--faq-page-padding-block-start, 48px);
+    padding-block-end: var(--faq-page-padding-block-end, 120px);
     background:
       radial-gradient(circle at 50% 0%, rgb(var(--color-foreground-rgb) / 0.035), transparent 28rem),
       rgb(var(--color-background-rgb));
   }
 
-  .faq-page__shell {
-    width: min(100% - 2rem, 85rem);
+  .faq-page__inner {
+    width: 85%;
     margin-inline: auto;
-  }
-
-  @media screen and (min-width: 750px) {
-    .faq-page__shell {
-      width: min(72.25vw, 85rem);
-    }
   }
 
   .faq-page__hero {
@@ -183,42 +184,44 @@
     justify-items: center;
     max-width: 48rem;
     margin-inline: auto;
-    padding-block: clamp(3rem, 6vw, 5.5rem);
+    padding-block-start: 0;
+    padding-block-end: clamp(3rem, 6vw, 5.5rem);
     text-align: center;
   }
 
   .faq-page__eyebrow,
   .faq-page__group h2,
-  .faq-page__item summary,
   .faq-page__group-mark {
     font-family: var(--font-mono--family);
     font-weight: var(--font-mono--weight);
-    letter-spacing: 0.16em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
   }
 
   .faq-page__eyebrow {
     margin: 0;
-    color: rgb(var(--color-foreground-rgb) / 0.48);
-    font-size: 0.75rem;
+    color: rgb(var(--color-foreground-rgb) / 0.55);
+    font-size: 0.6875rem;
     line-height: 1.2;
   }
 
   .faq-page__title {
+    font-family: var(--font-heading--family);
+    font-weight: 500;
     max-width: 44rem;
     margin: 1.15rem 0 0;
-    font-size: clamp(2.9rem, 5.8vw, 5.4rem);
-    letter-spacing: -0.07em;
-    line-height: 0.9;
-    text-transform: uppercase;
+    font-size: clamp(2rem, 3.6vw, 2.75rem);
+    letter-spacing: -0.015em;
+    line-height: 1.05;
   }
 
   .faq-page__intro {
+    font-family: var(--font-body--family);
     max-width: 42rem;
     margin-block-start: 1.25rem;
-    color: rgb(var(--color-foreground-rgb) / 0.58);
-    font-size: clamp(1.05rem, 1.55vw, 1.3rem);
-    line-height: 1.45;
+    color: rgb(var(--color-foreground-rgb) / 0.55);
+    font-size: 1rem;
+    line-height: 1.5;
   }
 
   .faq-page__intro p,
@@ -271,7 +274,7 @@
     color: rgb(var(--color-foreground-rgb) / 0.86);
     font-size: 1rem;
     line-height: 1.25;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.12em;
   }
 
   .faq-page__item {
@@ -286,8 +289,11 @@
     padding-block: 1.1rem;
     color: rgb(var(--color-foreground-rgb) / 0.84);
     cursor: pointer;
-    font-size: 0.875rem;
+    font-family: var(--font-body--family);
+    font-weight: 500;
+    font-size: 0.9375rem;
     line-height: 1.4;
+    letter-spacing: -0.005em;
     list-style: none;
   }
 
@@ -297,6 +303,7 @@
 
   .faq-page__chevron {
     flex: 0 0 auto;
+    font-family: var(--font-mono--family);
     color: rgb(var(--color-foreground-rgb) / 0.48);
     font-size: 1rem;
     transition: transform 180ms ease;
@@ -307,10 +314,11 @@
   }
 
   .faq-page__answer {
+    font-family: var(--font-body--family);
     max-width: 52rem;
     padding-block: 0 1.15rem;
-    color: rgb(var(--color-foreground-rgb) / 0.58);
-    font-size: 0.95rem;
+    color: rgb(var(--color-foreground-rgb) / 0.66);
+    font-size: 0.9375rem;
     line-height: 1.55;
   }
 
@@ -326,17 +334,19 @@
 
   .faq-page__cta h2 {
     margin: 0;
-    font-size: clamp(2rem, 4vw, 4rem);
-    letter-spacing: -0.06em;
-    line-height: 0.95;
-    text-transform: uppercase;
+    font-family: var(--font-heading--family);
+    font-weight: 500;
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    letter-spacing: -0.015em;
+    line-height: 1.1;
   }
 
   .faq-page__cta-copy {
+    font-family: var(--font-body--family);
     max-width: 36rem;
-    color: rgb(var(--color-foreground-rgb) / 0.58);
-    font-size: clamp(1rem, 1.35vw, 1.15rem);
-    line-height: 1.45;
+    color: rgb(var(--color-foreground-rgb) / 0.55);
+    font-size: 1rem;
+    line-height: 1.5;
   }
 
   .faq-page__button {
@@ -354,16 +364,16 @@
   }
 
   @media screen and (max-width: 749px) {
-    .faq-page {
-      padding-block: 2.5rem 4rem;
+    .faq-page__inner {
+      width: 100%;
     }
 
     .faq-page__hero {
-      padding-block: 2.75rem 4rem;
+      padding-block-end: 4rem;
     }
 
     .faq-page__title {
-      font-size: clamp(2.6rem, 12vw, 3.8rem);
+      font-size: clamp(1.75rem, 6.5vw, 2.25rem);
     }
 
     .faq-page__group {
@@ -385,6 +395,30 @@
       "id": "color_scheme",
       "label": "Color scheme",
       "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_block_start",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 8,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_block_end",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 240,
+      "step": 8,
+      "unit": "px",
+      "default": 120
     },
     {
       "type": "header",
