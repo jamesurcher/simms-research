@@ -3,8 +3,14 @@
   assign secondary_url = section.settings.secondary_url | default: '/pages/contact'
 %}
 
-<section class="partners-page color-{{ section.settings.color_scheme }}">
-  <div class="partners-page__shell">
+<section
+  class="partners-page section section--page-width color-{{ section.settings.color_scheme }}"
+  style="
+    --partners-page-padding-block-start: {{ section.settings.padding_block_start }}px;
+    --partners-page-padding-block-end: {{ section.settings.padding_block_end }}px;
+  "
+>
+  <div class="partners-page__inner">
     <header class="partners-page__hero">
       <p class="partners-page__eyebrow">{{ section.settings.hero_eyebrow }}</p>
       <h1 class="partners-page__title">{{ section.settings.hero_heading }}</h1>
@@ -134,21 +140,16 @@
 
 {% stylesheet %}
   .partners-page {
-    padding-block: clamp(3rem, 6vw, 5.5rem);
+    padding-block-start: var(--partners-page-padding-block-start, 48px);
+    padding-block-end: var(--partners-page-padding-block-end, 120px);
     background:
       radial-gradient(circle at 50% 0%, rgb(var(--color-foreground-rgb) / 0.035), transparent 28rem),
       rgb(var(--color-background-rgb));
   }
 
-  .partners-page__shell {
-    width: min(100% - 2rem, 85rem);
+  .partners-page__inner {
+    width: 85%;
     margin-inline: auto;
-  }
-
-  @media screen and (min-width: 750px) {
-    .partners-page__shell {
-      width: min(72.25vw, 85rem);
-    }
   }
 
   .partners-page__hero {
@@ -157,44 +158,44 @@
     max-width: 48rem;
     min-height: clamp(22rem, 42vw, 33rem);
     margin-inline: auto;
-    padding-block: clamp(3rem, 6vw, 5.5rem);
+    padding-block-start: 0;
+    padding-block-end: clamp(3rem, 6vw, 5.5rem);
     text-align: center;
   }
 
   .partners-page__eyebrow,
   .partners-page__micro,
-  .partners-page__stat span,
-  .partners-page__step h3,
-  .partners-page__card h3,
-  .partners-page__faq summary {
+  .partners-page__stat span {
     font-family: var(--font-mono--family);
     font-weight: var(--font-mono--weight);
-    letter-spacing: 0.16em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
   }
 
   .partners-page__eyebrow {
     margin: 0;
-    color: rgb(var(--color-foreground-rgb) / 0.48);
-    font-size: 0.75rem;
+    color: rgb(var(--color-foreground-rgb) / 0.55);
+    font-size: 0.6875rem;
     line-height: 1.2;
   }
 
   .partners-page__title {
-    max-width: 46rem;
+    font-family: var(--font-heading--family);
+    font-weight: 500;
+    max-width: 42rem;
     margin: 1.2rem 0 0;
-    font-size: clamp(2.9rem, 5.8vw, 5.4rem);
-    letter-spacing: -0.07em;
-    line-height: 0.9;
-    text-transform: uppercase;
+    font-size: clamp(2rem, 3.6vw, 2.75rem);
+    letter-spacing: -0.015em;
+    line-height: 1.05;
   }
 
   .partners-page__subhead {
+    font-family: var(--font-body--family);
     max-width: 40rem;
     margin-block-start: 1.25rem;
-    color: rgb(var(--color-foreground-rgb) / 0.58);
-    font-size: clamp(1.05rem, 1.55vw, 1.35rem);
-    line-height: 1.45;
+    color: rgb(var(--color-foreground-rgb) / 0.55);
+    font-size: 1rem;
+    line-height: 1.5;
   }
 
   .partners-page__subhead p,
@@ -212,11 +213,16 @@
   }
 
   .partners-page__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7rem;
     min-width: 12.5rem;
     min-height: 3.6rem;
     border-radius: 999px;
     background: var(--color-primary-button-background);
     color: var(--color-primary-button-text);
+    white-space: nowrap;
   }
 
   .partners-page__button:hover {
@@ -226,7 +232,7 @@
   }
 
   .partners-page__button span {
-    margin-inline-start: 0.7rem;
+    flex: 0 0 auto;
   }
 
   .partners-page__secondary {
@@ -267,10 +273,12 @@
 
   .partners-page__stat p {
     margin: 0;
-    color: rgb(var(--color-foreground-rgb) / 0.82);
-    font-family: var(--font-mono--family);
-    font-size: clamp(2rem, 3vw, 2.8rem);
-    line-height: 0.95;
+    color: var(--color-foreground);
+    font-family: var(--font-heading--family);
+    font-weight: 500;
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    line-height: 1;
+    letter-spacing: -0.01em;
   }
 
   .partners-page__stat span {
@@ -285,13 +293,14 @@
   }
 
   .partners-page__section-title {
+    font-family: var(--font-heading--family);
+    font-weight: 500;
     max-width: 60rem;
     margin: 1rem auto 0;
-    font-size: clamp(2.15rem, 4.1vw, 4.2rem);
-    letter-spacing: -0.06em;
-    line-height: 0.95;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    letter-spacing: -0.015em;
+    line-height: 1.15;
     text-align: center;
-    text-transform: uppercase;
   }
 
   .partners-page__section > .partners-page__eyebrow {
@@ -323,17 +332,21 @@
   .partners-page__step h3,
   .partners-page__card h3 {
     margin: 0;
+    font-family: var(--font-body--family);
+    font-weight: 600;
     color: rgb(var(--color-foreground-rgb) / 0.86);
-    font-size: 0.875rem;
-    line-height: 1.35;
+    font-size: 1.0625rem;
+    letter-spacing: -0.005em;
+    line-height: 1.25;
   }
 
   .partners-page__step p:last-child,
   .partners-page__card p,
   .partners-page__faq-answer {
     margin: 0;
-    color: rgb(var(--color-foreground-rgb) / 0.56);
-    font-size: 0.95rem;
+    font-family: var(--font-body--family);
+    color: rgb(var(--color-foreground-rgb) / 0.66);
+    font-size: 0.9375rem;
     line-height: 1.55;
   }
 
@@ -383,8 +396,11 @@
     padding-block: 1.45rem;
     color: rgb(var(--color-foreground-rgb) / 0.86);
     cursor: pointer;
-    font-size: 0.875rem;
-    line-height: 1.35;
+    font-family: var(--font-body--family);
+    font-weight: 500;
+    font-size: 0.9375rem;
+    letter-spacing: -0.005em;
+    line-height: 1.4;
     list-style: none;
   }
 
@@ -393,6 +409,7 @@
   }
 
   .partners-page__faq summary span {
+    font-family: var(--font-mono--family);
     color: rgb(var(--color-foreground-rgb) / 0.42);
     transition: transform 180ms ease;
   }
@@ -419,17 +436,19 @@
   .partners-page__final-cta h2 {
     max-width: 42rem;
     margin: 0;
-    font-size: clamp(2rem, 4vw, 4rem);
-    letter-spacing: -0.06em;
-    line-height: 0.95;
-    text-transform: uppercase;
+    font-family: var(--font-heading--family);
+    font-weight: 500;
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    letter-spacing: -0.015em;
+    line-height: 1.1;
   }
 
   .partners-page__cta-copy {
+    font-family: var(--font-body--family);
     max-width: 38rem;
-    color: rgb(var(--color-foreground-rgb) / 0.58);
-    font-size: clamp(1rem, 1.4vw, 1.2rem);
-    line-height: 1.45;
+    color: rgb(var(--color-foreground-rgb) / 0.55);
+    font-size: 1rem;
+    line-height: 1.5;
   }
 
   @media screen and (max-width: 989px) {
@@ -450,17 +469,17 @@
   }
 
   @media screen and (max-width: 749px) {
-    .partners-page {
-      padding-block: 2.5rem 4rem;
+    .partners-page__inner {
+      width: 100%;
     }
 
     .partners-page__hero {
       min-height: auto;
-      padding-block: 2.75rem 4rem;
+      padding-block-end: 4rem;
     }
 
     .partners-page__title {
-      font-size: clamp(2.6rem, 12vw, 3.8rem);
+      font-size: clamp(1.75rem, 6.5vw, 2.25rem);
     }
 
     .partners-page__stats,
@@ -495,6 +514,30 @@
       "default": "scheme-1"
     },
     {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_block_start",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 8,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_block_end",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 240,
+      "step": 8,
+      "unit": "px",
+      "default": 120
+    },
+    {
       "type": "text",
       "id": "apply_url",
       "label": "Apply URL",
@@ -508,7 +551,7 @@
       "type": "text",
       "id": "hero_eyebrow",
       "label": "Eyebrow",
-      "default": "Research Partner Program"
+      "default": "Referral Partners"
     },
     {
       "type": "text",
@@ -520,7 +563,7 @@
       "type": "richtext",
       "id": "hero_subhead",
       "label": "Subhead",
-      "default": "<p>Refer researchers to a trusted source of premium research compounds and earn 15% commission on every sale — paid out every week.</p>"
+      "default": "<p>Refer researchers to a trusted source of premium research compounds and earn 20% commission on every sale — paid out bi-weekly.</p>"
     },
     {
       "type": "text",
@@ -553,7 +596,7 @@
       "type": "text",
       "id": "stat_1_value",
       "label": "Stat 1 value",
-      "default": "15%"
+      "default": "20%"
     },
     {
       "type": "text",
@@ -565,19 +608,19 @@
       "type": "text",
       "id": "stat_2_value",
       "label": "Stat 2 value",
-      "default": "$250"
+      "default": "10%"
     },
     {
       "type": "text",
       "id": "stat_2_label",
       "label": "Stat 2 label",
-      "default": "Minimum payout"
+      "default": "Lifetime recurring"
     },
     {
       "type": "text",
       "id": "stat_3_value",
       "label": "Stat 3 value",
-      "default": "Weekly"
+      "default": "Bi-Weekly"
     },
     {
       "type": "text",
@@ -589,13 +632,13 @@
       "type": "text",
       "id": "stat_4_value",
       "label": "Stat 4 value",
-      "default": "Real-Time"
+      "default": "30 Days"
     },
     {
       "type": "text",
       "id": "stat_4_label",
       "label": "Stat 4 label",
-      "default": "Earnings dashboard"
+      "default": "Attribution window"
     },
     {
       "type": "header",
@@ -653,13 +696,13 @@
       "type": "text",
       "id": "step_4_title",
       "label": "Step 4 title",
-      "default": "Get paid weekly"
+      "default": "Get paid bi-weekly"
     },
     {
       "type": "textarea",
       "id": "step_4_body",
       "label": "Step 4 body",
-      "default": "Commissions are tracked in real time. Once you hit the $250 minimum threshold, payouts go out every week."
+      "default": "Commissions are attributed through the partner window, with payouts processed on a bi-weekly cadence."
     },
     {
       "type": "header",
@@ -687,7 +730,7 @@
       "type": "textarea",
       "id": "benefit_1_body",
       "label": "Benefit 1 body",
-      "default": "Start earning 15% on every referred sale immediately — no ramp-up period, no tiers to unlock."
+      "default": "Start earning 20% on every referred sale immediately — no ramp-up period, no tiers to unlock."
     },
     {
       "type": "text",
@@ -705,25 +748,25 @@
       "type": "text",
       "id": "benefit_3_title",
       "label": "Benefit 3 title",
-      "default": "Weekly payouts"
+      "default": "Bi-weekly payouts"
     },
     {
       "type": "textarea",
       "id": "benefit_3_body",
       "label": "Benefit 3 body",
-      "default": "Payouts are processed weekly once your account reaches the $250 minimum payout threshold."
+      "default": "Payouts are processed on a clear bi-weekly schedule, so partners know when commissions move."
     },
     {
       "type": "text",
       "id": "benefit_4_title",
       "label": "Benefit 4 title",
-      "default": "Real-time dashboard"
+      "default": "30-day attribution"
     },
     {
       "type": "textarea",
       "id": "benefit_4_body",
       "label": "Benefit 4 body",
-      "default": "Track clicks, conversions, and commission activity through your research partner dashboard."
+      "default": "Referrals remain attributed for 30 days, giving qualified traffic time to convert."
     },
     {
       "type": "text",
@@ -779,13 +822,13 @@
       "type": "text",
       "id": "cta_heading",
       "label": "Heading",
-      "default": "Start earning 15% from your first sale"
+      "default": "Start earning 20% from your first sale"
     },
     {
       "type": "richtext",
       "id": "cta_body",
       "label": "Body",
-      "default": "<p>Apply to become a Simms Research partner, get your tracking link, and start earning weekly commissions on every research compound sale you refer.</p>"
+      "default": "<p>Apply to become a Simms Research partner, get your tracking link, and start earning bi-weekly commissions on every research compound sale you refer.</p>"
     },
     {
       "type": "text",
