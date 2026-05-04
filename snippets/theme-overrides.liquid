@@ -22,6 +22,13 @@
     min-height: var(--hero-min-height, 100svh) !important;
   }
 
+  @media screen and (max-width: 749px) {
+    body:has(> #header-group > .header-section > #header-component[transparent])
+      .content-for-layout > .shopify-section:first-child .hero__media {
+      object-position: 78% center;
+    }
+  }
+
   #header-component[transparent='not-sticky']:not([data-sticky-state='active']):not(:hover):not(:focus-within)
     :is(.menu-list__link, .header-actions__action, .account-button__icon, .account-button__text) {
     color: rgb(255 255 255 / 1);
