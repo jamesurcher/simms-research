@@ -17,7 +17,33 @@
         "announcement_cXDVCA": {
           "type": "_announcement",
           "settings": {
-            "text": "FREE SHIPPING ON ORDERS $250+ | FOR RESEARCH USE ONLY",
+            "text": "FREE SHIPPING ON ORDERS $250+",
+            "link": "",
+            "font": "var(--font-body--family)",
+            "font_size": "0.75rem",
+            "weight": "",
+            "letter_spacing": "normal",
+            "case": "none"
+          },
+          "blocks": {}
+        },
+        "announcement_batch_testing": {
+          "type": "_announcement",
+          "settings": {
+            "text": "US Based | Third Party Tested",
+            "link": "/pages/lab-results",
+            "font": "var(--font-body--family)",
+            "font_size": "0.75rem",
+            "weight": "",
+            "letter_spacing": "normal",
+            "case": "none"
+          },
+          "blocks": {}
+        },
+        "announcement_research_only": {
+          "type": "_announcement",
+          "settings": {
+            "text": "FOR RESEARCH USE ONLY",
             "link": "",
             "font": "var(--font-body--family)",
             "font_size": "0.75rem",
@@ -29,11 +55,14 @@
         }
       },
       "block_order": [
-        "announcement_cXDVCA"
+        "announcement_cXDVCA",
+        "announcement_batch_testing",
+        "announcement_research_only"
       ],
       "name": "t:names.announcement_bar",
       "settings": {
         "speed": 5,
+        "show_arrows": false,
         "section_width": "page-width",
         "color_scheme": "scheme-2",
         "divider_width": 0,

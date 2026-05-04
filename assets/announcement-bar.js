@@ -31,6 +31,15 @@ export class AnnouncementBar extends Component {
     this.play();
   }
 
+  disconnectedCallback() {
+    super.disconnectedCallback();
+
+    this.suspend();
+    this.removeEventListener('mouseenter', this.suspend);
+    this.removeEventListener('mouseleave', this.resume);
+    document.removeEventListener('visibilitychange', this.#handleVisibilityChange);
+  }
+
   next() {
     this.current += 1;
   }
@@ -47,6 +56,7 @@ export class AnnouncementBar extends Component {
     if (!this.autoplay) return;
 
     this.paused = false;
+    this.suspend();
 
     this.#interval = setInterval(() => {
       if (this.matches(':hover') || document.hidden) return;
@@ -85,7 +95,6 @@ export class AnnouncementBar extends Component {
   resume() {
     if (!this.autoplay || this.paused) return;
 
-    this.pause();
     this.play();
   }
 
@@ -107,14 +116,18 @@ export class AnnouncementBar extends Component {
   }
 
   set current(current) {
+    const slides = this.refs.slides ?? [];
+
+    if (!slides.length) return;
+
     this.#current = current;
 
-    let relativeIndex = current % (this.refs.slides ?? []).length;
+    let relativeIndex = current % slides.length;
     if (relativeIndex < 0) {
-      relativeIndex += (this.refs.slides ?? []).length;
+      relativeIndex += slides.length;
     }
 
-    this.refs.slides?.forEach((slide, index) => {
+    slides.forEach((slide, index) => {
       slide.setAttribute('aria-hidden', `${index !== relativeIndex}`);
     });
   }
@@ -122,7 +135,7 @@ export class AnnouncementBar extends Component {
   /**
    * Pause the slideshow when the page is hidden.
    */
-  #handleVisibilityChange = () => (document.hidden ? this.pause() : this.resume());
+  #handleVisibilityChange = () => (document.hidden ? this.suspend() : this.resume());
 }
 
 if (!customElements.get('announcement-bar-component')) {
