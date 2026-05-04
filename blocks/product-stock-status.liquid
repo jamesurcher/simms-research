@@ -1,0 +1,156 @@
+{%- liquid
+  assign block_settings = block.settings
+  assign variant = closest.product.selected_or_first_available_variant
+  assign is_available = false
+
+  if variant != blank and variant.available
+    assign is_available = true
+  elsif closest.product.available
+    assign is_available = true
+  endif
+-%}
+
+<product-stock-status
+  class="product-stock-status spacing-style"
+  style="{% render 'spacing-style', settings: block_settings %}"
+  {{ block.shopify_attributes }}
+  data-product-id="{{ closest.product.id }}"
+>
+  {%- assign availability_modifier = 'out' -%}
+  {%- if is_available -%}{%- assign availability_modifier = 'in' -%}{%- endif -%}
+  <span class="product-stock-status__availability product-stock-status__availability--{{ availability_modifier }}">
+    {%- if is_available -%}
+      {{- block_settings.in_stock_label | default: 'In stock' -}}
+    {%- else -%}
+      {{- block_settings.out_of_stock_label | default: 'Out of stock' -}}
+    {%- endif -%}
+  </span>
+
+  {%- if is_available and block_settings.shipping_note != blank -%}
+    <span class="product-stock-status__sep" aria-hidden="true">·</span>
+    <span class="product-stock-status__shipping">{{ block_settings.shipping_note }}</span>
+  {%- endif -%}
+</product-stock-status>
+
+{% stylesheet %}
+  .product-stock-status {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.375rem;
+    font-family: var(--font-mono--family, 'Courier New', monospace);
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+
+  .product-stock-status__availability--in {
+    color: rgb(var(--color-foreground-rgb) / 0.8);
+  }
+
+  .product-stock-status__availability--out {
+    color: rgb(var(--color-foreground-rgb) / 0.4);
+  }
+
+  .product-stock-status__sep {
+    color: rgb(var(--color-foreground-rgb) / 0.25);
+  }
+
+  .product-stock-status__shipping {
+    color: rgb(var(--color-foreground-rgb) / 0.5);
+  }
+
+  @media screen and (max-width: 989px) {
+    .product-stock-status__sep {
+      display: none;
+    }
+  }
+
+  @media screen and (max-width: 380px) {
+    .product-stock-status {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.45rem;
+      line-height: 1.25;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Stock Status",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "in_stock_label",
+      "label": "In stock label",
+      "default": "In stock"
+    },
+    {
+      "type": "text",
+      "id": "out_of_stock_label",
+      "label": "Out of stock label",
+      "default": "Out of stock"
+    },
+    {
+      "type": "text",
+      "id": "shipping_note",
+      "label": "Shipping note",
+      "info": "Only shown when product is in stock",
+      "default": "Ships within 1–2 business days"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "Left",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "Right",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Stock Status",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

@@ -244,6 +244,33 @@
               },
               "block_order": []
             },
+            "product_trust_badges_1": {
+              "type": "product-trust-badges",
+              "settings": {
+                "badge_1": "COA Tested",
+                "badge_2": "≥99% Purity",
+                "use_purity_metafield": true,
+                "badge_3": "Research Grade",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "product_stock_status_1": {
+              "type": "product-stock-status",
+              "settings": {
+                "in_stock_label": "In stock",
+                "out_of_stock_label": "Out of stock",
+                "shipping_note": "Ships within 1–2 business days",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
             "text_batch_verification": {
               "type": "text",
               "name": "Certificate of Analysis",
@@ -300,7 +327,9 @@
           "block_order": [
             "group_icgrde",
             "divider_VJhene",
+            "product_trust_badges_1",
             "variant_picker_R3rGDr",
+            "product_stock_status_1",
             "buy_buttons_eYQEYi",
             "text_product_research_details",
             "text_batch_verification"

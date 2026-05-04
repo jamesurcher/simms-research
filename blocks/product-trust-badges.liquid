@@ -1,0 +1,150 @@
+{%- liquid
+  assign block_settings = block.settings
+  assign product_resource = closest.product | default: product
+
+  assign purity_value = product_resource.metafields.spec.purity.value
+  if block_settings.use_purity_metafield and purity_value != blank
+    assign purity_label = purity_value
+  else
+    assign purity_label = block_settings.badge_2
+  endif
+
+  assign badge_1 = block_settings.badge_1
+  assign badge_3 = block_settings.badge_3
+  assign rendered_count = 0
+-%}
+
+<div
+  class="product-trust-badges spacing-style"
+  style="{% render 'spacing-style', settings: block_settings %}"
+  {{ block.shopify_attributes }}
+>
+  {%- if badge_1 != blank -%}
+    <span class="product-trust-badges__item">{{ badge_1 }}</span>
+    {%- assign rendered_count = rendered_count | plus: 1 -%}
+  {%- endif -%}
+  {%- if purity_label != blank -%}
+    {%- if rendered_count > 0 -%}<span class="product-trust-badges__sep" aria-hidden="true">·</span>{%- endif -%}
+    <span class="product-trust-badges__item">{{ purity_label }}</span>
+    {%- assign rendered_count = rendered_count | plus: 1 -%}
+  {%- endif -%}
+  {%- if badge_3 != blank -%}
+    {%- if rendered_count > 0 -%}<span class="product-trust-badges__sep" aria-hidden="true">·</span>{%- endif -%}
+    <span class="product-trust-badges__item">{{ badge_3 }}</span>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .product-trust-badges {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    padding-block: 0.625rem;
+    border-block: 1px solid rgb(var(--color-foreground-rgb) / 0.12);
+    font-family: var(--font-mono--family, 'Courier New', monospace);
+    font-size: 0.6875rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgb(var(--color-foreground-rgb) / 0.65);
+    line-height: 1;
+  }
+
+  .product-trust-badges__sep {
+    color: rgb(var(--color-foreground-rgb) / 0.25);
+  }
+
+  @media screen and (max-width: 989px) {
+    .product-trust-badges {
+      gap: 0.5rem 0.85rem;
+    }
+
+    .product-trust-badges__sep {
+      display: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Trust Badges",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "badge_1",
+      "label": "Badge 1",
+      "default": "COA Tested"
+    },
+    {
+      "type": "text",
+      "id": "badge_2",
+      "label": "Badge 2 (purity fallback)",
+      "default": "≥99% Purity"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_purity_metafield",
+      "label": "Pull purity from product metafield",
+      "info": "Uses spec.purity metafield value when available",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "badge_3",
+      "label": "Badge 3",
+      "default": "Research Grade"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "Left",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "Right",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trust Badges",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}
