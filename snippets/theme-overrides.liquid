@@ -25,7 +25,26 @@
   @media screen and (max-width: 749px) {
     body:has(> #header-group > .header-section > #header-component[transparent])
       .content-for-layout > .shopify-section:first-child .hero__media {
-      object-position: 78% center;
+      object-position: 50% center;
+    }
+
+    body:has(> #header-group > .header-section > #header-component[transparent])
+      .content-for-layout > .shopify-section:first-child .hero__content-wrapper
+      > .group-block:first-child {
+      position: absolute;
+      inset-block-start: clamp(8.75rem, 17svh, 10.25rem);
+      inset-inline: 0;
+      width: 100%;
+      height: auto;
+      z-index: var(--layer-flat);
+    }
+
+    body:has(> #header-group > .header-section > #header-component[transparent])
+      .content-for-layout > .shopify-section:first-child .hero__content-wrapper
+      > .group-block:first-child
+      > .group-block-content {
+      height: auto;
+      justify-content: flex-start;
     }
   }
 
