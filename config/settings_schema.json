@@ -8,6 +8,69 @@
     "theme_support_url": "https://support.shopify.com/"
   },
   {
+    "name": "Volume pricing",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Defines the volume-tier ladder shown on every PDP. After saving here, create a matching automatic Volume discount in Shopify admin → Discounts so the discount actually applies at checkout. Set quantity to 0 to disable a tier."
+      },
+      {
+        "type": "checkbox",
+        "id": "volume_pricing_enabled",
+        "label": "Show volume tiers on product pages",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Tier 1"
+      },
+      {
+        "type": "number",
+        "id": "volume_tier_1_qty",
+        "label": "Minimum quantity",
+        "default": 3
+      },
+      {
+        "type": "number",
+        "id": "volume_tier_1_pct",
+        "label": "Discount %",
+        "default": 10
+      },
+      {
+        "type": "header",
+        "content": "Tier 2"
+      },
+      {
+        "type": "number",
+        "id": "volume_tier_2_qty",
+        "label": "Minimum quantity",
+        "default": 6
+      },
+      {
+        "type": "number",
+        "id": "volume_tier_2_pct",
+        "label": "Discount %",
+        "default": 15
+      },
+      {
+        "type": "header",
+        "content": "Tier 3"
+      },
+      {
+        "type": "number",
+        "id": "volume_tier_3_qty",
+        "label": "Minimum quantity",
+        "default": 12
+      },
+      {
+        "type": "number",
+        "id": "volume_tier_3_pct",
+        "label": "Discount %",
+        "default": 20
+      }
+    ]
+  },
+  {
     "name": "TOS gate",
     "settings": [
       {

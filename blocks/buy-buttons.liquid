@@ -67,6 +67,7 @@
           {%- render 'gift-card-recipient-form', product: product, form: form, section: section, block: block -%}
           <span class="buy-buttons-block__bar">
         {%- endif -%}
+        {% render 'volume-tier-selector', variant: variant, block_id: block.id %}
         <div
           class="product-form-buttons spacing-style{% if block_settings.stacking %} product-form-buttons--stacked{% endif %}"
           style="{% render 'spacing-style', settings: block_settings %}"
@@ -131,92 +132,6 @@
             </div>
           {%- endif -%}
 
-          {%- if product.quantity_price_breaks_configured? and variant.quantity_price_breaks.size > 0 -%}
-            {%- liquid
-              assign use_currency = settings.currency_code_enabled_product_pages
-            -%}
-            <volume-pricing
-              class="volume-pricing"
-              data-section-id="{{ section.id }}"
-              ref="volumePricing"
-            >
-              <span class="volume-pricing__title">{{ 'content.volume_pricing' | t }}</span>
-              <div class="volume-pricing__table">
-                <div class="volume-pricing__row volume-pricing__row--even">
-                  <span>{{ variant.quantity_rule.min }}+</span>
-                  <span>
-                    {%- if use_currency -%}
-                      {{- variant.price | money_with_currency | strip -}}
-                    {%- else -%}
-                      {{- variant.price | money | strip -}}
-                    {%- endif -%}
-                    /{{ 'content.each_abbreviation' | t -}}
-                  </span>
-                </div>
-                {%- for price_break in variant.quantity_price_breaks limit: 2 -%}
-                  {%- liquid
-                    assign row_index = forloop.index
-                    if row_index == 1
-                      assign row_class = 'volume-pricing__row volume-pricing__row--odd'
-                    else
-                      assign row_class = 'volume-pricing__row volume-pricing__row--even'
-                    endif
-                  -%}
-                  <div class="{{ row_class }}">
-                    <span>{{ price_break.minimum_quantity }}+</span>
-                    <span>
-                      {%- if use_currency -%}
-                        {{- price_break.price | money_with_currency | strip -}}
-                      {%- else -%}
-                        {{- price_break.price | money | strip -}}
-                      {%- endif -%}
-                      /{{ 'content.each_abbreviation' | t -}}
-                    </span>
-                  </div>
-                {%- endfor -%}
-
-                {%- if variant.quantity_price_breaks.size > 2 -%}
-                  <div class="volume-pricing__collapsible-wrapper">
-                    {%- for price_break in variant.quantity_price_breaks offset: 2 -%}
-                      {%- liquid
-                        assign collapsed_index = forloop.index
-                        assign total_index = collapsed_index | plus: 2
-                        assign modulo_result = total_index | modulo: 2
-                        if modulo_result == 1
-                          assign row_class = 'volume-pricing__row volume-pricing__row--odd'
-                        else
-                          assign row_class = 'volume-pricing__row volume-pricing__row--even'
-                        endif
-                      -%}
-                      <div class="{{ row_class }}">
-                        <span>{{ price_break.minimum_quantity }}+</span>
-                        <span>
-                          {%- if use_currency -%}
-                            {{- price_break.price | money_with_currency | strip -}}
-                          {%- else -%}
-                            {{- price_break.price | money | strip -}}
-                          {%- endif -%}
-                          /{{ 'content.each_abbreviation' | t -}}
-                        </span>
-                      </div>
-                    {%- endfor -%}
-                  </div>
-
-                  <button
-                    type="button"
-                    class="volume-pricing__toggle button-unstyled"
-                    ref="volumePricingToggle"
-                    on:click="/toggleExpanded"
-                  >
-                    <span class="volume-pricing__toggle-text">
-                      <span class="volume-pricing__show-more">+ {{ 'actions.show_more' | t }}</span>
-                      <span class="volume-pricing__show-less">- {{ 'actions.show_less' | t }}</span>
-                    </span>
-                  </button>
-                {%- endif -%}
-              </div>
-            </volume-pricing>
-          {%- endif -%}
           {% content_for 'block',
             type: 'add-to-cart',
             id: 'add-to-cart',
