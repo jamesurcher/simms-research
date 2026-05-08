@@ -8,6 +8,31 @@
     "theme_support_url": "https://support.shopify.com/"
   },
   {
+    "name": "TOS gate",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Background image shown on the first-visit terms-of-service gate. Leave empty for a plain white background."
+      },
+      {
+        "type": "image_picker",
+        "id": "tos_gate_background",
+        "label": "Background image"
+      },
+      {
+        "type": "range",
+        "id": "tos_gate_overlay_opacity",
+        "label": "Background overlay opacity",
+        "min": 0,
+        "max": 100,
+        "step": 5,
+        "unit": "%",
+        "default": 40,
+        "info": "White scrim above the image to keep the card readable."
+      }
+    ]
+  },
+  {
     "name": "t:names.logo_and_favicon",
     "settings": [
       {

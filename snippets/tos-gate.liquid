@@ -1,0 +1,485 @@
+{% doc %}
+  Renders the research-use age/terms gate shown on first visit.
+
+  Behavior:
+  - On load, JS reads cookie `simms_tos_accepted`. If absent, gate is shown
+    and the storefront beneath is hidden until the visitor accepts.
+  - Accept sets the cookie (30 days default, 365 if "remember" checked).
+  - Decline redirects to https://www.google.com.
+  - Suppressed inside the theme editor (request.design_mode).
+{% enddoc %}
+
+{%- if request.design_mode or request.page_type == 'policy' -%}
+  {%- comment -%} Don't gate the editor preview or policy pages (Terms, Privacy, etc). {%- endcomment -%}
+{%- else -%}
+  <script>
+    (function () {
+      try {
+        if (document.cookie.indexOf('simms_tos_accepted=1') === -1) {
+          document.documentElement.classList.add('tos-gated');
+        }
+      } catch (e) {}
+    })();
+  </script>
+
+  {%- if settings.tos_gate_background != blank -%}
+    {%- assign tos_gate_overlay = settings.tos_gate_overlay_opacity | default: 40 | divided_by: 100.0 -%}
+    {%- capture tos_gate_style -%}
+      --tos-gate-bg-image: url('{{ settings.tos_gate_background | image_url: width: 2400 }}');
+      --tos-gate-overlay-opacity: {{ tos_gate_overlay }};
+    {%- endcapture -%}
+  {%- endif -%}
+
+  <section
+    id="tos-gate"
+    class="tos-gate{% if settings.tos_gate_background != blank %} tos-gate--has-image{% endif %}"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="tos-gate-heading"
+    {% if tos_gate_style %}style="{{ tos_gate_style | strip_newlines }}"{% endif %}
+    hidden
+  >
+    <div class="tos-gate__inner">
+      <header class="tos-gate__brand">
+        {%- if settings.logo != blank -%}
+          {%- assign logo_w = settings.logo.width | at_most: 600 -%}
+          <img
+            class="tos-gate__logo"
+            src="{{ settings.logo | image_url: width: logo_w }}"
+            srcset="{{ settings.logo | image_url: width: 300 }} 300w, {{ settings.logo | image_url: width: 600 }} 600w"
+            sizes="(max-width: 600px) 60vw, 280px"
+            width="{{ settings.logo.width }}"
+            height="{{ settings.logo.height }}"
+            alt="{{ shop.name | escape }}"
+          >
+        {%- else -%}
+          <p class="tos-gate__eyebrow">Welcome to</p>
+          <p class="tos-gate__wordmark">{{ shop.name }}</p>
+          <p class="tos-gate__sub">Research</p>
+        {%- endif -%}
+      </header>
+
+      <div class="tos-gate__card">
+        <span class="tos-gate__pill">Research access</span>
+
+        <h2 id="tos-gate-heading" class="tos-gate__heading">
+          View our catalog
+        </h2>
+
+        <p class="tos-gate__body">
+          By entering, you accept our
+          <a href="/policies/terms-of-service" class="tos-gate__link">Terms</a>
+          and confirm you are of legal age to view research compounds in your jurisdiction.
+        </p>
+
+        <ul class="tos-gate__trust" role="list">
+          <li>
+            <span class="tos-gate__trust-value">99%+</span>
+            <span class="tos-gate__trust-label">Purity</span>
+          </li>
+          <li>
+            <span class="tos-gate__trust-value">Lab</span>
+            <span class="tos-gate__trust-label">Certified</span>
+          </li>
+          <li>
+            <span class="tos-gate__trust-value">Research</span>
+            <span class="tos-gate__trust-label">Use only</span>
+          </li>
+        </ul>
+
+        <p class="tos-gate__fine-print">
+          All compounds are sold for research and laboratory use. Products are not for human
+          consumption or medical use.
+        </p>
+
+        <label class="tos-gate__remember">
+          <input type="checkbox" id="tos-gate-remember">
+          <span>Remember for 30 days</span>
+        </label>
+
+        <div class="tos-gate__actions">
+          <button type="button" class="tos-gate__btn tos-gate__btn--secondary" id="tos-gate-decline">
+            Leave site
+          </button>
+          <button type="button" class="tos-gate__btn tos-gate__btn--primary" id="tos-gate-accept">
+            Enter site
+          </button>
+        </div>
+      </div>
+
+      <footer class="tos-gate__footer">
+        &copy; {{ 'now' | date: '%Y' }} {{ shop.name }} &middot; All rights reserved
+      </footer>
+    </div>
+  </section>
+
+  <script>
+    (function () {
+      var gate = document.getElementById('tos-gate');
+      if (!gate) return;
+
+      var gated = document.documentElement.classList.contains('tos-gated');
+      if (gated) {
+        gate.hidden = false;
+      }
+
+      function setCookie(days) {
+        var secure = location.protocol === 'https:' ? '; Secure' : '';
+        var ageStr = days ? '; max-age=' + (days * 24 * 60 * 60) : '';
+        document.cookie = 'simms_tos_accepted=1; path=/; SameSite=Lax' + ageStr + secure;
+      }
+
+      document.getElementById('tos-gate-accept').addEventListener('click', function () {
+        var remember = document.getElementById('tos-gate-remember').checked;
+        setCookie(remember ? 30 : 0);
+
+        // Reveal storefront beneath while the gate animates out.
+        document.documentElement.classList.add('tos-gate-exiting');
+        document.documentElement.classList.remove('tos-gated');
+
+        var done = false;
+        var finish = function () {
+          if (done) return;
+          done = true;
+          gate.hidden = true;
+          document.documentElement.classList.remove('tos-gate-exiting');
+        };
+        // Wait for the slowest transition (storefront fade, 700ms + 80ms delay) then settle.
+        setTimeout(finish, 850);
+      });
+
+      document.getElementById('tos-gate-decline').addEventListener('click', function () {
+        window.location.replace('https://www.google.com');
+      });
+    })();
+  </script>
+{%- endif -%}
+
+{% stylesheet %}
+  /* Hide storefront beneath the gate until accepted. */
+  .tos-gated body > #header-group,
+  .tos-gated body > main,
+  .tos-gated body > footer {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Fade the storefront in as the gate dissolves. */
+  .tos-gate-exiting body > #header-group,
+  .tos-gate-exiting body > main,
+  .tos-gate-exiting body > footer {
+    opacity: 1;
+    transition: opacity 700ms cubic-bezier(0.22, 1, 0.36, 1) 80ms;
+  }
+
+  .tos-gated {
+    overflow: hidden;
+  }
+
+  .tos-gate {
+    position: fixed;
+    inset: 0;
+    z-index: 2147483000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1.25rem;
+    background: #ffffff;
+    color: #0a0a0a;
+    font-family: var(--font-body--family, system-ui, sans-serif);
+    overflow-y: auto;
+    transition: opacity 600ms cubic-bezier(0.22, 1, 0.36, 1) 100ms;
+  }
+
+  /* Gate exit animation. */
+  .tos-gate-exiting .tos-gate {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .tos-gate-exiting .tos-gate__inner {
+    transform: scale(0.96) translateY(-4px);
+    opacity: 0;
+    transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1),
+                opacity 400ms ease-out;
+  }
+
+  .tos-gate__inner {
+    transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1),
+                opacity 400ms ease-out;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tos-gate,
+    .tos-gate__inner,
+    .tos-gate-exiting body > #header-group,
+    .tos-gate-exiting body > main,
+    .tos-gate-exiting body > footer {
+      transition-duration: 1ms !important;
+    }
+    .tos-gate-exiting .tos-gate__inner {
+      transform: none;
+    }
+  }
+
+  .tos-gate--has-image {
+    background-image: var(--tos-gate-bg-image);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .tos-gate--has-image::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgb(255 255 255 / var(--tos-gate-overlay-opacity, 0.4));
+    pointer-events: none;
+  }
+
+  .tos-gate__inner {
+    position: relative;
+    z-index: 1;
+  }
+
+  .tos-gate[hidden] {
+    display: none;
+  }
+
+  .tos-gate__inner {
+    width: 100%;
+    max-width: 36rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2.5rem;
+  }
+
+  .tos-gate__brand {
+    text-align: center;
+  }
+
+  .tos-gate__logo {
+    display: block;
+    width: auto;
+    max-width: min(280px, 60vw);
+    height: auto;
+    margin: 0 auto;
+  }
+
+  .tos-gate__eyebrow,
+  .tos-gate__sub {
+    margin: 0;
+    font-size: 0.75rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: rgb(10 10 10 / 0.5);
+  }
+
+  .tos-gate__wordmark {
+    margin: 0.5rem 0;
+    font-family: var(--font-heading--family, inherit);
+    font-size: clamp(2.25rem, 6vw, 3.25rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: #0a0a0a;
+    text-transform: lowercase;
+  }
+
+  .tos-gate__card {
+    width: 100%;
+    padding: 2rem 1.75rem;
+    background: #f5f5f5;
+    border: 1px solid #e6e6e6;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.25rem;
+  }
+
+  @media (min-width: 600px) {
+    .tos-gate__card {
+      padding: 2.5rem;
+    }
+  }
+
+  .tos-gate__pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background: #e4f5ff;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #0a0a0a;
+  }
+
+  .tos-gate__heading {
+    margin: 0;
+    font-family: var(--font-heading--family, inherit);
+    font-size: clamp(1.5rem, 3.4vw, 1.875rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: #0a0a0a;
+  }
+
+  .tos-gate__body {
+    margin: 0;
+    max-width: 28rem;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: rgb(10 10 10 / 0.65);
+  }
+
+  .tos-gate__link {
+    color: #0a0a0a;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .tos-gate__trust {
+    width: 100%;
+    margin: 0.5rem 0 0;
+    padding: 1.25rem 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    border-top: 1px solid #e6e6e6;
+    border-bottom: 1px solid #e6e6e6;
+  }
+
+  .tos-gate__trust li {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .tos-gate__trust-value {
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #0a0a0a;
+  }
+
+  .tos-gate__trust-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgb(10 10 10 / 0.5);
+  }
+
+  .tos-gate__fine-print {
+    margin: 0;
+    max-width: 28rem;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    color: rgb(10 10 10 / 0.5);
+  }
+
+  .tos-gate__remember {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.85rem;
+    color: rgb(10 10 10 / 0.7);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .tos-gate__remember input {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 1rem;
+    height: 1rem;
+    margin: 0;
+    border: 1.5px solid rgb(10 10 10 / 0.4);
+    border-radius: 3px;
+    background: #ffffff;
+    display: inline-grid;
+    place-content: center;
+    cursor: pointer;
+    transition: border-color 120ms ease, background-color 120ms ease;
+  }
+
+  .tos-gate__remember input::before {
+    content: '';
+    width: 0.6rem;
+    height: 0.6rem;
+    transform: scale(0);
+    transition: transform 120ms ease;
+    background: #ffffff;
+    clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+  }
+
+  .tos-gate__remember input:checked {
+    background: #0a0a0a;
+    border-color: #0a0a0a;
+  }
+
+  .tos-gate__remember input:checked::before {
+    transform: scale(1);
+  }
+
+  .tos-gate__remember input:focus-visible {
+    outline: 2px solid #0a0a0a;
+    outline-offset: 2px;
+  }
+
+  .tos-gate__actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-top: 0.25rem;
+  }
+
+  .tos-gate__btn {
+    appearance: none;
+    border: 1px solid #e6e6e6;
+    background: #ffffff;
+    color: #0a0a0a;
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 1rem 1.25rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 150ms ease, color 150ms ease, border-color 150ms ease, transform 80ms ease;
+  }
+
+  .tos-gate__btn:hover {
+    background: #e4f5ff;
+    border-color: #e4f5ff;
+  }
+
+  .tos-gate__btn:active {
+    transform: scale(0.98);
+  }
+
+  .tos-gate__btn--primary {
+    background: #0a0a0a;
+    color: #ffffff;
+    border-color: #0a0a0a;
+  }
+
+  .tos-gate__btn--primary:hover {
+    background: #0a0a0a;
+    color: #e4f5ff;
+    border-color: #0a0a0a;
+  }
+
+  .tos-gate__footer {
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    color: rgb(10 10 10 / 0.5);
+    text-align: center;
+  }
+{% endstylesheet %}
