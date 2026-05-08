@@ -172,9 +172,14 @@
                 </p>
               </div>
 
-              <ul class="lab-card__rows" role="list">
+              <ul class="lab-card__rows" data-lab-card-rows role="list">
                 {%- if batches != blank -%}
-                  {%- for batch in batches limit: 4 -%}
+                  {%- comment -%}
+                    Liquid's `sort` filter is unreliable on metaobject lists,
+                    so we render up to 30 batches and let JS sort+cap to top 4
+                    by tested_at descending.
+                  {%- endcomment -%}
+                  {%- for batch in batches limit: 30 -%}
                     {%- liquid
                       assign b_id = batch.batch_id.value
                       assign b_purity = batch.purity.value | default: batch.avg_purity.value
@@ -189,7 +194,7 @@
                         assign b_url = batch.coa_url.value
                       endif
                     -%}
-                    <li class="lab-card__row">
+                    <li class="lab-card__row" data-tested-at="{{ b_tested | date: '%Y-%m-%d' }}">
                       <span class="lab-card__row-id">
                         #{{ b_id | default: '—' | escape }}
                         {%- if b_is_current == true -%}
@@ -405,6 +410,7 @@
       'lab-results-page',
       class LabResultsPage extends HTMLElement {
         connectedCallback() {
+          this.sortAndCapBatches();
           this.grid       = this.querySelector('[data-lab-grid]');
           this.details    = this.querySelectorAll('[data-lab-detail]');
           this.searchInput = this.querySelector('[data-lab-search]');
@@ -538,6 +544,22 @@
           if (typeof this.dialog.close === 'function') this.dialog.close();
           document.documentElement.removeAttribute('scroll-lock');
           if (this.dialogFrame) this.dialogFrame.src = 'about:blank';
+        }
+
+        sortAndCapBatches() {
+          const lists = this.querySelectorAll('[data-lab-card-rows]');
+          lists.forEach((list) => {
+            const rows = Array.from(list.querySelectorAll('.lab-card__row'));
+            rows.sort((a, b) => {
+              const da = a.dataset.testedAt || '';
+              const db = b.dataset.testedAt || '';
+              return db.localeCompare(da);
+            });
+            rows.forEach((row, i) => {
+              row.style.display = i < 4 ? '' : 'none';
+              list.appendChild(row);
+            });
+          });
         }
       }
     );

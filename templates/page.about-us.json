@@ -33,7 +33,7 @@
           "settings": {
             "eyebrow": "Dispatch",
             "title": "Same-week fulfillment",
-            "body": "Orders placed on in-stock items ship within 2 business days from our Phoenix facility."
+            "body": "Orders placed on in-stock items ship within 2 business days from our Tampa facility."
           }
         },
         "step-1": {
@@ -81,8 +81,8 @@
         "commit-1": {
           "type": "commitment",
           "settings": {
-            "title": "No proprietary blends",
-            "body": "Single compound at a stated concentration. No blends, no ambiguity."
+            "title": "High quality blends",
+            "body": "Compounds delivered at a stated concentration."
           }
         },
         "commit-2": {
@@ -103,7 +103,7 @@
           "type": "commitment",
           "settings": {
             "title": "US-based operations",
-            "body": "Sourced, tested, labeled, and shipped from Phoenix, AZ. No import arbitrage."
+            "body": "Sourced, tested, labeled, and shipped from Tampa, FL."
           }
         }
       },
@@ -114,8 +114,8 @@
       ],
       "settings": {
         "color_scheme": "scheme-1",
-        "eyebrow": "Simms Research · Phoenix, AZ",
-        "heading": "We don’t sell supplements.\nWe supply research-grade peptides.",
+        "eyebrow": "Simms Research · Tampa, FL",
+        "heading": "The source for research-grade peptides.",
         "subhead": "Every vial we ship is third-party tested, batch-labeled, and documented — before it leaves our facility.",
         "process_eyebrow": "How We Verify Every Batch",
         "process_heading": "From synthesis to shipment.",
