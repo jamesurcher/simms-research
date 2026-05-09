@@ -11,6 +11,7 @@
 {%- assign endpoint = settings.notify_endpoint | strip -%}
 {%- assign form_id = 'notify-me-' | append: variant.id | append: '-' | append: block_id -%}
 {%- assign variant_label = variant.title | default: '' -%}
+{%- assign notify_initially_disabled = variant.available -%}
 
 <notify-me-form
   class="notify-me"
@@ -39,120 +40,232 @@
         class="notify-me__input"
         placeholder="you@email.com"
         autocomplete="email"
-        required
         data-notify-email
+        {% if notify_initially_disabled %}disabled{% endif %}
       >
     </label>
 
     {%- comment -%} Honeypot — bots will fill this; real users won't. {%- endcomment -%}
     <label class="notify-me__honeypot" aria-hidden="true">
       Website
-      <input type="text" name="notify_website" tabindex="-1" autocomplete="off">
+      <input
+        type="text"
+        name="notify_website"
+        tabindex="-1"
+        autocomplete="off"
+        data-notify-honeypot
+        {% if notify_initially_disabled %}disabled{% endif %}
+      >
     </label>
 
-    <button type="button" class="notify-me__submit" data-notify-submit>
+    <button
+      type="button"
+      class="notify-me__submit"
+      data-notify-submit
+      {% if endpoint == blank or notify_initially_disabled %}disabled{% endif %}
+    >
       <span class="notify-me__submit-label">Notify me</span>
       <span class="notify-me__submit-loading" hidden>Sending&hellip;</span>
     </button>
   </div>
 
-  <p class="notify-me__status" data-notify-status hidden></p>
+  <p class="notify-me__status" data-notify-status role="status" aria-live="polite" hidden></p>
 </notify-me-form>
 
 <script>
   (function () {
-    if (window.__notifyMeInit) return;
-    window.__notifyMeInit = true;
-
-    // Sync buy-state visibility + notify-me data based on the current variant.
-    //
-    // Source of truth: the product form's <input name="id"> value. Shopify's
-    // variant picker keeps this in sync with the user's selection. We then
-    // look up that variant ID's availability via the matching variant-picker
-    // radio's data-option-available attribute.
-    //
-    // Listening to radio change events alone is unreliable because:
-    //   - Shopify may re-render parts of the section after a variant change
-    //     (Section Rendering API), which can race with our event handlers.
-    //   - The "checked" attribute and "data-current-checked" can disagree
-    //     after JS-driven updates.
-    function syncBuyState() {
-      var idInput = document.querySelector(
-        'product-form-component input[name="id"]'
-      );
-      if (!idInput) return;
-      var variantId = idInput.value;
-      if (!variantId) return;
-
-      var radio = document.querySelector(
-        'input[type="radio"][data-option-available][data-variant-id="' + variantId + '"]'
-      );
-      if (!radio) return;
-
-      var available = radio.dataset.optionAvailable === 'true';
-      var variantLabel = radio.value || '';
-
-      document.querySelectorAll('[data-buy-state]').forEach(function (state) {
-        state.setAttribute('data-variant-available', available ? 'true' : 'false');
-        var notify = state.querySelector('notify-me-form');
-        if (notify) {
-          notify.dataset.variantId = variantId;
-          notify.dataset.variant = variantLabel;
-        }
-      });
-    }
-
-    // Trigger sync from multiple signals — pick whichever fires first.
-    // setTimeout(..., 0) defers one tick so Shopify's own handlers update
-    // the form's id input before we read it.
-    function deferredSync() { setTimeout(syncBuyState, 0); }
-
-    document.addEventListener('change', function (e) {
-      var radio = e.target.closest && e.target.closest('input[type="radio"][data-option-available]');
-      if (radio) deferredSync();
-    });
-    document.addEventListener('variant:update', deferredSync);
-
-    // Initial sync + a couple of follow-ups to catch any late-arriving
-    // re-renders from the Section Rendering API.
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', syncBuyState);
-    } else {
-      syncBuyState();
-    }
-    setTimeout(syncBuyState, 250);
-    setTimeout(syncBuyState, 1000);
-
     if (!window.customElements || customElements.get('notify-me-form')) return;
 
     customElements.define('notify-me-form', class extends HTMLElement {
       connectedCallback() {
         this.form = this.querySelector('[data-notify-form]');
         this.email = this.querySelector('[data-notify-email]');
+        this.honeypot = this.querySelector('[data-notify-honeypot]');
         this.submit = this.querySelector('[data-notify-submit]');
         this.label = this.querySelector('.notify-me__submit-label');
         this.loading = this.querySelector('.notify-me__submit-loading');
         this.status = this.querySelector('[data-notify-status]');
-        this.endpoint = this.dataset.endpoint;
+        this.endpoint = (this.dataset.endpoint || '').trim();
+        this.productForm = this.closest('product-form-component');
+        this.buyState = this.closest('[data-buy-state]');
+        this.eventTarget = this.closest('.shopify-section, dialog, product-card') || document;
+        this.currentVariantId = this.dataset.variantId || '';
+        this.lastVariantId = this.currentVariantId;
+        this.submittedVariantId = '';
+        this.notifyVisible = this.buyState?.dataset.variantAvailable === 'false';
+        this.busy = false;
+        this.abortController = new AbortController();
 
-        if (!this.submit || !this.endpoint) return;
+        if (!this.form || !this.email || !this.submit || !this.status) return;
 
-        this.submit.addEventListener('click', this.onSubmit.bind(this));
-        // Pressing Enter in the email input should also submit.
-        if (this.email) {
-          this.email.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-              e.preventDefault();
-              this.onSubmit(e);
-            }
-          });
+        var signal = this.abortController.signal;
+
+        this.submit.addEventListener('click', this.onSubmit.bind(this), { signal: signal });
+        this.email.addEventListener('keydown', this.onEmailKeydown.bind(this), { signal: signal });
+        this.eventTarget.addEventListener('variant:update', this.onVariantUpdate.bind(this), { signal: signal });
+        this.eventTarget.addEventListener('change', this.onVariantInputChange.bind(this), { signal: signal });
+
+        this.applyVariant(this.getInitialVariant(), { preserveSubmitted: true });
+        window.setTimeout(() => this.applyVariant(this.getInitialVariant(), { preserveSubmitted: true }), 250);
+      }
+
+      disconnectedCallback() {
+        if (this.abortController) this.abortController.abort();
+      }
+
+      onEmailKeydown(e) {
+        if (e.key !== 'Enter') return;
+        e.preventDefault();
+        this.onSubmit(e);
+      }
+
+      onVariantInputChange(e) {
+        var target = e.target;
+        if (!target?.closest?.('variant-picker, swatches-variant-picker-component')) return;
+        window.setTimeout(() => this.applyVariant(this.getInitialVariant()), 0);
+      }
+
+      onVariantUpdate(e) {
+        var detail = e.detail || {};
+        var data = detail.data || {};
+        var formProductId = this.productForm?.dataset.productId;
+
+        if (data.productId && formProductId && data.productId !== formProductId && !data.newProduct) return;
+
+        if (data.newProduct?.id && this.productForm) {
+          this.productForm.dataset.productId = data.newProduct.id;
+        }
+
+        this.applyVariant(detail.resource || null);
+      }
+
+      getInitialVariant() {
+        var idInput = this.productForm?.querySelector('input[name="id"]');
+        var variantId = idInput?.value || this.dataset.variantId || '';
+        var checkedOption = this.getCheckedVariantOption();
+
+        if (checkedOption && (!variantId || checkedOption.dataset.variantId !== variantId)) {
+          variantId = checkedOption.dataset.variantId || variantId;
+          return {
+            id: variantId,
+            title: checkedOption.value || this.dataset.variant || '',
+            available: checkedOption.dataset.optionAvailable === 'true'
+          };
+        }
+
+        var variantJson = this.getVariantJson();
+
+        if (variantJson && (!variantId || String(variantJson.id) === String(variantId))) {
+          return variantJson;
+        }
+
+        var option = this.findVariantOption(variantId);
+        if (option) {
+          return {
+            id: variantId,
+            title: option.value || this.dataset.variant || '',
+            available: option.dataset.optionAvailable === 'true'
+          };
+        }
+
+        return {
+          id: variantId,
+          title: this.dataset.variant || '',
+          available: this.buyState?.dataset.variantAvailable === 'true'
+        };
+      }
+
+      getCheckedVariantOption() {
+        var scope = this.closest('.shopify-section') || document;
+        var checked = Array.prototype.slice.call(scope.querySelectorAll(
+          'input[type="radio"][data-option-available][data-variant-id]:checked'
+        ));
+
+        if (checked.length === 1) return checked[0];
+
+        checked = Array.prototype.slice.call(scope.querySelectorAll(
+          'input[type="radio"][data-option-available][data-variant-id][data-current-checked="true"]'
+        ));
+
+        return checked.length === 1 ? checked[0] : null;
+      }
+
+      getVariantJson() {
+        var scope = this.closest('.shopify-section') || document;
+        var json = scope.querySelector(
+          'variant-picker script[type="application/json"], swatches-variant-picker-component script[type="application/json"]'
+        );
+
+        if (!json?.textContent) return null;
+
+        try {
+          return JSON.parse(json.textContent);
+        } catch (err) {
+          return null;
         }
       }
 
+      findVariantOption(variantId) {
+        if (!variantId) return null;
+
+        var scope = this.closest('.shopify-section') || document;
+        return scope.querySelector(
+          'input[type="radio"][data-option-available][data-variant-id="' + String(variantId).replace(/"/g, '\\"') + '"]'
+        );
+      }
+
+      applyVariant(variant, options) {
+        var preserveSubmitted = options?.preserveSubmitted === true;
+        var variantId = variant?.id ? String(variant.id) : '';
+        var variantTitle = variant?.title || variant?.public_title || this.dataset.variant || '';
+        var isSoldOutVariant = !!variantId && variant.available === false;
+        var variantChanged = variantId && variantId !== this.lastVariantId;
+
+        if (variantId) {
+          this.currentVariantId = variantId;
+          this.dataset.variantId = variantId;
+        }
+
+        if (variantTitle) this.dataset.variant = variantTitle;
+        if (this.buyState) {
+          this.buyState.setAttribute('data-variant-available', isSoldOutVariant ? 'false' : 'true');
+        }
+
+        this.notifyVisible = isSoldOutVariant;
+
+        if (variantChanged && !preserveSubmitted) {
+          this.resetFormState();
+        }
+
+        if (!this.notifyVisible) {
+          this.hideStatus();
+          if (this.form) this.form.hidden = false;
+        } else if (!this.endpoint) {
+          this.showStatus('Notifications are temporarily unavailable.', true);
+        } else if (this.submittedVariantId === this.currentVariantId) {
+          if (this.form) this.form.hidden = true;
+          this.showStatus("Thanks. Your request was sent.");
+        } else if (this.form) {
+          this.form.hidden = false;
+        }
+
+        this.lastVariantId = variantId || this.lastVariantId;
+        this.updateControls();
+      }
+
       setBusy(busy) {
-        this.submit.disabled = busy;
-        this.label.hidden = busy;
-        this.loading.hidden = !busy;
+        this.busy = busy;
+        if (this.label) this.label.hidden = busy;
+        if (this.loading) this.loading.hidden = !busy;
+        this.updateControls();
+      }
+
+      updateControls() {
+        var enabled = this.notifyVisible && !this.busy && this.submittedVariantId !== this.currentVariantId;
+
+        if (this.email) this.email.disabled = !enabled;
+        if (this.honeypot) this.honeypot.disabled = !enabled;
+        if (this.submit) this.submit.disabled = !enabled || !this.endpoint;
       }
 
       showStatus(msg, isError) {
@@ -161,9 +274,34 @@
         this.status.classList.toggle('notify-me__status--error', !!isError);
       }
 
+      hideStatus() {
+        if (!this.status) return;
+        this.status.hidden = true;
+        this.status.textContent = '';
+        this.status.classList.remove('notify-me__status--error');
+      }
+
+      resetFormState() {
+        this.setBusy(false);
+        this.hideStatus();
+        if (this.form) this.form.hidden = false;
+        if (this.honeypot) this.honeypot.value = '';
+      }
+
+      completeSubmission() {
+        this.submittedVariantId = this.currentVariantId;
+        if (this.form) this.form.hidden = true;
+        this.showStatus("Thanks. Your request was sent.");
+      }
+
       async onSubmit(e) {
         e.preventDefault();
-        if (this.submit.disabled) return;
+        if (this.submit.disabled || !this.notifyVisible) return;
+
+        if (!this.endpoint) {
+          this.showStatus('Notifications are temporarily unavailable.', true);
+          return;
+        }
 
         var email = (this.email.value || '').trim();
         if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -172,39 +310,50 @@
           return;
         }
 
+        if (this.honeypot?.value) {
+          this.completeSubmission();
+          this.updateControls();
+          return;
+        }
+
         var payload = {
           email: email,
           product: this.dataset.product,
           product_handle: this.dataset.productHandle,
           variant: this.dataset.variant,
-          variant_id: this.dataset.variantId,
+          variant_id: this.currentVariantId,
           url: window.location.href,
-          website: this.querySelector('input[name="notify_website"]').value
+          website: this.honeypot?.value || ''
         };
 
         this.setBusy(true);
         this.status.hidden = true;
 
-        // Apps Script web apps return opaque responses under `mode: 'no-cors'`
-        // (and we use text/plain to avoid CORS preflight). We can't actually
-        // read the response, so we race the network call against a 4-second
-        // timeout — either way, we end the busy state and show the success
-        // message. The Apps Script either appends the row or it doesn't; the
-        // user's experience here is the same.
-        var fetchPromise = fetch(this.endpoint, {
-          method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(payload)
-        }).catch(function () { /* swallow; treat as completion */ });
+        var requestController = new AbortController();
+        var timeoutId = window.setTimeout(function () {
+          requestController.abort();
+        }, 10000);
 
-        var timeout = new Promise(function (resolve) { setTimeout(resolve, 4000); });
+        try {
+          // Apps Script web apps do not provide readable CORS responses by
+          // default. A resolved no-cors fetch means the browser accepted the
+          // request; it cannot prove SpreadsheetApp.appendRow succeeded.
+          await fetch(this.endpoint, {
+            method: 'POST',
+            mode: 'no-cors',
+            credentials: 'omit',
+            signal: requestController.signal,
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(payload)
+          });
 
-        await Promise.race([fetchPromise, timeout]);
-
-        this.setBusy(false);
-        if (this.form) this.form.hidden = true;
-        this.showStatus('Got it. We’ll email you when this is back in stock.');
+          this.completeSubmission();
+        } catch (err) {
+          this.showStatus('Could not send. Please try again in a moment.', true);
+        } finally {
+          window.clearTimeout(timeoutId);
+          this.setBusy(false);
+        }
       }
     });
   })();
@@ -217,10 +366,8 @@
     display: none;
   }
 
-  /* Hide qty + add-to-cart row when the variant is unavailable.
-     Uses :has() so we don't need the buttons-wrap to be a sibling of buy-state. */
-  form:has([data-buy-state][data-variant-available="false"]) [data-buy-state-buttons],
-  [data-buy-state][data-variant-available="false"] ~ [data-buy-state-buttons] {
+  /* Hide qty + add-to-cart row when the adjacent buy-state is unavailable. */
+  [data-buy-state][data-variant-available="false"] + [data-buy-state-buttons] {
     display: none !important;
   }
 
