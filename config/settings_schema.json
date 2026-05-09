@@ -8,6 +8,21 @@
     "theme_support_url": "https://support.shopify.com/"
   },
   {
+    "name": "Notify me when available",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "When a product variant is sold out, customers see an inline 'Notify me when available' form on the PDP. Submissions are POSTed to this URL as JSON ({ email, product, variant, url, website }). Easiest backend: a Google Apps Script web app that appends rows to a Sheet."
+      },
+      {
+        "type": "text",
+        "id": "notify_endpoint",
+        "label": "POST endpoint URL",
+        "info": "Full URL including https://. External URLs allowed."
+      }
+    ]
+  },
+  {
     "name": "Volume pricing",
     "settings": [
       {

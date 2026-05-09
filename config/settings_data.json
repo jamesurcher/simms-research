@@ -10,6 +10,7 @@
 {
   "current": {
     "tos_gate_background": "shopify://shop_images/Main_Hero_Image.jpg",
+    "notify_endpoint": "https://script.google.com/macros/s/AKfycbxdpe_xtH4OgHZiGM92wThh7ATC1QrgJeCC_1EiYByT5g77QdVD78UTfs0qIdrRzf9t/exec",
     "logo": "shopify://shop_images/Simms_Logo_Banner_4.png",
     "logo_inverse": "shopify://shop_images/Simms_Logo_Banner_3.png",
     "logo_height": 60,

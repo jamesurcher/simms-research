@@ -67,9 +67,17 @@
           {%- render 'gift-card-recipient-form', product: product, form: form, section: section, block: block -%}
           <span class="buy-buttons-block__bar">
         {%- endif -%}
-        {% render 'volume-tier-selector', variant: variant, block_id: block.id %}
+        <div class="buy-state" data-buy-state data-variant-available="{% if can_add_to_cart %}true{% else %}false{% endif %}">
+          <div class="buy-state__instock" data-buy-state-instock>
+            {% render 'volume-tier-selector', variant: variant, block_id: block.id %}
+          </div>
+          <div class="buy-state__notify" data-buy-state-notify>
+            {% render 'notify-me-form', variant: variant, product: product, block_id: block.id %}
+          </div>
+        </div>
         <div
           class="product-form-buttons spacing-style{% if block_settings.stacking %} product-form-buttons--stacked{% endif %}"
+          data-buy-state-buttons
           style="{% render 'spacing-style', settings: block_settings %}"
           ref="productFormButtons"
         >
