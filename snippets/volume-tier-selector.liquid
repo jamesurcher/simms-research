@@ -37,12 +37,6 @@
     assign group_id = 'volume-tier-' | append: variant.id | append: '-' | append: block_id
     assign base_price = variant.price
     assign compare_price = variant.compare_at_price
-
-    assign tiers_qty = '' | split: ''
-    assign tiers_pct = '' | split: ''
-    if t1_qty > 0 and t1_pct > 0
-      assign tiers_qty = tiers_qty | concat: t1_qty | split: ''
-    endif
   -%}
 
   <volume-tier-selector class="volume-tier-selector" data-group-id="{{ group_id }}">

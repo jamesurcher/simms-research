@@ -1,12 +1,21 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
       "type": "about-quality",
-
       "blocks": {
         "diff-1": {
           "type": "differentiator",
           "settings": {
+            "icon": "map-pin",
             "eyebrow": "Sourcing",
             "title": "American API only",
             "body": "We source exclusively from US-licensed manufacturers with documented synthesis chains."
@@ -15,6 +24,7 @@
         "diff-2": {
           "type": "differentiator",
           "settings": {
+            "icon": "flask-conical",
             "eyebrow": "Testing",
             "title": "Independent third-party",
             "body": "Every batch is submitted to an independent ISO-certified laboratory before release."
@@ -23,6 +33,7 @@
         "diff-3": {
           "type": "differentiator",
           "settings": {
+            "icon": "qr-code",
             "eyebrow": "Labeling",
             "title": "Batch-level COA",
             "body": "Each vial is labeled with its batch ID. The matching COA is published on the product page."
@@ -31,6 +42,7 @@
         "diff-4": {
           "type": "differentiator",
           "settings": {
+            "icon": "package",
             "eyebrow": "Dispatch",
             "title": "Same-week fulfillment",
             "body": "Orders placed on in-stock items ship within 2 business days from our Tampa facility."
@@ -108,14 +120,25 @@
         }
       },
       "block_order": [
-        "diff-1", "diff-2", "diff-3", "diff-4",
-        "step-1", "step-2", "step-3", "step-4", "step-5", "step-6",
-        "commit-1", "commit-2", "commit-3", "commit-4"
+        "diff-1",
+        "diff-2",
+        "diff-3",
+        "diff-4",
+        "step-1",
+        "step-2",
+        "step-3",
+        "step-4",
+        "step-5",
+        "step-6",
+        "commit-1",
+        "commit-2",
+        "commit-3",
+        "commit-4"
       ],
       "settings": {
         "color_scheme": "scheme-1",
         "eyebrow": "Simms Research · Tampa, FL",
-        "heading": "The source for research-grade peptides.",
+        "heading": "Your source for research-grade peptides.",
         "subhead": "Every vial we ship is third-party tested, batch-labeled, and documented — before it leaves our facility.",
         "process_eyebrow": "How We Verify Every Batch",
         "process_heading": "From synthesis to shipment.",
@@ -124,11 +147,15 @@
         "cta_eyebrow": "See The Results",
         "cta_heading": "Every batch. Every test.",
         "cta_primary_label": "View Lab Results",
+        "cta_primary_url": "",
         "cta_secondary_label": "Shop the Catalog",
+        "cta_secondary_url": "",
         "padding-block-start": 48,
         "padding-block-end": 120
       }
     }
   },
-  "order": ["main"]
+  "order": [
+    "main"
+  ]
 }

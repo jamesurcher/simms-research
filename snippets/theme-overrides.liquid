@@ -22,6 +22,308 @@
     min-height: var(--hero-min-height, 100svh) !important;
   }
 
+  /* ---- Homepage product-list heading -----------------------------------
+     Replace the default chunky rich-text treatment with the same restrained
+     editorial system used across the research and lab sections. */
+
+  [class*='__text_MEWCAN'] p {
+    font-family: var(--font-mono--family);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    line-height: 1.2;
+    text-transform: uppercase;
+    color: rgb(var(--color-foreground-rgb) / 0.55);
+    margin: 0;
+  }
+
+  [class*='__product_list_text_Bd9pVh'] h2 {
+    font-family: var(--font-heading--family);
+    font-size: clamp(2.25rem, 3vw, 2.5rem);
+    font-weight: var(--font-heading--weight);
+    line-height: 0.98;
+    letter-spacing: -0.01em;
+    color: var(--color-foreground-heading);
+    margin: 0;
+  }
+
+  /* ---- Legal pages ------------------------------------------------------
+     Keep policy pages deliberately plain and document-like. The page copy was
+     pasted with external utility classes, so this neutralizes that formatting
+     without changing the text. */
+
+  :is(
+      .main-page--terms-conditions,
+      .main-page--privacy-policy,
+      .main-page--refund-return,
+      .main-page--shipping-policy
+    )
+    .section-content-wrapper {
+    max-width: min(46rem, calc(100% - 2rem));
+    margin-inline: auto;
+    gap: 0;
+  }
+
+  :is(
+      .main-page--terms-conditions,
+      .main-page--privacy-policy,
+      .main-page--refund-return,
+      .main-page--shipping-policy
+    )
+    .section-content-wrapper
+    > .text-block:first-child {
+    display: none;
+  }
+
+  :is(
+      .main-page--terms-conditions,
+      .main-page--privacy-policy,
+      .main-page--refund-return,
+      .main-page--shipping-policy
+    )
+    .shopify-block.rte {
+    width: 100%;
+  }
+
+  :is(
+      .main-page--terms-conditions,
+      .main-page--privacy-policy,
+      .main-page--refund-return,
+      .main-page--shipping-policy
+    )
+    rte-formatter {
+    display: block;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #111;
+  }
+
+  :is(
+      .main-page--terms-conditions,
+      .main-page--privacy-policy,
+      .main-page--refund-return,
+      .main-page--shipping-policy
+    )
+    rte-formatter
+    :where(h1, h2, h3, h4, p, ul, ol) {
+    margin: 0;
+  }
+
+  :is(
+      .main-page--terms-conditions,
+      .main-page--privacy-policy,
+      .main-page--refund-return,
+      .main-page--shipping-policy
+    )
+    rte-formatter
+    > [class*='text-center'] {
+    margin-block: 0 2rem;
+    text-align: left;
+  }
+
+  :is(
+      .main-page--terms-conditions,
+      .main-page--privacy-policy,
+      .main-page--refund-return,
+      .main-page--shipping-policy
+    )
+    rte-formatter
+    h1 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0;
+    color: #111;
+  }
+
+  :is(
+      .main-page--terms-conditions,
+      .main-page--privacy-policy,
+      .main-page--refund-return,
+      .main-page--shipping-policy
+    )
+    rte-formatter
+    h1
+    + p {
+    margin-block-start: 0.75rem;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: #444;
+  }
+
+  :is(
+      .main-page--terms-conditions,
+      .main-page--privacy-policy,
+      .main-page--refund-return,
+      .main-page--shipping-policy
+    )
+    rte-formatter
+    h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: 0;
+    color: #111;
+  }
+
+  :is(
+      .main-page--terms-conditions,
+      .main-page--privacy-policy,
+      .main-page--refund-return,
+      .main-page--shipping-policy
+    )
+    rte-formatter
+    h3 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: 0;
+    color: #111;
+  }
+
+  :is(
+      .main-page--terms-conditions,
+      .main-page--privacy-policy,
+      .main-page--refund-return,
+      .main-page--shipping-policy
+    )
+    rte-formatter
+    p,
+  :is(
+      .main-page--terms-conditions,
+      .main-page--privacy-policy,
+      .main-page--refund-return,
+      .main-page--shipping-policy
+    )
+    rte-formatter
+    li {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: #222;
+  }
+
+  :is(
+      .main-page--terms-conditions,
+      .main-page--privacy-policy,
+      .main-page--refund-return,
+      .main-page--shipping-policy
+    )
+    rte-formatter
+    p
+    + p {
+    margin-block-start: 1rem;
+  }
+
+  :is(
+      .main-page--terms-conditions,
+      .main-page--privacy-policy,
+      .main-page--refund-return,
+      .main-page--shipping-policy
+    )
+    rte-formatter
+    ul,
+  :is(
+      .main-page--terms-conditions,
+      .main-page--privacy-policy,
+      .main-page--refund-return,
+      .main-page--shipping-policy
+    )
+    rte-formatter
+    ol {
+    padding-inline-start: 1.5rem;
+    margin-block-start: 0.75rem;
+  }
+
+  :is(
+      .main-page--terms-conditions,
+      .main-page--privacy-policy,
+      .main-page--refund-return,
+      .main-page--shipping-policy
+    )
+    rte-formatter
+    li
+    + li {
+    margin-block-start: 0.25rem;
+  }
+
+  :is(
+      .main-page--terms-conditions,
+      .main-page--privacy-policy,
+      .main-page--refund-return,
+      .main-page--shipping-policy
+    )
+    rte-formatter
+    section {
+    padding-block-start: 0;
+    margin-block-start: 1.75rem;
+    border: 0;
+  }
+
+  :is(
+      .main-page--terms-conditions,
+      .main-page--privacy-policy,
+      .main-page--refund-return,
+      .main-page--shipping-policy
+    )
+    rte-formatter
+    section
+    > *
+    + * {
+    margin-block-start: 0.75rem;
+  }
+
+  :is(
+      .main-page--terms-conditions,
+      .main-page--privacy-policy,
+      .main-page--refund-return,
+      .main-page--shipping-policy
+    )
+    rte-formatter
+    :is([class*='shadcn-card'], [class*='border'], [class*='bg-'], [class*='rounded'], [class*='shadow']) {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  :is(
+      .main-page--terms-conditions,
+      .main-page--privacy-policy,
+      .main-page--refund-return,
+      .main-page--shipping-policy
+    )
+    rte-formatter
+    :is([class*='shadcn-card'], [class*='border'], [class*='bg-'], [class*='rounded'], [class*='shadow'])
+    + * {
+    margin-block-start: 1.25rem;
+  }
+
+  :is(
+      .main-page--terms-conditions,
+      .main-page--privacy-policy,
+      .main-page--refund-return,
+      .main-page--shipping-policy
+    )
+    rte-formatter
+    [class*='flex'] {
+    display: block;
+  }
+
+  :is(
+      .main-page--terms-conditions,
+      .main-page--privacy-policy,
+      .main-page--refund-return,
+      .main-page--shipping-policy
+    )
+    rte-formatter
+    svg {
+    display: none;
+  }
+
   @media screen and (max-width: 749px) {
     body:has(> #header-group > .header-section > #header-component[transparent])
       .content-for-layout > .shopify-section:first-child .hero__media {
@@ -247,6 +549,22 @@
     letter-spacing: 0.14em;
     line-height: 1.2;
     text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .product-research-details__eyebrow-icon {
+    display: inline-flex;
+    align-items: center;
+    width: 0.95rem;
+    height: 0.95rem;
+    color: currentColor;
+  }
+
+  .product-research-details__eyebrow-icon svg {
+    width: 100%;
+    height: 100%;
   }
 
   .product-research-details__lead,

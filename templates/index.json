@@ -221,7 +221,7 @@
       "name": "t:names.hero",
       "settings": {
         "media_type_1": "image",
-        "image_1": "shopify://shop_images/Generated_Image_April_29_2026_-_6_57PM.jpg",
+        "image_1": "shopify://shop_images/Main_Hero_Image.jpg",
         "media_type_2": "image",
         "stack_media_on_mobile": false,
         "custom_mobile_media": false,
@@ -253,7 +253,21 @@
     },
     "trust_strip_main": {
       "type": "trust-strip",
-      "settings": {}
+      "settings": {
+        "eyebrow": "",
+        "icon_1": "award",
+        "value_1": "99%+",
+        "label_1": "Purity Guaranteed",
+        "icon_2": "file-text",
+        "value_2": "COA Included",
+        "label_2": "Third party lab tested",
+        "icon_3": "truck",
+        "value_3": "2-Day",
+        "label_3": "Fast Delivery",
+        "color_scheme": "",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      }
     },
     "product_list_themegen": {
       "type": "product-list",
@@ -363,18 +377,18 @@
               "type": "_product-list-text",
               "name": "t:names.collection_title",
               "settings": {
-                "text": "<h2><strong>Latest Research Peptides</strong></h2>",
+                "text": "<h2>Latest research peptides</h2>",
                 "width": "fit-content",
                 "max_width": "narrow",
                 "alignment": "left",
-                "type_preset": "h3",
-                "font": "var(--font-body--family)",
-                "font_size": "",
-                "line_height": "normal",
-                "letter_spacing": "normal",
+                "type_preset": "custom",
+                "font": "var(--font-heading--family)",
+                "font_size": "2.5rem",
+                "line_height": "tight",
+                "letter_spacing": "tight",
                 "case": "none",
                 "wrap": "pretty",
-                "color": "",
+                "color": "var(--color-foreground-heading)",
                 "background": false,
                 "background_color": "#00000026",
                 "corner_radius": 0,
@@ -576,7 +590,7 @@
       ],
       "name": "Popular Products",
       "settings": {
-        "collection": "vitamins-and-supplements-example-products",
+        "collection": "catalog",
         "layout_type": "grid",
         "carousel_on_mobile": true,
         "max_products": 8,

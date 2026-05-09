@@ -2,7 +2,9 @@
   "sections": {
     "main": {
       "type": "lab-results-index",
-      "settings": {}
+      "settings": {
+        "lab_partner": "HPLC Verified"
+      }
     }
   },
   "order": ["main"]

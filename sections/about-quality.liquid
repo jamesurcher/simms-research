@@ -26,6 +26,12 @@
       <div class="about-quality__diffs">
         {%- for block in differentiators -%}
           <div class="about-quality__diff" {{ block.shopify_attributes }}>
+            {%- if block.settings.icon != blank and block.settings.icon != 'none' -%}
+              <span class="about-quality__diff-icon" aria-hidden="true">
+                {%- assign icon_file = 'icon-' | append: block.settings.icon | append: '.svg' -%}
+                {{ icon_file | inline_asset_content }}
+              </span>
+            {%- endif -%}
             {%- if block.settings.eyebrow != blank -%}
               <p class="about-quality__diff-eyebrow">{{ block.settings.eyebrow }}</p>
             {%- endif -%}
@@ -186,6 +192,21 @@
     display: flex;
     flex-direction: column;
     gap: 0.625rem;
+  }
+
+  .about-quality__diff-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 1.5rem;
+    height: 1.5rem;
+    color: var(--color-foreground);
+    margin-block-end: 0.75rem;
+  }
+
+  .about-quality__diff-icon svg {
+    width: 100%;
+    height: 100%;
   }
 
   .about-quality__diff-eyebrow {
@@ -532,6 +553,27 @@
       "name": "Differentiator",
       "limit": 4,
       "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "none", "label": "None" },
+            { "value": "map-pin", "label": "Map pin" },
+            { "value": "flask-conical", "label": "Flask" },
+            { "value": "qr-code", "label": "QR code" },
+            { "value": "package", "label": "Package" },
+            { "value": "truck", "label": "Truck" },
+            { "value": "award", "label": "Award" },
+            { "value": "file-text", "label": "Document" },
+            { "value": "shield-check", "label": "Shield" },
+            { "value": "gauge", "label": "Gauge" },
+            { "value": "microscope", "label": "Microscope" },
+            { "value": "clipboard-list", "label": "Clipboard" },
+            { "value": "list-filter", "label": "Filter" }
+          ],
+          "default": "none"
+        },
         {
           "type": "text",
           "id": "eyebrow",

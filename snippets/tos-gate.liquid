@@ -9,8 +9,16 @@
   - Suppressed inside the theme editor (request.design_mode).
 {% enddoc %}
 
-{%- if request.design_mode or request.page_type == 'policy' -%}
-  {%- comment -%} Don't gate the editor preview or policy pages (Terms, Privacy, etc). {%- endcomment -%}
+{%- liquid
+  assign legal_page_handles = 'terms-conditions,privacy-policy,refund-return,shipping-policy' | split: ','
+  assign is_legal_page = false
+  if request.page_type == 'page' and legal_page_handles contains page.handle
+    assign is_legal_page = true
+  endif
+-%}
+
+{%- if request.design_mode or request.page_type == 'policy' or is_legal_page -%}
+  {%- comment -%} Don't gate the editor preview, Shopify policy pages, or custom legal pages. {%- endcomment -%}
 {%- else -%}
   <script>
     (function () {
@@ -68,20 +76,23 @@
 
         <p class="tos-gate__body">
           By entering, you accept our
-          <a href="/policies/terms-of-service" class="tos-gate__link">Terms</a>
+          <a href="/pages/terms-conditions" class="tos-gate__link">Terms</a>
           and confirm you are of legal age to view research compounds in your jurisdiction.
         </p>
 
         <ul class="tos-gate__trust" role="list">
           <li>
+            <span class="tos-gate__trust-icon" aria-hidden="true">{{ 'icon-award.svg' | inline_asset_content }}</span>
             <span class="tos-gate__trust-value">99%+</span>
             <span class="tos-gate__trust-label">Purity</span>
           </li>
           <li>
+            <span class="tos-gate__trust-icon" aria-hidden="true">{{ 'icon-flask-conical.svg' | inline_asset_content }}</span>
             <span class="tos-gate__trust-value">Lab</span>
             <span class="tos-gate__trust-label">Certified</span>
           </li>
           <li>
+            <span class="tos-gate__trust-icon" aria-hidden="true">{{ 'icon-shield-check.svg' | inline_asset_content }}</span>
             <span class="tos-gate__trust-value">Research</span>
             <span class="tos-gate__trust-label">Use only</span>
           </li>
@@ -357,6 +368,22 @@
     flex-direction: column;
     align-items: center;
     gap: 0.35rem;
+  }
+
+  .tos-gate__trust-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    color: #0a0a0a;
+    margin-block-end: 0.15rem;
+    opacity: 0.85;
+  }
+
+  .tos-gate__trust-icon svg {
+    width: 100%;
+    height: 100%;
   }
 
   .tos-gate__trust-value {

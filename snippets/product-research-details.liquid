@@ -79,7 +79,10 @@
 >
   {% if research_lead != blank %}
     <section class="product-research-details__section product-research-details__section--profile">
-      <p class="product-research-details__eyebrow">Research Profile</p>
+      <p class="product-research-details__eyebrow">
+        <span class="product-research-details__eyebrow-icon" aria-hidden="true">{{ 'icon-microscope.svg' | inline_asset_content }}</span>
+        Research Profile
+      </p>
       <rte-formatter class="product-research-details__lead rte">
         {{ research_lead }}
       </rte-formatter>
@@ -94,7 +97,10 @@
 
   {% if specs_count >= 2 %}
     <section class="product-research-details__section product-research-details__section--specs">
-      <p class="product-research-details__eyebrow">Technical Specifications</p>
+      <p class="product-research-details__eyebrow">
+        <span class="product-research-details__eyebrow-icon" aria-hidden="true">{{ 'icon-clipboard-list.svg' | inline_asset_content }}</span>
+        Technical Specifications
+      </p>
       <dl class="product-research-details__spec-grid">
         {% if details_cas != blank %}
           <div class="product-research-details__spec">
