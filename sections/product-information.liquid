@@ -168,6 +168,8 @@
 {% endif %}
 
 {% render 'product-information-content',
+  product_resource: closest.product,
+  render_media_coa: true,
   product_media_size: closest.product.media.size,
   section_id: section.id,
   settings: section.settings,

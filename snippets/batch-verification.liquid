@@ -34,7 +34,11 @@
   assign exact_first_batch = blank
   assign fallback_current_batch = blank
   assign fallback_first_batch = blank
+  assign product_current_batch = blank
+  assign product_first_batch = blank
+  assign current_batch_matches_selected = false
   assign use_product_level_batches = false
+  assign use_all_batches = false
   assign batch_source = 'none'
   assign debug_first_batch_variant_label = blank
   assign debug_first_batch_id = blank
@@ -57,6 +61,14 @@
       assign batch_variant_label = batch.variant_label.value | default: blank
       assign batch_variant_key = batch_variant_label | downcase | remove: ' ' | remove: '-' | remove: '_' | remove: 'mg'
       assign matches_selected_key = false
+
+      if product_first_batch == blank
+        assign product_first_batch = batch
+      endif
+
+      if batch.is_current.value == true and product_current_batch == blank
+        assign product_current_batch = batch
+      endif
 
       if selected_variant_key != blank and batch_variant_key == selected_variant_key
         assign matches_selected_key = true
@@ -88,31 +100,46 @@
     assign single_batch_variant_label = single_batch.variant_label.value | default: blank
     assign single_batch_variant_key = single_batch_variant_label | downcase | remove: ' ' | remove: '-' | remove: '_' | remove: 'mg'
     assign single_batch_matches = false
+    assign single_batch_matches_selected = false
 
     if single_batch_variant_key == blank
       assign single_batch_matches = true
       assign use_product_level_batches = true
     elsif selected_variant_key != blank and single_batch_variant_key == selected_variant_key
       assign single_batch_matches = true
+      assign single_batch_matches_selected = true
     elsif selected_dosage_key != blank and single_batch_variant_key == selected_dosage_key
       assign single_batch_matches = true
+      assign single_batch_matches_selected = true
     endif
 
     if single_batch_matches
       assign current_batch = single_batch
+      assign current_batch_matches_selected = single_batch_matches_selected
     endif
   endif
 
   if exact_current_batch != blank
     assign current_batch = exact_current_batch
+    assign current_batch_matches_selected = true
   elsif exact_first_batch != blank
     assign current_batch = exact_first_batch
+    assign current_batch_matches_selected = true
   elsif fallback_current_batch != blank
     assign current_batch = fallback_current_batch
     assign use_product_level_batches = true
   elsif fallback_first_batch != blank
     assign current_batch = fallback_first_batch
     assign use_product_level_batches = true
+  elsif product_current_batch != blank
+    assign current_batch = product_current_batch
+    assign use_all_batches = true
+  elsif product_first_batch != blank
+    assign current_batch = product_first_batch
+    assign use_all_batches = true
+  elsif current_batch == blank and single_batch != blank
+    assign current_batch = single_batch
+    assign use_all_batches = true
   endif
 
   assign current_batch_id = current_batch.batch_id.value
@@ -123,7 +150,10 @@
   assign current_net_content = current_batch.net_content.value
   assign current_net_delta = current_batch.net_content_delta.value
   assign calculated_net_delta = blank
-  assign current_labeled_basis = selected_dosage_label | default: current_labeled_content
+  assign current_labeled_basis = current_labeled_content
+  if current_batch_matches_selected and selected_dosage_label != blank
+    assign current_labeled_basis = selected_dosage_label
+  endif
   assign current_labeled_number = current_labeled_basis | downcase | remove: 'mg' | remove: ' ' | remove: ',' | plus: 0.0
   assign current_net_number = current_net_content | downcase | remove: 'mg' | remove: ' ' | remove: ',' | plus: 0.0
 
@@ -164,6 +194,11 @@
   if current_coa_url == blank
     assign current_coa_url = current_batch.coa_url.value
   endif
+  assign current_coa_url_downcase = current_coa_url | downcase
+  assign current_coa_is_pdf = false
+  if current_coa_url_downcase contains '.pdf'
+    assign current_coa_is_pdf = true
+  endif
   assign previous_batches_count = 0
 
   if current_batch != blank and batches != blank
@@ -173,7 +208,9 @@
       assign batch_variant_key = batch_variant_label | downcase | remove: ' ' | remove: '-' | remove: '_' | remove: 'mg'
       assign variant_matches = false
 
-      if use_product_level_batches and batch_variant_key == blank
+      if use_all_batches
+        assign variant_matches = true
+      elsif use_product_level_batches and batch_variant_key == blank
         assign variant_matches = true
       elsif use_product_level_batches == false
         if selected_variant_key != blank and batch_variant_key == selected_variant_key
@@ -386,17 +423,43 @@
         <div class="batch-verification__dialog-shell">
           <div class="batch-verification__dialog-header">
             <p>Certificate of Analysis</p>
+            <a
+              class="batch-verification__dialog-link"
+              href="{{ current_coa_url }}"
+              target="_blank"
+              rel="noopener"
+              data-coa-dialog-link
+              {% unless current_coa_is_pdf %}
+                hidden
+              {% endunless %}
+            >
+              Open PDF
+            </a>
             <button type="button" class="batch-verification__dialog-close" aria-label="Close COA" data-coa-close>
               ×
             </button>
           </div>
           <div class="batch-verification__dialog-body" data-coa-dialog-body>
+            <iframe
+              class="batch-verification__dialog-frame"
+              src="{% if current_coa_is_pdf %}{{ current_coa_url }}{% else %}about:blank{% endif %}"
+              title="Certificate of analysis for {{ product_resource.title | escape }}"
+              data-coa-dialog-frame
+              {% unless current_coa_is_pdf %}
+                hidden
+              {% endunless %}
+            ></iframe>
             <img
-              src="{{ current_coa_url }}"
+              class="batch-verification__dialog-image"
+              src="{{ 'icon-file-text.svg' | asset_url }}"
               alt="Certificate of analysis for {{ product_resource.title | escape }}"
               width="2400"
               height="3200"
               loading="lazy"
+              data-coa-dialog-image
+              {% if current_coa_is_pdf %}
+                hidden
+              {% endif %}
             >
           </div>
         </div>
@@ -430,6 +493,16 @@
             if (event.target === this.dialog) this.closeDialog();
           };
 
+          this.handleDialogClose = () => {
+            document.documentElement.removeAttribute('scroll-lock');
+          };
+
+          this.handleDialogCancel = () => {
+            requestAnimationFrame(() => {
+              if (!this.dialog?.open) document.documentElement.removeAttribute('scroll-lock');
+            });
+          };
+
           this.handleVariantUpdate = (event) => {
             const productId = this.getAttribute('data-batch-verification-product-id');
             const eventProductId = event.detail?.data?.productId;
@@ -444,6 +517,8 @@
           this.addEventListener('click', this.handleCoaClick);
           this.addEventListener('click', this.handleCloseClick);
           this.dialog?.addEventListener('click', this.handleBackdropClick);
+          this.dialog?.addEventListener('close', this.handleDialogClose);
+          this.dialog?.addEventListener('cancel', this.handleDialogCancel);
           document.addEventListener('variant:update', this.handleVariantUpdate);
         }
 
@@ -451,15 +526,33 @@
           this.removeEventListener('click', this.handleCoaClick);
           this.removeEventListener('click', this.handleCloseClick);
           this.dialog?.removeEventListener('click', this.handleBackdropClick);
+          this.dialog?.removeEventListener('close', this.handleDialogClose);
+          this.dialog?.removeEventListener('cancel', this.handleDialogCancel);
           document.removeEventListener('variant:update', this.handleVariantUpdate);
         }
 
         openDialog(url) {
           if (!this.dialog || !url) return;
 
-          const image = this.dialogBody?.querySelector('img');
+          const isPdf = /\.pdf(?:$|[?#])/i.test(url);
+          const frame = this.dialogBody?.querySelector('[data-coa-dialog-frame]');
+          const image = this.dialogBody?.querySelector('[data-coa-dialog-image]');
+          const link = this.dialog?.querySelector('[data-coa-dialog-link]');
 
-          if (image) image.src = url;
+          if (link) {
+            link.href = url;
+            link.hidden = !isPdf;
+          }
+
+          if (frame) {
+            frame.hidden = !isPdf;
+            frame.src = isPdf ? url : 'about:blank';
+          }
+
+          if (image) {
+            image.hidden = isPdf;
+            if (!isPdf) image.src = url;
+          }
 
           if (typeof this.dialog.showModal === 'function') {
             this.dialog.showModal();

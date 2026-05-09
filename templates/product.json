@@ -185,18 +185,6 @@
                 "price_tVjtKg"
               ]
             },
-            "divider_VJhene": {
-              "type": "_divider",
-              "name": "t:names.divider",
-              "settings": {
-                "thickness": 1,
-                "corner_radius": "square",
-                "width_percent": 100,
-                "padding-block-start": 0,
-                "padding-block-end": 0
-              },
-              "blocks": {}
-            },
             "variant_picker_R3rGDr": {
               "type": "variant-picker",
               "settings": {
@@ -271,32 +259,6 @@
               },
               "blocks": {}
             },
-            "text_batch_verification": {
-              "type": "text",
-              "name": "Certificate of Analysis",
-              "settings": {
-                "text": "<p>Certificate of Analysis</p>",
-                "width": "100%",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "paragraph",
-                "font": "var(--font-body--family)",
-                "font_size": "",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
             "text_product_research_details": {
               "type": "text",
               "name": "Research details",
@@ -326,13 +288,11 @@
           },
           "block_order": [
             "group_icgrde",
-            "divider_VJhene",
             "product_trust_badges_1",
             "variant_picker_R3rGDr",
             "product_stock_status_1",
             "buy_buttons_eYQEYi",
-            "text_product_research_details",
-            "text_batch_verification"
+            "text_product_research_details"
           ]
         }
       },

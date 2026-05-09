@@ -4,6 +4,8 @@
   Renders the product information layout with media gallery and product details.
   Used by both product-information and featured-product-information sections.
 
+  @param {object} [product_resource] - Product to render product-scoped media extras for
+  @param {boolean} [render_media_coa] - Whether to render the product COA module under media
   @param {number} product_media_size - Number of media items in the product
   @param {string} section_id - Unique section ID
   @param {object} settings - Section settings object
@@ -25,6 +27,8 @@
   {% endcapture %}
 
   {% render 'product-information-content',
+    product_resource: product,
+    render_media_coa: true,
     product_media_size: product.media.size,
     section_id: section.id,
     settings: section.settings,
@@ -35,6 +39,8 @@
 {% enddoc %}
 
 {% liquid
+  assign product_resource = product_resource | default: closest.product | default: product
+
   # Determine render order based on media position
   if settings.desktop_media_position == 'left'
     assign render_order = 'media,product-details'
@@ -109,6 +115,14 @@
     {% endfor %}
   </div>
 
+  {% if render_media_coa and product_resource != blank %}
+    <div class="{{ product_grid_class }} product-information__post-grid">
+      <div class="product-information__media-coa">
+        {% render 'batch-verification', product_resource: product_resource %}
+      </div>
+    </div>
+  {% endif %}
+
   {{ additional_blocks }}
 </div>
 
@@ -140,6 +154,14 @@
     height: 100%;
   }
 
+  .product-information__media-coa {
+    min-width: 0;
+  }
+
+  .product-information__post-grid:has(batch-verification[hidden]) {
+    display: none;
+  }
+
   /* Mobile styles */
   @media screen and (max-width: 749px) {
     .product-information__media {
@@ -147,6 +169,10 @@
     }
 
     .product-details {
+      grid-column: 2 / 3;
+    }
+
+    .product-information__post-grid .product-information__media-coa {
       grid-column: 2 / 3;
     }
   }
@@ -182,6 +208,11 @@
         &:has(.media-gallery--extend) {
           grid-column: 1 / 3;
         }
+
+        &.product-information__post-grid .product-information__media-coa {
+          grid-column: 1 / 2;
+          padding-right: calc(var(--gap, 0) / 2);
+        }
       }
 
       /* Media on the right side */
@@ -200,6 +231,11 @@
 
         &:has(.media-gallery--extend) {
           grid-column: 2 / -1;
+        }
+
+        &.product-information__post-grid .product-information__media-coa {
+          grid-column: 2 / 3;
+          padding-left: calc(var(--gap, 0) / 2);
         }
       }
 
@@ -222,6 +258,11 @@
             }
           }
 
+          &.product-information__post-grid .product-information__media-coa {
+            grid-column: 2 / 3;
+            padding-right: calc(var(--gap, 0) / 2);
+          }
+
           .product-details {
             grid-column: 3 / 4;
           }
@@ -234,6 +275,11 @@
             &:has(.media-gallery--extend) {
               grid-column: 3 / -1;
             }
+          }
+
+          &.product-information__post-grid .product-information__media-coa {
+            grid-column: 3 / 4;
+            padding-left: calc(var(--gap, 0) / 2);
           }
 
           .product-details {
@@ -307,6 +353,18 @@
   @media screen and (min-width: 1600px) {
     .product-information__grid--limit-details .product-details > .group-block {
       --details-max-width: 32rem;
+    }
+  }
+
+  @media screen and (min-width: 1200px) {
+    .product-information__post-grid.product-information--media-left .product-information__media-coa .batch-verification {
+      max-width: min(35rem, 42vw);
+      margin-inline-start: auto;
+    }
+
+    .product-information__post-grid.product-information--media-right .product-information__media-coa .batch-verification {
+      max-width: min(35rem, 42vw);
+      margin-inline-end: auto;
     }
   }
 

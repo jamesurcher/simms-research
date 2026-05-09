@@ -327,7 +327,7 @@
   @media screen and (max-width: 749px) {
     body:has(> #header-group > .header-section > #header-component[transparent])
       .content-for-layout > .shopify-section:first-child .hero__media {
-      object-position: 50% center;
+      object-position: 30% center;
     }
 
     body:has(> #header-group > .header-section > #header-component[transparent])
@@ -926,6 +926,7 @@
   }
 
   .batch-verification__dialog-header p {
+    flex: 1;
     margin: 0;
     color: rgb(var(--color-foreground-rgb) / 0.58);
     font-family: var(--font-mono--family);
@@ -934,11 +935,28 @@
     text-transform: uppercase;
   }
 
+  .batch-verification__dialog-link {
+    color: rgb(var(--color-foreground-rgb) / 0.62);
+    font-family: var(--font-body--family);
+    font-size: 0.8125rem;
+    text-decoration-color: currentColor;
+    text-underline-offset: 0.24em;
+    white-space: nowrap;
+  }
+
+  .batch-verification__dialog-link:hover {
+    color: var(--color-foreground);
+  }
+
+  .batch-verification__dialog-link[hidden] {
+    display: none;
+  }
+
   .batch-verification__dialog-close {
     display: inline-grid;
     width: 2.15rem;
     height: 2.15rem;
-    margin-inline-start: auto;
+    margin-inline-start: 0;
     place-items: center;
     border: 1px solid rgb(var(--color-foreground-rgb) / 0.14);
     border-radius: 999px;
@@ -961,13 +979,28 @@
     background: rgb(var(--color-background-rgb) / 1);
   }
 
-  .batch-verification__dialog-body img {
+  .batch-verification__dialog-body [hidden] {
+    display: none !important;
+  }
+
+  .batch-verification__dialog-body img,
+  .batch-verification__dialog-frame {
     display: block;
     width: 100%;
-    height: auto;
     margin-inline: auto;
     border-radius: 0;
     box-shadow: none;
+  }
+
+  .batch-verification__dialog-body img {
+    height: auto;
+  }
+
+  .batch-verification__dialog-frame {
+    height: min(78dvh, 64rem);
+    min-height: 32rem;
+    border: 0;
+    background: #fff;
   }
 
   @media screen and (min-width: 990px) {
@@ -1046,6 +1079,11 @@
 
     .batch-verification__dialog-body {
       padding: 0;
+    }
+
+    .batch-verification__dialog-frame {
+      height: calc(100dvh - 4rem);
+      min-height: 0;
     }
   }
 
