@@ -94,7 +94,21 @@
           autocomplete="off"
           spellcheck="false"
         >
+        <button
+          type="button"
+          class="lab-results__search-clear"
+          data-lab-clear-search
+          data-lab-search-clear
+          hidden
+          aria-label="Clear search"
+        >
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <line x1="3" y1="3" x2="11" y2="11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            <line x1="11" y1="3" x2="3" y2="11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+        </button>
       </div>
+      <p class="lab-results__status" data-lab-status aria-live="polite" hidden></p>
 
       <dl class="lab-results__stats">
         <div class="lab-results__stat">
@@ -137,7 +151,7 @@
           {%- if entry_batches != blank -%}
             {%- liquid
               # Build search haystack: title + cas + every batch_id
-              assign cas_value = product.metafields.spec.cas.value | default: ''
+              assign cas_value = product.metafields.spec.cas.value | default: product.metafields.details.cas.value | default: ''
               assign batch_ids_concat = ''
               if batches != blank
                 for b in batches
@@ -418,10 +432,13 @@
           this.grid       = this.querySelector('[data-lab-grid]');
           this.details    = this.querySelectorAll('[data-lab-detail]');
           this.searchInput = this.querySelector('[data-lab-search]');
+          this.searchClear = this.querySelector('[data-lab-search-clear]');
+          this.status     = this.querySelector('[data-lab-status]');
           this.noResults  = this.querySelector('[data-lab-no-results]');
           this.dialog     = this.querySelector('[data-lab-dialog]');
           this.dialogFrame = this.querySelector('[data-lab-dialog-frame]');
           this.dialogTitle = this.querySelector('[data-lab-dialog-title]');
+          this.cards      = this.grid ? Array.from(this.grid.querySelectorAll('[data-lab-card]')) : [];
 
           this.handleHashChange = () => this.applyHash();
           this.handleClick      = (e) => this.onClick(e);
@@ -437,6 +454,7 @@
           document.addEventListener('keydown', this.handleKeydown);
 
           this.applyHash();
+          this.applySearch();
         }
 
         disconnectedCallback() {
@@ -483,14 +501,18 @@
           });
 
           if (activeDetail) {
-            this.grid.hidden = true;
-            if (this.searchInput) this.searchInput.value = '';
-            if (this.noResults) this.noResults.hidden = true;
+            if (this.grid) this.grid.hidden = true;
+            if (this.searchInput?.value) {
+              this.searchInput.value = '';
+              this.applySearch();
+            } else if (this.noResults) {
+              this.noResults.hidden = true;
+            }
             // Scroll into view so user lands on the detail title, not the page top
             requestAnimationFrame(() => {
               activeDetail.scrollIntoView({ behavior: 'smooth', block: 'start' });
             });
-          } else {
+          } else if (this.grid) {
             this.grid.hidden = false;
           }
         }
@@ -517,17 +539,39 @@
 
         applySearch() {
           const raw = (this.searchInput?.value || '').trim().toLowerCase();
-          const terms = raw.split(/\s+/).filter(Boolean);
-          const cards = this.grid.querySelectorAll('[data-lab-card]');
+          const terms = raw.split(/\s+/).map((term) => this.normalizeSearchValue(term)).filter(Boolean);
+          if (terms.length > 0 && /^#tests\//.test(window.location.hash || '')) {
+            this.clearHash();
+          }
+
+          const cards = this.cards || [];
           let visible = 0;
           cards.forEach((card) => {
-            const haystack = (card.dataset.search || '').toLowerCase();
+            const haystack = this.normalizeSearchValue(card.dataset.search || '');
             const matches = terms.length === 0 || terms.every((t) => haystack.includes(t));
             card.hidden = !matches;
             if (matches) visible++;
           });
           if (this.noResults) {
             this.noResults.hidden = (visible > 0 || terms.length === 0);
+          }
+          this.updateSearchUi(visible, raw);
+        }
+
+        normalizeSearchValue(value) {
+          return value.toLowerCase().replace(/[^a-z0-9]+/g, '');
+        }
+
+        updateSearchUi(visible, query) {
+          const total = this.cards?.length || 0;
+          if (this.searchClear) this.searchClear.hidden = query.length === 0;
+          if (!this.status) return;
+
+          this.status.hidden = total === 0;
+          if (query) {
+            this.status.textContent = `Showing ${visible} of ${total} compounds matching "${query}"`;
+          } else {
+            this.status.textContent = `Showing ${total} of ${total} compounds`;
           }
         }
 
@@ -721,7 +765,7 @@
     background: transparent;
     border: 1px solid rgb(var(--color-foreground-rgb) / 0.18);
     border-radius: 999px;
-    padding: 0.875rem 1rem 0.875rem 2.625rem;
+    padding: 0.875rem 3rem 0.875rem 2.625rem;
     font-family: var(--font-mono--family);
     font-size: 0.875rem;
     color: var(--color-foreground);
@@ -740,6 +784,43 @@
 
   /* Hide the native search clear button for visual consistency */
   .lab-results__search-input::-webkit-search-cancel-button { -webkit-appearance: none; }
+
+  .lab-results__search-clear {
+    position: absolute;
+    right: 0.875rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: rgb(var(--color-foreground-rgb) / 0.55);
+    cursor: pointer;
+    transition: color 120ms ease, background 120ms ease;
+  }
+
+  .lab-results__search-clear:hover,
+  .lab-results__search-clear:focus-visible {
+    color: var(--color-foreground);
+    background: rgb(var(--color-foreground-rgb) / 0.06);
+    outline: none;
+  }
+
+  .lab-results__search-clear[hidden] { display: none; }
+
+  .lab-results__status {
+    margin-block: -0.25rem 1rem;
+    font-family: var(--font-body--family);
+    font-size: 0.8125rem;
+    color: rgb(var(--color-foreground-rgb) / 0.55);
+  }
+
+  .lab-results__status[hidden] { display: none; }
 
   /* ---------- Index grid ---------- */
 
@@ -796,6 +877,8 @@
     transition: border-color 160ms ease, background 160ms ease;
     background: rgb(var(--color-foreground-rgb) / 0.04);
   }
+
+  .lab-card[hidden] { display: none; }
 
   .lab-card:hover {
     border-color: rgb(var(--color-foreground-rgb) / 0.32);
