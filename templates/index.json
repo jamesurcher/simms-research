@@ -260,13 +260,16 @@
         "label_1": "Purity Guaranteed",
         "icon_2": "file-text",
         "value_2": "COA Included",
-        "label_2": "Third party lab tested",
-        "icon_3": "truck",
-        "value_3": "2-Day",
-        "label_3": "Fast Delivery",
+        "label_2": "Full Documentation",
+        "icon_3": "flask-conical",
+        "value_3": "Third Party",
+        "label_3": "Lab Tested",
+        "icon_4": "truck",
+        "value_4": "2-Day",
+        "label_4": "Fast Delivery",
         "color_scheme": "",
-        "padding-block-start": 96,
-        "padding-block-end": 96
+        "padding-block-start": 48,
+        "padding-block-end": 48
       }
     },
     "product_list_themegen": {

@@ -1,5 +1,5 @@
 {% comment %}
-  Trust strip — 3-column section under hero.
+  Trust strip — 4-column section under hero.
   Each column: optional icon + a value in display weight + a mono uppercase label.
 {% endcomment %}
 
@@ -15,7 +15,7 @@
       <p class="trust-strip__eyebrow">{{ section.settings.eyebrow }}</p>
     {%- endif -%}
     <div class="trust-strip__grid">
-      {%- for i in (1..3) -%}
+      {%- for i in (1..4) -%}
         {%- assign value_key = 'value_' | append: i -%}
         {%- assign label_key = 'label_' | append: i -%}
         {%- assign icon_key = 'icon_' | append: i -%}
@@ -43,14 +43,14 @@
 
 {% stylesheet %}
   .trust-strip {
-    padding-block-start: var(--trust-strip-padding-block-start, 96px);
-    padding-block-end: var(--trust-strip-padding-block-end, 96px);
+    padding-block-start: var(--trust-strip-padding-block-start, 48px);
+    padding-block-end: var(--trust-strip-padding-block-end, 48px);
     background: var(--color-background);
     color: var(--color-foreground);
   }
 
   .trust-strip__inner {
-    max-width: var(--normal-page-width);
+    max-width: min(var(--normal-page-width), 1040px);
     margin-inline: auto;
   }
 
@@ -66,18 +66,18 @@
 
   .trust-strip__grid {
     display: grid;
-    grid-template-columns: repeat(3, auto);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     justify-content: center;
-    column-gap: clamp(4.5rem, 11vw, 9rem);
-    row-gap: 2rem;
+    column-gap: clamp(1.5rem, 4vw, 4rem);
+    row-gap: 1.5rem;
     border-block-start: 1px solid currentColor;
-    padding-block-start: 2.5rem;
+    padding-block-start: 1.75rem;
   }
 
   .trust-strip__column {
     display: flex;
     flex-direction: column;
-    gap: 0.875rem;
+    gap: 0.5rem;
     align-items: center;
     text-align: center;
   }
@@ -86,11 +86,11 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: clamp(2rem, 3vw, 2.5rem);
-    height: clamp(2rem, 3vw, 2.5rem);
+    width: clamp(1.625rem, 1.25vw, 2rem);
+    height: clamp(1.625rem, 1.25vw, 2rem);
     color: var(--color-foreground);
     opacity: 0.85;
-    margin-block-end: 0.5rem;
+    margin-block-end: 0.25rem;
   }
 
   .trust-strip__icon svg {
@@ -101,7 +101,7 @@
   .trust-strip__value {
     font-family: var(--font-heading--family);
     font-weight: 400;
-    font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+    font-size: clamp(1.5rem, 1.6vw, 2.125rem);
     line-height: 1;
     letter-spacing: -0.01em;
   }
@@ -117,9 +117,30 @@
   }
 
   @media (max-width: 749px) {
+    .trust-strip {
+      padding-block-start: calc(var(--trust-strip-padding-block-start, 48px) * 0.75);
+      padding-block-end: calc(var(--trust-strip-padding-block-end, 48px) * 0.75);
+    }
+
     .trust-strip__grid {
-      grid-template-columns: 1fr;
-      column-gap: 0;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 1rem;
+      row-gap: 1.5rem;
+    }
+
+    .trust-strip__value {
+      font-size: clamp(1.25rem, 5.6vw, 1.5rem);
+    }
+
+    .trust-strip__label {
+      font-size: 0.5625rem;
+    }
+  }
+
+  @media (min-width: 750px) and (max-width: 989px) {
+    .trust-strip__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: clamp(1.5rem, 6vw, 3rem);
     }
   }
 {% endstylesheet %}
@@ -182,7 +203,7 @@
       "default": "file-text"
     },
     { "type": "text", "id": "value_2", "label": "Value", "default": "COA Included" },
-    { "type": "text", "id": "label_2", "label": "Label", "default": "Third party lab tested" },
+    { "type": "text", "id": "label_2", "label": "Label", "default": "Full Documentation" },
     { "type": "header", "content": "Column 3" },
     {
       "type": "select",
@@ -203,10 +224,34 @@
         { "value": "clipboard-list", "label": "Clipboard" },
         { "value": "list-filter", "label": "Filter" }
       ],
+      "default": "flask-conical"
+    },
+    { "type": "text", "id": "value_3", "label": "Value", "default": "Third Party" },
+    { "type": "text", "id": "label_3", "label": "Label", "default": "Lab Tested" },
+    { "type": "header", "content": "Column 4" },
+    {
+      "type": "select",
+      "id": "icon_4",
+      "label": "Icon",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "award", "label": "Award" },
+        { "value": "truck", "label": "Truck" },
+        { "value": "file-text", "label": "Document" },
+        { "value": "shield-check", "label": "Shield" },
+        { "value": "gauge", "label": "Gauge" },
+        { "value": "flask-conical", "label": "Flask" },
+        { "value": "map-pin", "label": "Map pin" },
+        { "value": "package", "label": "Package" },
+        { "value": "qr-code", "label": "QR code" },
+        { "value": "microscope", "label": "Microscope" },
+        { "value": "clipboard-list", "label": "Clipboard" },
+        { "value": "list-filter", "label": "Filter" }
+      ],
       "default": "truck"
     },
-    { "type": "text", "id": "value_3", "label": "Value", "default": "2-Day" },
-    { "type": "text", "id": "label_3", "label": "Label", "default": "Fast Delivery" },
+    { "type": "text", "id": "value_4", "label": "Value", "default": "2-Day" },
+    { "type": "text", "id": "label_4", "label": "Label", "default": "Fast Delivery" },
     { "type": "header", "content": "Layout" },
     {
       "type": "color_scheme",
@@ -222,7 +267,7 @@
       "max": 200,
       "step": 8,
       "unit": "px",
-      "default": 96
+      "default": 48
     },
     {
       "type": "range",
@@ -232,7 +277,7 @@
       "max": 200,
       "step": 8,
       "unit": "px",
-      "default": 96
+      "default": 48
     }
   ],
   "presets": [
