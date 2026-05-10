@@ -641,7 +641,7 @@
     display: grid;
     grid-template-columns: repeat(4, max-content);
     justify-content: center;
-    column-gap: clamp(7.75rem, 6vw, 5.25rem);
+    column-gap: 7.75rem;
     row-gap: 2.5rem;
     border: 1px solid rgb(var(--color-foreground-rgb) / 0.08);
     border-radius: 16px;
@@ -1272,6 +1272,27 @@
   }
 
   /* ---------- Responsive ---------- */
+
+  @media (max-width: 1699px) and (min-width: 1200px) {
+    .lab-results__stats {
+      column-gap: clamp(1rem, calc(20vw - 13.75rem), 7.75rem);
+    }
+  }
+
+  @media (max-width: 1199px) {
+    .lab-results__stats {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 1.5rem;
+    }
+    .lab-results__stat {
+      min-width: 0;
+    }
+    .lab-results__stat dt,
+    .lab-results__stat dd {
+      max-width: 100%;
+      text-wrap: balance;
+    }
+  }
 
   @media (max-width: 989px) {
     .lab-results__grid {
