@@ -703,7 +703,6 @@
   }
 
   .batch-verification__title,
-  .batch-verification__previous-title,
   .batch-verification__metric dt {
     font-family: var(--font-mono--family);
     font-weight: var(--font-mono--weight);
@@ -793,8 +792,7 @@
     transform: translateY(-0.03rem);
   }
 
-  .batch-verification__value--verified,
-  .batch-verification__previous-purity {
+  .batch-verification__value--verified {
     color: #009b57 !important;
   }
 
@@ -823,46 +821,12 @@
     color: var(--color-foreground);
   }
 
-  .batch-verification__previous {
-    margin-block-start: 1.35rem;
-    padding-block-start: 1.25rem;
-    border-top: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
-  }
-
-  .batch-verification__previous-title {
-    margin: 0 0 0.85rem;
-    color: rgb(var(--color-foreground-rgb) / 0.42);
-    font-size: 0.6875rem;
-  }
-
-  .batch-verification__previous-list {
-    display: grid;
-    gap: 0.62rem;
-  }
-
-  .batch-verification__previous-row {
-    display: grid;
-    grid-template-columns: minmax(7.2rem, 1.2fr) minmax(4.5rem, 0.7fr) minmax(5.5rem, 0.8fr) minmax(6.4rem, 1fr) auto;
-    gap: 0.7rem;
-    align-items: baseline;
-    color: rgb(var(--color-foreground-rgb) / 0.46);
-    font-family: var(--font-mono--family);
-    font-size: 0.8125rem;
-    line-height: 1.35;
-  }
-
-  .batch-verification__previous-batch {
-    color: rgb(var(--color-foreground-rgb) / 0.54);
-  }
-
-  .batch-verification__previous-row a,
   .batch-verification__footer a {
     color: rgb(var(--color-foreground-rgb) / 0.56);
     text-decoration-color: currentColor;
     text-underline-offset: 0.22em;
   }
 
-  .batch-verification__previous-row a:hover,
   .batch-verification__footer a:hover {
     color: var(--color-foreground);
   }
@@ -1036,15 +1000,6 @@
     .batch-verification__chevron {
       grid-column: 2;
       grid-row: 1;
-    }
-
-    .batch-verification__previous-row {
-      grid-template-columns: 1fr auto;
-    }
-
-    .batch-verification__previous-row > span:last-child {
-      grid-column: 1 / -1;
-      justify-self: start;
     }
 
     .batch-verification__footer {
