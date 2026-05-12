@@ -243,12 +243,6 @@
         <span style="--cart-free-shipping-progress: {{ free_shipping_progress }}%;"></span>
       </div>
     </div>
-
-    <ul class="cart-reassurance" role="list">
-      <li>Research use only</li>
-      <li>Secure Shopify checkout</li>
-      <li>Shipping calculated at checkout</li>
-    </ul>
   </div>
 
   {%- liquid
@@ -410,6 +404,10 @@
     }
   }
 
+  .cart-totals:has(.cart-conversion) {
+    gap: var(--gap-md);
+  }
+
   .cart-totals__original-container,
   .cart-totals__original-container * {
     font-size: var(--cart-font-size--sm);
@@ -517,11 +515,11 @@
 
   .cart-conversion {
     display: grid;
-    gap: 0.9rem;
-    padding: 1rem;
-    border: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
-    border-radius: 16px;
-    background: rgb(var(--color-foreground-rgb) / 0.035);
+    gap: 0;
+    padding: 0.25rem 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
   }
 
   .cart-free-shipping {
@@ -533,11 +531,16 @@
     display: flex;
     align-items: baseline;
     justify-content: space-between;
-    gap: 1rem;
+    gap: 0.65rem;
     font-family: var(--font-mono--family);
-    font-size: 0.75rem;
+    font-size: 0.6875rem;
     line-height: 1.25;
+    word-spacing: -0.20em;
     color: rgb(var(--color-foreground-rgb) / 0.7);
+  }
+
+  .cart-free-shipping__label span {
+    white-space: nowrap;
   }
 
   .cart-free-shipping__label span:first-child {
@@ -561,33 +564,6 @@
     height: 100%;
     border-radius: inherit;
     background: #009b57;
-  }
-
-  .cart-reassurance {
-    display: grid;
-    gap: 0.35rem;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    font-family: var(--font-mono--family);
-    font-size: 0.6875rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: rgb(var(--color-foreground-rgb) / 0.5);
-  }
-
-  .cart-reassurance li {
-    display: flex;
-    gap: 0.45rem;
-    align-items: center;
-  }
-
-  .cart-reassurance li::before {
-    content: "";
-    width: 0.35rem;
-    height: 0.35rem;
-    border-radius: 999px;
-    background: rgb(var(--color-foreground-rgb) / 0.32);
   }
 
   .cart-drawer__summary .cart-totals:not(:has(.cart-totals__original-container:empty)) {
