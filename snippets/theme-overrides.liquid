@@ -361,6 +361,17 @@
     --color-account-icon: rgb(255 255 255 / 1);
   }
 
+  /* ---- Collection product grid rail ------------------------------------
+     The collection grid switches to a block layout on mobile, so keep the
+     product cards on the same 85% inner rail as the custom page sections. */
+
+  @media screen and (max-width: 749px) {
+    main[data-template^='collection'] .product-grid-container .collection-wrapper {
+      width: 85%;
+      margin-inline: auto;
+    }
+  }
+
   /* ---- Product card: labeled CTA pill ----------------------------------
      Default Horizon quick-add is a 36px icon overlay positioned over the
      image, only revealed on hover. Per brief §3 move 4, replace with an
