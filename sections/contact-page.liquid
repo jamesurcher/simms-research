@@ -56,7 +56,7 @@
         {%- form 'contact', id: form_id, class: 'contact-page__form' -%}
           <input name="contact[id]" type="hidden" value="{{ form_id }}">
 
-          {%- if form.errors and form.id == form_id -%}
+          {%- if form.errors -%}
             <div class="contact-page__message contact-page__message--error" tabindex="-1" autofocus>
               {{- 'icon-error.svg' | inline_asset_content -}}
               {{- form.errors.translated_fields.email | capitalize }}
@@ -64,84 +64,99 @@
             </div>
           {%- endif -%}
 
-          {%- if form.posted_successfully? and form.id == form_id -%}
-            <div class="contact-page__message contact-page__message--success" tabindex="-1" autofocus>
-              {{- 'icon-checkmark.svg' | inline_asset_content -}}
-              {{- 'blocks.contact_form.post_success' | t -}}
+          {%- if form.posted_successfully? -%}
+            <div
+              class="contact-page__confirmation"
+              role="status"
+              aria-live="polite"
+              tabindex="-1"
+              autofocus
+            >
+              <span class="contact-page__confirmation-icon" aria-hidden="true">
+                {{- 'icon-checkmark.svg' | inline_asset_content -}}
+              </span>
+              <div>
+                <h2 class="contact-page__confirmation-title">Message sent</h2>
+                <p>{{ 'blocks.contact_form.post_success' | t }}</p>
+                <p>We received your message and will route it to the right team.</p>
+                <a class="button contact-page__confirmation-button" href="{{ page.url | default: '/pages/contact' }}">
+                  Send another message
+                </a>
+              </div>
             </div>
+          {%- else -%}
+            <div class="contact-page__row">
+              <div class="contact-page__field">
+                <label for="{{ form_id }}-name">Name</label>
+                <input
+                  type="text"
+                  id="{{ form_id }}-name"
+                  name="contact[name]"
+                  autocomplete="name"
+                  value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
+                  placeholder="Your name"
+                >
+              </div>
+
+              <div class="contact-page__field">
+                <label for="{{ form_id }}-email">Email <span aria-hidden="true">*</span></label>
+                <input
+                  type="email"
+                  id="{{ form_id }}-email"
+                  name="contact[email]"
+                  autocomplete="email"
+                  spellcheck="false"
+                  autocapitalize="off"
+                  value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
+                  aria-required="true"
+                  {% if form.errors contains 'email' %}
+                    aria-invalid="true"
+                  {% endif %}
+                  placeholder="you@example.com"
+                  required
+                >
+              </div>
+            </div>
+
+            <div class="contact-page__row">
+              <div class="contact-page__field">
+                <label for="{{ form_id }}-phone">Phone</label>
+                <input
+                  type="tel"
+                  id="{{ form_id }}-phone"
+                  name="contact[phone]"
+                  autocomplete="tel"
+                  pattern="[0-9\-]*"
+                  value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}"
+                  placeholder="Optional"
+                >
+              </div>
+
+              <div class="contact-page__field">
+                <label for="{{ form_id }}-topic">Subject</label>
+                <select id="{{ form_id }}-topic" name="contact[subject]">
+                  <option value="Order Support">Order Support</option>
+                  <option value="Research / Product Question">Research / Product Question</option>
+                  <option value="Wholesale / Partnership">Wholesale / Partnership</option>
+                  <option value="General Inquiry">General Inquiry</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="contact-page__field">
+              <label for="{{ form_id }}-body">Message</label>
+              <textarea
+                rows="9"
+                id="{{ form_id }}-body"
+                name="contact[body]"
+                placeholder="How can we help?"
+              >{{- form.body -}}</textarea>
+            </div>
+
+            <button type="submit" class="button contact-page__submit">
+              Send Message
+            </button>
           {%- endif -%}
-
-          <div class="contact-page__row">
-            <div class="contact-page__field">
-              <label for="{{ form_id }}-name">Name</label>
-              <input
-                type="text"
-                id="{{ form_id }}-name"
-                name="contact[name]"
-                autocomplete="name"
-                value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
-                placeholder="Your name"
-              >
-            </div>
-
-            <div class="contact-page__field">
-              <label for="{{ form_id }}-email">Email <span aria-hidden="true">*</span></label>
-              <input
-                type="email"
-                id="{{ form_id }}-email"
-                name="contact[email]"
-                autocomplete="email"
-                spellcheck="false"
-                autocapitalize="off"
-                value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
-                aria-required="true"
-                {% if form.errors contains 'email' and form.id == form_id %}
-                  aria-invalid="true"
-                {% endif %}
-                placeholder="you@example.com"
-                required
-              >
-            </div>
-          </div>
-
-          <div class="contact-page__row">
-            <div class="contact-page__field">
-              <label for="{{ form_id }}-phone">Phone</label>
-              <input
-                type="tel"
-                id="{{ form_id }}-phone"
-                name="contact[phone]"
-                autocomplete="tel"
-                pattern="[0-9\-]*"
-                value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}"
-                placeholder="Optional"
-              >
-            </div>
-
-            <div class="contact-page__field">
-              <label for="{{ form_id }}-topic">Subject</label>
-              <select id="{{ form_id }}-topic" name="contact[subject]">
-                <option value="Order Support">Order Support</option>
-                <option value="Research / Product Question">Research / Product Question</option>
-                <option value="Wholesale / Partnership">Wholesale / Partnership</option>
-                <option value="General Inquiry">General Inquiry</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="contact-page__field">
-            <label for="{{ form_id }}-body">Message</label>
-            <textarea
-              rows="9"
-              id="{{ form_id }}-body"
-              name="contact[body]"
-              placeholder="How can we help?"
-            >{{- form.body -}}</textarea>
-          </div>
-
-          <button type="submit" class="button contact-page__submit">
-            Send Message
-          </button>
         {%- endform -%}
       </div>
     </div>
@@ -330,15 +345,66 @@
     color: rgb(136 19 55);
   }
 
-  .contact-page__message--success {
-    background: rgb(0 155 87 / 0.08);
-    color: #007a46;
-  }
-
   .contact-page__message svg {
     width: 1rem;
     height: 1rem;
     flex: 0 0 auto;
+  }
+
+  .contact-page__confirmation {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+    min-height: 23rem;
+    padding: clamp(1.35rem, 3vw, 2rem);
+    border: 1px solid rgb(0 122 70 / 0.28);
+    border-radius: 14px;
+    background:
+      linear-gradient(rgb(0 155 87 / 0.08), rgb(0 155 87 / 0.08)),
+      rgb(var(--color-background-rgb));
+  }
+
+  .contact-page__confirmation:focus {
+    outline: 2px solid rgb(0 122 70 / 0.32);
+    outline-offset: 3px;
+  }
+
+  .contact-page__confirmation-icon {
+    display: inline-grid;
+    place-items: center;
+    width: 2.35rem;
+    height: 2.35rem;
+    border-radius: 50%;
+    background: #007a46;
+    color: #fff;
+  }
+
+  .contact-page__confirmation-icon svg {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .contact-page__confirmation-title {
+    margin: 0;
+    color: rgb(var(--color-foreground-rgb) / 0.9);
+    font-size: clamp(1.65rem, 3vw, 2.2rem);
+    letter-spacing: 0;
+    line-height: 1.05;
+  }
+
+  .contact-page__confirmation p {
+    max-width: 29rem;
+    margin: 0.7rem 0 0;
+    color: rgb(var(--color-foreground-rgb) / 0.64);
+    font-size: 1rem;
+    line-height: 1.45;
+  }
+
+  .contact-page__confirmation-button {
+    width: fit-content;
+    min-height: 3rem;
+    margin-block-start: 1.4rem;
+    border-radius: 999px;
   }
 
   @media screen and (max-width: 989px) {
@@ -364,6 +430,11 @@
 
     .contact-page__form-header {
       gap: 0.35rem;
+    }
+
+    .contact-page__confirmation {
+      grid-template-columns: 1fr;
+      min-height: 18rem;
     }
   }
 {% endstylesheet %}
