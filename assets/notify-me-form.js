@@ -1,82 +1,7 @@
-{% doc %}
-  Renders a "Notify me when available" email capture form.
-  Posts to the URL stored in settings.notify_endpoint as JSON.
-  Used on the PDP when a variant is unavailable.
-
-  @param {variant} variant - The currently selected variant (for variant_label).
-  @param {product} product - The product (for title).
-  @param {string} [block_id] - Used to scope element IDs when multiple instances render.
-{% enddoc %}
-
-{%- assign endpoint = settings.notify_endpoint | strip -%}
-{%- assign form_id = 'notify-me-' | append: variant.id | append: '-' | append: block_id -%}
-{%- assign variant_label = variant.title | default: '' -%}
-{%- assign notify_initially_disabled = variant.available -%}
-
-<notify-me-form
-  class="notify-me"
-  data-endpoint="{{ endpoint | escape }}"
-  data-product="{{ product.title | escape }}"
-  data-product-handle="{{ product.handle | escape }}"
-  data-variant-id="{{ variant.id }}"
-  data-variant="{{ variant_label | escape }}"
->
-  <p class="notify-me__heading">Notify me when available</p>
-  <p class="notify-me__sub">
-    Currently out of stock. Drop your email and we'll let you know when this batch is back in.
-  </p>
-
-  {%- comment -%}
-    A <div> instead of <form> because this snippet renders inside the
-    Shopify product <form>. Nested <form> elements are invalid HTML and
-    the browser silently drops the inner one, which breaks JS.
-  {%- endcomment -%}
-  <div class="notify-me__form" id="{{ form_id }}" data-notify-form>
-    <label class="notify-me__field">
-      <span class="visually-hidden">Email address</span>
-      <input
-        type="email"
-        name="notify_email"
-        class="notify-me__input"
-        placeholder="you@email.com"
-        autocomplete="email"
-        data-notify-email
-        {% if notify_initially_disabled %}disabled{% endif %}
-      >
-    </label>
-
-    {%- comment -%} Honeypot — bots will fill this; real users won't. {%- endcomment -%}
-    <label class="notify-me__honeypot" aria-hidden="true">
-      Website
-      <input
-        type="text"
-        name="notify_website"
-        tabindex="-1"
-        autocomplete="off"
-        data-notify-honeypot
-        {% if notify_initially_disabled %}disabled{% endif %}
-      >
-    </label>
-
-    <button
-      type="button"
-      class="notify-me__submit"
-      data-notify-submit
-      {% if endpoint == blank or notify_initially_disabled %}disabled{% endif %}
-    >
-      <span class="notify-me__submit-label">Notify me</span>
-      <span class="notify-me__submit-loading" hidden>Sending&hellip;</span>
-    </button>
-  </div>
-
-  <p class="notify-me__status" data-notify-status role="status" aria-live="polite" hidden></p>
-</notify-me-form>
-
-<script>
-  (function () {
-    if (!window.customElements || customElements.get('notify-me-form')) return;
-
-    customElements.define('notify-me-form', class extends HTMLElement {
+if (window.customElements && !customElements.get('notify-me-form')) {
+  customElements.define(
+    'notify-me-form',
+    class extends HTMLElement {
       connectedCallback() {
         this.form = this.querySelector('[data-notify-form]');
         this.email = this.querySelector('[data-notify-email]');
@@ -149,7 +74,7 @@
           return {
             id: variantId,
             title: checkedOption.value || this.dataset.variant || '',
-            available: checkedOption.dataset.optionAvailable === 'true'
+            available: checkedOption.dataset.optionAvailable === 'true',
           };
         }
 
@@ -164,28 +89,30 @@
           return {
             id: variantId,
             title: option.value || this.dataset.variant || '',
-            available: option.dataset.optionAvailable === 'true'
+            available: option.dataset.optionAvailable === 'true',
           };
         }
 
         return {
           id: variantId,
           title: this.dataset.variant || '',
-          available: this.buyState?.dataset.variantAvailable === 'true'
+          available: this.buyState?.dataset.variantAvailable === 'true',
         };
       }
 
       getCheckedVariantOption() {
         var scope = this.closest('.shopify-section') || document;
-        var checked = Array.prototype.slice.call(scope.querySelectorAll(
-          'input[type="radio"][data-option-available][data-variant-id]:checked'
-        ));
+        var checked = Array.prototype.slice.call(
+          scope.querySelectorAll('input[type="radio"][data-option-available][data-variant-id]:checked')
+        );
 
         if (checked.length === 1) return checked[0];
 
-        checked = Array.prototype.slice.call(scope.querySelectorAll(
-          'input[type="radio"][data-option-available][data-variant-id][data-current-checked="true"]'
-        ));
+        checked = Array.prototype.slice.call(
+          scope.querySelectorAll(
+            'input[type="radio"][data-option-available][data-variant-id][data-current-checked="true"]'
+          )
+        );
 
         return checked.length === 1 ? checked[0] : null;
       }
@@ -348,7 +275,7 @@
           variant: this.dataset.variant,
           variant_id: this.currentVariantId,
           url: window.location.href,
-          website: this.honeypot?.value || ''
+          website: this.honeypot?.value || '',
         };
 
         this.setBusy(true);
@@ -360,16 +287,13 @@
         }, 10000);
 
         try {
-          // Apps Script web apps do not provide readable CORS responses by
-          // default. A resolved no-cors fetch means the browser accepted the
-          // request; it cannot prove SpreadsheetApp.appendRow succeeded.
           await fetch(this.endpoint, {
             method: 'POST',
             mode: 'no-cors',
             credentials: 'omit',
             signal: requestController.signal,
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify(payload)
+            body: JSON.stringify(payload),
           });
 
           this.completeSubmission();
@@ -380,133 +304,6 @@
           this.setBusy(false);
         }
       }
-    });
-  })();
-</script>
-
-{% stylesheet %}
-  /* Toggle in-stock UI vs notify form based on the wrapper's variant-available state. */
-  [data-buy-state][data-variant-available="true"] [data-buy-state-notify],
-  [data-buy-state][data-variant-available="false"] [data-buy-state-instock] {
-    display: none;
-  }
-
-  /* Hide qty + add-to-cart row when the adjacent buy-state is unavailable. */
-  [data-buy-state][data-variant-available="false"] + [data-buy-state-buttons] {
-    display: none !important;
-  }
-
-  .notify-me {
-    display: block;
-    width: 100%;
-    padding: 1.25rem 1.25rem;
-    background: #f5f5f5;
-    border: 1px solid rgb(10 10 10 / 0.06);
-    border-radius: 8px;
-    margin-block: 1rem;
-  }
-
-  .notify-me__heading {
-    margin: 0 0 0.35rem;
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: #0a0a0a;
-    letter-spacing: -0.005em;
-  }
-
-  .notify-me__sub {
-    margin: 0 0 1rem;
-    font-size: 0.82rem;
-    line-height: 1.5;
-    color: rgb(10 10 10 / 0.65);
-  }
-
-  .notify-me__form {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 0.5rem;
-  }
-
-  .notify-me__field {
-    grid-column: 1;
-    display: block;
-  }
-
-  .notify-me__input {
-    width: 100%;
-    padding: 0.85rem 1rem;
-    background: #ffffff;
-    border: 1px solid rgb(10 10 10 / 0.12);
-    border-radius: 6px;
-    font: inherit;
-    font-size: 0.92rem;
-    color: #0a0a0a;
-    appearance: none;
-    -webkit-appearance: none;
-    transition: border-color 150ms ease;
-  }
-
-  .notify-me__input:focus {
-    outline: none;
-    border-color: #0a0a0a;
-  }
-
-  .notify-me__input::placeholder {
-    color: rgb(10 10 10 / 0.4);
-  }
-
-  .notify-me__honeypot {
-    position: absolute;
-    left: -9999px;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-  }
-
-  .notify-me__submit {
-    grid-column: 2;
-    appearance: none;
-    border: 1px solid #0a0a0a;
-    background: #0a0a0a;
-    color: #ffffff;
-    padding: 0.85rem 1.4rem;
-    border-radius: 6px;
-    font: inherit;
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    cursor: pointer;
-    transition: background 150ms ease, color 150ms ease;
-    white-space: nowrap;
-  }
-
-  .notify-me__submit:hover:not(:disabled) {
-    background: #0a0a0a;
-    color: #e4f5ff;
-  }
-
-  .notify-me__submit:disabled {
-    opacity: 0.55;
-    cursor: not-allowed;
-  }
-
-  .notify-me__status {
-    margin: 0.85rem 0 0;
-    font-size: 0.82rem;
-    line-height: 1.4;
-    color: rgb(10 10 10 / 0.7);
-  }
-
-  .notify-me__status--error {
-    color: #b00020;
-  }
-
-  @media (max-width: 480px) {
-    .notify-me__form {
-      grid-template-columns: 1fr;
     }
-    .notify-me__submit {
-      grid-column: 1;
-    }
-  }
-{% endstylesheet %}
+  );
+}
