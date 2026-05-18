@@ -10,6 +10,8 @@
 
 {%- assign steps = section.blocks | where: 'type', 'step' -%}
 
+<div class="section-background process-steps__surface color-{{ section.settings.color_scheme }}"></div>
+
 <section
   class="process-steps section section--page-width color-{{ section.settings.color_scheme }}"
   style="
@@ -76,6 +78,13 @@
 </section>
 
 {% stylesheet %}
+  .process-steps__surface {
+    background:
+      linear-gradient(rgb(var(--color-foreground-rgb) / 0.035), rgb(var(--color-foreground-rgb) / 0.035)) top / 100% 1px no-repeat,
+      linear-gradient(rgb(var(--color-foreground-rgb) / 0.035), rgb(var(--color-foreground-rgb) / 0.035)) bottom / 100% 1px no-repeat,
+      #fcfaf6;
+  }
+
   .process-steps {
     padding-block-start: var(--process-steps-padding-block-start, 96px);
     padding-block-end: var(--process-steps-padding-block-end, 96px);
