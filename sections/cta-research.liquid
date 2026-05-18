@@ -1,7 +1,7 @@
 {%- comment -%}
   CTA research — dark rounded card with closing pitch.
 
-  Inspired by Rue Peptides' "Ready to advance your research?" closing block.
+  Inspired by Rue Peptides' closing CTA block.
   A self-contained dark panel sitting inside the page width rail: eyebrow
   with institutions claim, large display headline, supporting sub, two
   buttons (filled white + outlined ghost), and an inline row of trust marks
@@ -9,6 +9,8 @@
 {%- endcomment -%}
 
 {%- assign badges = section.blocks | where: 'type', 'badge' -%}
+
+<div class="section-background cta-research__surface"></div>
 
 <section
   class="cta-research section section--page-width"
@@ -85,6 +87,13 @@
 </section>
 
 {% stylesheet %}
+  .cta-research__surface {
+    background:
+      linear-gradient(rgb(236 230 223 / 0.1), rgb(236 230 223 / 0.1)) top / 100% 1px no-repeat,
+      radial-gradient(ellipse 75% 42% at 50% 18%, rgb(139 156 207 / 0.16) 0%, transparent 64%),
+      linear-gradient(180deg, #263d73 0%, #1b2f62 55%, #172953 100%);
+  }
+
   .cta-research {
     padding-block-start: var(--cta-research-padding-block-start, 96px);
     padding-block-end: var(--cta-research-padding-block-end, 96px);
@@ -107,7 +116,9 @@
         var(--dusk-violet) 100%
       );
     color: var(--dusk-fg);
-    padding: clamp(3rem, 7vw, 6rem) clamp(1.5rem, 5vw, 4rem);
+    padding: clamp(3.5rem, 7.5vw, 6.5rem) clamp(1.5rem, 5vw, 4rem);
+    border: 1px solid rgb(236 230 223 / 0.12);
+    box-shadow: 0 24px 70px rgb(5 14 36 / 0.34);
   }
 
   /* Horizon band — wide, low, blurred warm glow standing in for the
@@ -274,7 +285,7 @@
 
     .cta-research__card {
       border-radius: 20px;
-      padding: 3rem 1.5rem 3rem;
+      padding: 3.25rem 1.5rem;
     }
 
     .cta-research__buttons {
@@ -303,7 +314,7 @@
   "settings": [
     { "type": "header", "content": "Content" },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow (mono caps)", "default": "7,500+ Vials Delivered" },
-    { "type": "text", "id": "heading", "label": "Heading", "default": "Ready to advance your research?" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Ready to start your research?" },
     { "type": "textarea", "id": "subhead", "label": "Subheading", "default": "Verified compounds with full COA documentation. Ships same-day, arrives research-ready." },
     { "type": "header", "content": "Primary button" },
     { "type": "text", "id": "primary_label", "label": "Label", "default": "Shop all peptides" },

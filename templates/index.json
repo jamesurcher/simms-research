@@ -739,16 +739,16 @@
       },
       "block_order": ["badge_1", "badge_2", "badge_3", "badge_4"],
       "settings": {
-        "eyebrow": "500+ research institutions served",
-        "heading": "Ready to advance your research?",
+        "eyebrow": "7,500+ Vials Delivered",
+        "heading": "Ready to start your research?",
         "subhead": "Verified compounds with full COA documentation. Ships same-day, arrives research-ready.",
         "primary_label": "Shop all peptides",
         "primary_url": "/collections/all",
         "secondary_label": "View COA library",
         "secondary_url": "/pages/lab-results",
         "secondary_icon": "file-text",
-        "padding-block-start": 96,
-        "padding-block-end": 96
+        "padding-block-start": 112,
+        "padding-block-end": 112
       }
     },
     "faq_accordion_rue": {
@@ -834,8 +834,8 @@
         "reassurance": "No spam. Research updates and offers only.",
         "success_message": "Subscribed. Welcome aboard.",
         "color_scheme": "scheme-1",
-        "padding-block-start": 96,
-        "padding-block-end": 120
+        "padding-block-start": 56,
+        "padding-block-end": 72
       }
     }
   },
@@ -845,8 +845,8 @@
     "product_list_themegen",
     "process_steps_rue",
     "precision_verify_rue",
-    "cta_research_rue",
     "faq_accordion_rue",
+    "cta_research_rue",
     "newsletter_research_rue"
   ]
 }
