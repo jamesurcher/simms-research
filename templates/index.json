@@ -197,7 +197,7 @@
               "name": "t:names.button",
               "settings": {
                 "label": "View Lab Results",
-                "link": "/pages/lab-results",
+                "link": "shopify://pages/lab-results",
                 "open_in_new_tab": false,
                 "style_class": "button-secondary",
                 "width": "fit-content",
