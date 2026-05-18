@@ -23,6 +23,17 @@ body {
   --surface-transition-timing: var(--ease-out-quad);
   --submenu-animation-speed: 360ms;
   --submenu-animation-easing: cubic-bezier(0.25, 0.1, 0.25, 1);
+
+  /* Dusk palette — sampled from the blue-hour BPC-157 ad. Indigo top,
+     violet horizon, peach band. Use --dusk-* on dark sections;
+     reserve --horizon as the single warm accent sitewide. */
+  --dusk-deep: #1a2347;
+  --dusk-mid: #3a3a6e;
+  --dusk-violet: #6b5f8a;
+  --horizon: #d4ada6;
+  --horizon-deep: #c19084;
+  --dusk-fg: #ece6df;
+  --dusk-fg-muted: #a8a3c0;
 }
 
 html {

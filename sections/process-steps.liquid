@@ -140,11 +140,12 @@
     border: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
     border-radius: 16px;
     background: var(--color-background);
-    transition: border-color 220ms ease;
+    transition: border-color 220ms ease, box-shadow 220ms ease;
   }
 
   .process-steps__card:hover {
-    border-color: rgb(var(--color-foreground-rgb) / 0.22);
+    border-color: var(--horizon-deep);
+    box-shadow: 0 0 0 1px var(--horizon-deep);
   }
 
   .process-steps__icon {
@@ -157,6 +158,12 @@
     background: rgb(var(--color-foreground-rgb) / 0.05);
     color: var(--color-foreground);
     margin-block-end: 2.25rem;
+    transition: background 220ms ease, color 220ms ease;
+  }
+
+  .process-steps__card:hover .process-steps__icon {
+    background: rgb(193 144 132 / 0.12);
+    color: var(--horizon-deep);
   }
 
   .process-steps__icon svg {
@@ -176,6 +183,11 @@
     color: rgb(var(--color-foreground-rgb) / 0.06);
     pointer-events: none;
     user-select: none;
+    transition: color 220ms ease;
+  }
+
+  .process-steps__card:hover .process-steps__bignum {
+    color: rgb(193 144 132 / 0.45);
   }
 
   .process-steps__body {
@@ -192,6 +204,11 @@
     text-transform: uppercase;
     color: rgb(var(--color-foreground-rgb) / 0.42);
     margin: 0;
+    transition: color 220ms ease;
+  }
+
+  .process-steps__card:hover .process-steps__step-label {
+    color: var(--horizon-deep);
   }
 
   .process-steps__title {
