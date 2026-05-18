@@ -1,0 +1,386 @@
+{%- comment -%}
+  Process steps — three-card sequence.
+
+  Inspired by Rue Peptides' "Three steps to your next compound" section, but
+  translated into the Simms voice: Inter heading family, mono-caps eyebrows,
+  no italic-serif accent, no bright-color brand chrome. The big background
+  numeral is rendered in the heading family at reduced opacity, sitting
+  behind the card content for a quiet editorial flourish.
+{%- endcomment -%}
+
+{%- assign steps = section.blocks | where: 'type', 'step' -%}
+
+<section
+  class="process-steps section section--page-width color-{{ section.settings.color_scheme }}"
+  style="
+    --process-steps-padding-block-start: {{ section.settings['padding-block-start'] }}px;
+    --process-steps-padding-block-end: {{ section.settings['padding-block-end'] }}px;
+  "
+>
+  <div class="process-steps__inner">
+    <header class="process-steps__hero">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="process-steps__eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="process-steps__heading">{{ section.settings.heading | newline_to_br }}</h2>
+      {%- endif -%}
+      {%- if section.settings.subhead != blank -%}
+        <p class="process-steps__subhead">{{ section.settings.subhead }}</p>
+      {%- endif -%}
+    </header>
+
+    {%- if steps.size > 0 -%}
+      <ol class="process-steps__grid">
+        {%- for block in steps -%}
+          {%- assign step_num = forloop.index | prepend: '0' | slice: -2, 2 -%}
+          <li class="process-steps__card" {{ block.shopify_attributes }}>
+            {%- if block.settings.icon != blank and block.settings.icon != 'none' -%}
+              <span class="process-steps__icon" aria-hidden="true">
+                {%- assign icon_file = 'icon-' | append: block.settings.icon | append: '.svg' -%}
+                {{ icon_file | inline_asset_content }}
+              </span>
+            {%- endif -%}
+            <span class="process-steps__bignum" aria-hidden="true">{{ step_num }}</span>
+            <div class="process-steps__body">
+              <p class="process-steps__step-label">Step {{ step_num }}</p>
+              <h3 class="process-steps__title">{{ block.settings.title }}</h3>
+              {%- if block.settings.body != blank -%}
+                <p class="process-steps__desc">{{ block.settings.body }}</p>
+              {%- endif -%}
+            </div>
+          </li>
+        {%- endfor -%}
+      </ol>
+    {%- endif -%}
+
+    {%- if section.settings.footnote != blank or section.settings.cta_label != blank -%}
+      <div class="process-steps__footer">
+        {%- if section.settings.footnote != blank -%}
+          <p class="process-steps__footnote">{{ section.settings.footnote }}</p>
+        {%- endif -%}
+        {%- if section.settings.cta_label != blank -%}
+          <a
+            href="{{ section.settings.cta_url | default: '/collections/all' }}"
+            class="process-steps__cta"
+          >
+            <span>{{ section.settings.cta_label }}</span>
+            <svg class="process-steps__cta-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <path d="M1 7H13M13 7L8 2M13 7L8 12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .process-steps {
+    padding-block-start: var(--process-steps-padding-block-start, 96px);
+    padding-block-end: var(--process-steps-padding-block-end, 96px);
+  }
+
+  .process-steps__inner {
+    width: 85%;
+    margin-inline: auto;
+  }
+
+  /* ── Hero ── */
+  .process-steps__hero {
+    text-align: center;
+    max-width: 42rem;
+    margin-inline: auto;
+    margin-block-end: 4rem;
+  }
+
+  .process-steps__eyebrow {
+    font-family: var(--font-mono--family);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgb(var(--color-foreground-rgb) / 0.5);
+    margin: 0 0 1.25rem 0;
+  }
+
+  .process-steps__heading {
+    font-family: var(--font-heading--family);
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--color-foreground-heading);
+    margin: 0;
+  }
+
+  .process-steps__subhead {
+    font-family: var(--font-body--family);
+    font-size: clamp(0.9375rem, 1.2vw, 1.0625rem);
+    line-height: 1.55;
+    color: rgb(var(--color-foreground-rgb) / 0.62);
+    margin: 1.25rem auto 0;
+    max-width: 38ch;
+  }
+
+  /* ── Grid of cards ── */
+  .process-steps__grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+
+  .process-steps__card {
+    position: relative;
+    overflow: hidden;
+    padding: 2rem 1.75rem 2.25rem;
+    border: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
+    border-radius: 16px;
+    background: var(--color-background);
+    transition: border-color 220ms ease;
+  }
+
+  .process-steps__card:hover {
+    border-color: rgb(var(--color-foreground-rgb) / 0.22);
+  }
+
+  .process-steps__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 999px;
+    background: rgb(var(--color-foreground-rgb) / 0.05);
+    color: var(--color-foreground);
+    margin-block-end: 2.25rem;
+  }
+
+  .process-steps__icon svg {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+
+  .process-steps__bignum {
+    position: absolute;
+    inset-block-start: 1.25rem;
+    inset-inline-end: 1.5rem;
+    font-family: var(--font-heading--family);
+    font-size: 5.5rem;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: rgb(var(--color-foreground-rgb) / 0.06);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .process-steps__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .process-steps__step-label {
+    font-family: var(--font-mono--family);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgb(var(--color-foreground-rgb) / 0.42);
+    margin: 0;
+  }
+
+  .process-steps__title {
+    font-family: var(--font-heading--family);
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: var(--color-foreground-heading);
+    margin: 0;
+  }
+
+  .process-steps__desc {
+    font-family: var(--font-body--family);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: rgb(var(--color-foreground-rgb) / 0.62);
+    margin: 0.25rem 0 0;
+  }
+
+  /* ── Footer row ── */
+  .process-steps__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-block-start: 2.5rem;
+  }
+
+  .process-steps__footnote {
+    font-family: var(--font-mono--family);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgb(var(--color-foreground-rgb) / 0.45);
+    margin: 0;
+  }
+
+  .process-steps__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.875rem 1.375rem;
+    border-radius: var(--style-border-radius-buttons-primary);
+    background: var(--color-foreground);
+    color: var(--color-background);
+    font-family: var(--font-body--family);
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    text-decoration: none;
+    transition: opacity 180ms ease;
+  }
+
+  .process-steps__cta:hover {
+    opacity: 0.85;
+  }
+
+  .process-steps__cta-arrow {
+    transition: transform 220ms ease;
+  }
+
+  .process-steps__cta:hover .process-steps__cta-arrow {
+    transform: translateX(2px);
+  }
+
+  @media (max-width: 989px) {
+    .process-steps__grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+  }
+
+  @media (max-width: 749px) {
+    .process-steps__inner {
+      width: 100%;
+      padding-inline: 1.25rem;
+    }
+
+    .process-steps__hero {
+      text-align: left;
+      margin-block-end: 2.5rem;
+    }
+
+    .process-steps__subhead {
+      margin-inline: 0;
+    }
+
+    .process-steps__card {
+      padding: 1.75rem 1.5rem 2rem;
+    }
+
+    .process-steps__bignum {
+      font-size: 4rem;
+    }
+
+    .process-steps__icon {
+      margin-block-end: 1.75rem;
+    }
+
+    .process-steps__footer {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1.25rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Process steps",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Hero" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow (mono caps)", "default": "Simple process" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Three steps to your next compound." },
+    { "type": "text", "id": "subhead", "label": "Subheading", "default": "Verified compounds with full documentation — no paperwork headaches." },
+    { "type": "header", "content": "Footer row" },
+    { "type": "text", "id": "footnote", "label": "Footnote (mono caps)", "default": "Same-day shipping. Free 2-day air on orders $250+." },
+    { "type": "text", "id": "cta_label", "label": "CTA label", "default": "Browse compounds" },
+    { "type": "url", "id": "cta_url", "label": "CTA link" },
+    { "type": "header", "content": "Layout" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
+    { "type": "range", "id": "padding-block-start", "label": "Top padding", "min": 0, "max": 200, "step": 8, "unit": "px", "default": 96 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom padding", "min": 0, "max": 200, "step": 8, "unit": "px", "default": 96 }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Step",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "none", "label": "None" },
+            { "value": "list-filter", "label": "Filter" },
+            { "value": "file-text", "label": "Document" },
+            { "value": "package", "label": "Package" },
+            { "value": "flask-conical", "label": "Flask" },
+            { "value": "shield-check", "label": "Shield" },
+            { "value": "microscope", "label": "Microscope" },
+            { "value": "clipboard-list", "label": "Clipboard" },
+            { "value": "truck", "label": "Truck" },
+            { "value": "qr-code", "label": "QR code" },
+            { "value": "map-pin", "label": "Map pin" },
+            { "value": "gauge", "label": "Gauge" },
+            { "value": "award", "label": "Award" }
+          ],
+          "default": "list-filter"
+        },
+        { "type": "text", "id": "title", "label": "Title", "default": "Browse & select" },
+        { "type": "textarea", "id": "body", "label": "Description", "default": "Filter the catalog by research category, purity grade, or molecular target." }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "Process steps",
+      "blocks": [
+        {
+          "type": "step",
+          "settings": {
+            "icon": "list-filter",
+            "title": "Browse & select",
+            "body": "Filter the catalog by research category, purity grade, or molecular target."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "icon": "file-text",
+            "title": "Review the COA",
+            "body": "Download the third-party Certificate of Analysis before you order. Full mass-spec data on file."
+          }
+        },
+        {
+          "type": "step",
+          "settings": {
+            "icon": "package",
+            "title": "Order research-ready",
+            "body": "Ships same-day, lyophilized and stable. Arrives in 2 days, ready for your protocol."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

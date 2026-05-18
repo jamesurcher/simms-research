@@ -1,0 +1,305 @@
+{%- comment -%}
+  FAQ accordion — homepage variant.
+
+  Inspired by Rue Peptides' "Good questions we get" section. Split layout
+  with title block on the left (eyebrow + heading + contact link) and a
+  list of <details> accordions on the right. Questions are framed in
+  researcher voice to keep with the RUO compliance posture (no "how do I
+  take," no dosing). Uses native <details>/<summary> so it works without
+  JavaScript and remains accessible.
+{%- endcomment -%}
+
+{%- assign questions = section.blocks | where: 'type', 'question' -%}
+{%- assign contact_url = section.settings.contact_url | default: '/pages/contact' -%}
+
+<section
+  class="faq-accordion section section--page-width color-{{ section.settings.color_scheme }}"
+  style="
+    --faq-accordion-padding-block-start: {{ section.settings['padding-block-start'] }}px;
+    --faq-accordion-padding-block-end: {{ section.settings['padding-block-end'] }}px;
+  "
+>
+  <div class="faq-accordion__inner">
+
+    <header class="faq-accordion__hero">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="faq-accordion__eyebrow">
+          <span class="faq-accordion__eyebrow-rule" aria-hidden="true"></span>
+          <span>{{ section.settings.eyebrow }}</span>
+        </p>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="faq-accordion__heading">{{ section.settings.heading | newline_to_br }}</h2>
+      {%- endif -%}
+      {%- if section.settings.contact_label != blank -%}
+        <p class="faq-accordion__contact">
+          {%- if section.settings.contact_prefix != blank -%}
+            <span class="faq-accordion__contact-prefix">{{ section.settings.contact_prefix }}</span>
+          {%- endif -%}
+          <a href="{{ contact_url }}" class="faq-accordion__contact-link">
+            {{ section.settings.contact_label }}
+            <span aria-hidden="true">→</span>
+          </a>
+        </p>
+      {%- endif -%}
+    </header>
+
+    {%- if questions.size > 0 -%}
+      <ul class="faq-accordion__list">
+        {%- for block in questions -%}
+          <li class="faq-accordion__item" {{ block.shopify_attributes }}>
+            <details class="faq-accordion__details">
+              <summary class="faq-accordion__summary">
+                <span class="faq-accordion__question">{{ block.settings.question }}</span>
+                <span class="faq-accordion__chevron" aria-hidden="true">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path d="M3 5L7 9L11 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+              </summary>
+              <div class="faq-accordion__answer">
+                {{ block.settings.answer }}
+              </div>
+            </details>
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+
+  </div>
+</section>
+
+{% stylesheet %}
+  .faq-accordion {
+    padding-block-start: var(--faq-accordion-padding-block-start, 96px);
+    padding-block-end: var(--faq-accordion-padding-block-end, 96px);
+  }
+
+  .faq-accordion__inner {
+    width: 85%;
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.6fr);
+    column-gap: clamp(2rem, 6vw, 5rem);
+    row-gap: 2.5rem;
+    align-items: start;
+  }
+
+  /* ── Hero (left) ── */
+  .faq-accordion__hero {
+    position: sticky;
+    top: 6rem;
+  }
+
+  .faq-accordion__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--font-mono--family);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgb(var(--color-foreground-rgb) / 0.55);
+    margin: 0 0 1.25rem 0;
+  }
+
+  .faq-accordion__eyebrow-rule {
+    display: inline-block;
+    width: 1.75rem;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.55;
+  }
+
+  .faq-accordion__heading {
+    font-family: var(--font-heading--family);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--color-foreground-heading);
+    margin: 0;
+    max-width: 14ch;
+  }
+
+  .faq-accordion__contact {
+    font-family: var(--font-body--family);
+    font-size: 0.9375rem;
+    color: rgb(var(--color-foreground-rgb) / 0.65);
+    margin: 1.5rem 0 0;
+  }
+
+  .faq-accordion__contact-prefix {
+    margin-inline-end: 0.4rem;
+  }
+
+  .faq-accordion__contact-link {
+    color: var(--color-foreground);
+    font-weight: 500;
+    text-decoration: none;
+    border-block-end: 1px solid currentColor;
+    padding-block-end: 0.05rem;
+    transition: opacity 180ms ease;
+  }
+
+  .faq-accordion__contact-link:hover {
+    opacity: 0.7;
+  }
+
+  .faq-accordion__contact-link span {
+    display: inline-block;
+    margin-inline-start: 0.3rem;
+    transition: transform 220ms ease;
+  }
+
+  .faq-accordion__contact-link:hover span {
+    transform: translateX(2px);
+  }
+
+  /* ── List ── */
+  .faq-accordion__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .faq-accordion__item + .faq-accordion__item {
+    border-block-start: 1px solid rgb(var(--color-foreground-rgb) / 0.12);
+  }
+
+  .faq-accordion__item:first-child {
+    border-block-start: 1px solid rgb(var(--color-foreground-rgb) / 0.12);
+  }
+
+  .faq-accordion__item:last-child {
+    border-block-end: 1px solid rgb(var(--color-foreground-rgb) / 0.12);
+  }
+
+  .faq-accordion__details {
+    display: block;
+  }
+
+  .faq-accordion__summary {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding-block: 1.5rem;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .faq-accordion__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-accordion__question {
+    font-family: var(--font-body--family);
+    font-size: clamp(1rem, 1.2vw, 1.0625rem);
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: -0.005em;
+    color: var(--color-foreground);
+  }
+
+  .faq-accordion__chevron {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    flex-shrink: 0;
+    color: rgb(var(--color-foreground-rgb) / 0.55);
+    transition: transform 220ms ease;
+  }
+
+  .faq-accordion__details[open] .faq-accordion__chevron {
+    transform: rotate(180deg);
+    color: var(--color-foreground);
+  }
+
+  .faq-accordion__answer {
+    font-family: var(--font-body--family);
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    color: rgb(var(--color-foreground-rgb) / 0.7);
+    padding-block: 0 1.75rem;
+    max-width: 64ch;
+  }
+
+  .faq-accordion__answer :is(p, ul, ol) {
+    margin-block: 0;
+  }
+
+  .faq-accordion__answer :is(p, ul, ol) + :is(p, ul, ol) {
+    margin-block-start: 0.75rem;
+  }
+
+  @media (max-width: 989px) {
+    .faq-accordion__inner {
+      grid-template-columns: 1fr;
+    }
+
+    .faq-accordion__hero {
+      position: static;
+    }
+  }
+
+  @media (max-width: 749px) {
+    .faq-accordion__inner {
+      width: 100%;
+      padding-inline: 1.25rem;
+    }
+
+    .faq-accordion__summary {
+      padding-block: 1.25rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "FAQ accordion",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Hero" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow (mono caps)", "default": "FAQ" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Questions researchers ask." },
+    { "type": "text", "id": "contact_prefix", "label": "Contact prefix", "default": "Can't find your answer?" },
+    { "type": "text", "id": "contact_label", "label": "Contact link label", "default": "Contact us" },
+    { "type": "url", "id": "contact_url", "label": "Contact link URL" },
+    { "type": "header", "content": "Layout" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
+    { "type": "range", "id": "padding-block-start", "label": "Top padding", "min": 0, "max": 200, "step": 8, "unit": "px", "default": 96 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom padding", "min": 0, "max": 200, "step": 8, "unit": "px", "default": 96 }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question", "default": "How is purity verified?" },
+        { "type": "richtext", "id": "answer", "label": "Answer", "default": "<p>Every batch is tested in-house by HPLC and independently re-verified by a third-party laboratory. We publish the Certificate of Analysis for each lot before the product ships.</p>" }
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "presets": [
+    {
+      "name": "FAQ accordion",
+      "blocks": [
+        { "type": "question", "settings": { "question": "How is purity verified?", "answer": "<p>Every batch is tested in-house by HPLC and independently re-verified by a third-party laboratory. We publish the Certificate of Analysis for each lot before the product ships.</p>" } },
+        { "type": "question", "settings": { "question": "What's included in the COA?", "answer": "<p>Each Certificate of Analysis includes the compound's identity, HPLC purity percentage, mass-spec verification, lot number, manufacture date, and a sign-off from the testing laboratory.</p>" } },
+        { "type": "question", "settings": { "question": "How are compounds shipped and stored?", "answer": "<p>Compounds ship lyophilized in temperature-controlled, insulated packaging with cold packs. Once received, store at the temperature specified on the COA — typically refrigerated or frozen.</p>" } },
+        { "type": "question", "settings": { "question": "Can I access historical COAs for past lots?", "answer": "<p>Yes. Every lot we have ever shipped is searchable in the public COA library by batch ID. Reach out if you need a hand locating a specific record.</p>" } },
+        { "type": "question", "settings": { "question": "What is the replacement policy on purity?", "answer": "<p>If a batch does not meet the purity threshold listed on the COA, we replace it — no questions. Independent re-verification is welcome and reimbursable.</p>" } },
+        { "type": "question", "settings": { "question": "Do you ship internationally?", "answer": "<p>Domestic US shipping is supported by default. International availability depends on the destination country's regulations — contact us for a routing assessment before placing an order.</p>" } },
+        { "type": "question", "settings": { "question": "How quickly do orders process?", "answer": "<p>Orders placed before the same-day cutoff ship the same business day. Most US destinations arrive within 1–3 business days, all temperature-controlled end-to-end.</p>" } },
+        { "type": "question", "settings": { "question": "Where are the compounds synthesized?", "answer": "<p>All compounds are synthesized in cGMP-aligned facilities in the United States, then third-party tested before they are released for sale.</p>" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

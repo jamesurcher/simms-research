@@ -611,11 +611,242 @@
         "padding-block-start": 100,
         "padding-block-end": 48
       }
+    },
+    "process_steps_rue": {
+      "type": "process-steps",
+      "blocks": {
+        "step_browse": {
+          "type": "step",
+          "settings": {
+            "icon": "list-filter",
+            "title": "Browse & select",
+            "body": "Filter the catalog by research category, purity grade, or molecular target."
+          }
+        },
+        "step_review": {
+          "type": "step",
+          "settings": {
+            "icon": "file-text",
+            "title": "Review the COA",
+            "body": "Download the third-party Certificate of Analysis before you order. Full mass-spec data on file."
+          }
+        },
+        "step_order": {
+          "type": "step",
+          "settings": {
+            "icon": "package",
+            "title": "Order research-ready",
+            "body": "Ships same-day, lyophilized and stable. Arrives in 2 days, ready for your protocol."
+          }
+        }
+      },
+      "block_order": ["step_browse", "step_review", "step_order"],
+      "settings": {
+        "eyebrow": "Simple process",
+        "heading": "Three steps to your next compound.",
+        "subhead": "Verified compounds with full documentation — no paperwork headaches.",
+        "footnote": "Same-day shipping. Free 2-day air on orders $250+.",
+        "cta_label": "Browse compounds",
+        "cta_url": "/collections/all",
+        "color_scheme": "scheme-1",
+        "padding-block-start": 120,
+        "padding-block-end": 96
+      }
+    },
+    "precision_verify_rue": {
+      "type": "precision-verify",
+      "blocks": {
+        "pillar_1": {
+          "type": "pillar",
+          "settings": {
+            "title": "Independent Verification",
+            "body": "Every compound verified by third-party HPLC and Mass Spectrometry before it ships. No exceptions."
+          }
+        },
+        "pillar_2": {
+          "type": "pillar",
+          "settings": {
+            "title": "Full COA Transparency",
+            "body": "Certificates of Analysis published for every product, every batch."
+          }
+        },
+        "pillar_3": {
+          "type": "pillar",
+          "settings": {
+            "title": "Free Shipping",
+            "body": "Via 2-Day Air on all orders over $250 to anywhere in the United States, including Alaska and Hawaii."
+          }
+        },
+        "pillar_4": {
+          "type": "pillar",
+          "settings": {
+            "title": "Complete Scientific Documentation",
+            "body": "CAS number, molecular weight, amino acid sequence, and storage specifications included."
+          }
+        },
+        "stat_1": {
+          "type": "stat",
+          "settings": { "value": "≥99%", "label": "Minimum purity" }
+        },
+        "stat_2": {
+          "type": "stat",
+          "settings": { "value": "100%", "label": "COA coverage" }
+        },
+        "stat_3": {
+          "type": "stat",
+          "settings": {
+            "value": "20+",
+            "label": "Batches tested",
+            "auto_fill": true,
+            "auto_fill_suffix": "+"
+          }
+        },
+        "stat_4": {
+          "type": "stat",
+          "settings": { "value": "Same day", "label": "Processing" }
+        }
+      },
+      "block_order": ["pillar_1", "pillar_2", "pillar_3", "pillar_4", "stat_1", "stat_2", "stat_3", "stat_4"],
+      "settings": {
+        "eyebrow": "Why Simms Research",
+        "heading": "Precision you can verify.",
+        "body": "We connect researchers with precision-grade peptides through expert synthesis, independent third-party testing, and complete documentation — every step of the way.",
+        "disclaimer": "",
+        "color_scheme": "scheme-1",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      }
+    },
+    "cta_research_rue": {
+      "type": "cta-research",
+      "blocks": {
+        "badge_1": {
+          "type": "badge",
+          "settings": { "icon": "shield-check", "label": "≥99% HPLC purity" }
+        },
+        "badge_2": {
+          "type": "badge",
+          "settings": { "icon": "flask-conical", "label": "Third-party tested" }
+        },
+        "badge_3": {
+          "type": "badge",
+          "settings": { "icon": "file-text", "label": "COA every batch" }
+        },
+        "badge_4": {
+          "type": "badge",
+          "settings": { "icon": "truck", "label": "Free 2-day shipping" }
+        }
+      },
+      "block_order": ["badge_1", "badge_2", "badge_3", "badge_4"],
+      "settings": {
+        "eyebrow": "500+ research institutions served",
+        "heading": "Ready to advance your research?",
+        "subhead": "Verified compounds with full COA documentation. Ships same-day, arrives research-ready.",
+        "primary_label": "Shop all peptides",
+        "primary_url": "/collections/all",
+        "secondary_label": "View COA library",
+        "secondary_url": "/pages/lab-results",
+        "secondary_icon": "file-text",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      }
+    },
+    "faq_accordion_rue": {
+      "type": "faq-accordion",
+      "blocks": {
+        "q_1": {
+          "type": "question",
+          "settings": {
+            "question": "How is purity verified?",
+            "answer": "<p>Every batch is tested in-house by HPLC and independently re-verified by a third-party laboratory. We publish the Certificate of Analysis for each lot before the product ships.</p>"
+          }
+        },
+        "q_2": {
+          "type": "question",
+          "settings": {
+            "question": "What's included in the COA?",
+            "answer": "<p>Each Certificate of Analysis includes the compound's identity, HPLC purity percentage, mass-spec verification, lot number, manufacture date, and a sign-off from the testing laboratory.</p>"
+          }
+        },
+        "q_3": {
+          "type": "question",
+          "settings": {
+            "question": "How are compounds shipped and stored?",
+            "answer": "<p>Compounds ship lyophilized in temperature-controlled, insulated packaging with cold packs. Once received, store at the temperature specified on the COA — typically refrigerated or frozen.</p>"
+          }
+        },
+        "q_4": {
+          "type": "question",
+          "settings": {
+            "question": "Can I access historical COAs for past lots?",
+            "answer": "<p>Yes. Every lot we have ever shipped is searchable in the public COA library by batch ID. Reach out if you need a hand locating a specific record.</p>"
+          }
+        },
+        "q_5": {
+          "type": "question",
+          "settings": {
+            "question": "What is the replacement policy on purity?",
+            "answer": "<p>If a batch does not meet the purity threshold listed on the COA, we replace it — no questions. Independent re-verification is welcome and reimbursable.</p>"
+          }
+        },
+        "q_6": {
+          "type": "question",
+          "settings": {
+            "question": "Do you ship internationally?",
+            "answer": "<p>Domestic US shipping is supported by default. International availability depends on the destination country's regulations — contact us for a routing assessment before placing an order.</p>"
+          }
+        },
+        "q_7": {
+          "type": "question",
+          "settings": {
+            "question": "How quickly do orders process?",
+            "answer": "<p>Orders placed before the same-day cutoff ship the same business day. Most US destinations arrive within 1–3 business days, all temperature-controlled end-to-end.</p>"
+          }
+        },
+        "q_8": {
+          "type": "question",
+          "settings": {
+            "question": "Where are the compounds synthesized?",
+            "answer": "<p>All compounds are synthesized in cGMP-aligned facilities in the United States, then third-party tested before they are released for sale.</p>"
+          }
+        }
+      },
+      "block_order": ["q_1", "q_2", "q_3", "q_4", "q_5", "q_6", "q_7", "q_8"],
+      "settings": {
+        "eyebrow": "FAQ",
+        "heading": "Questions researchers ask.",
+        "contact_prefix": "Can't find your answer?",
+        "contact_label": "Contact us",
+        "contact_url": "/pages/contact",
+        "color_scheme": "scheme-1",
+        "padding-block-start": 96,
+        "padding-block-end": 96
+      }
+    },
+    "newsletter_research_rue": {
+      "type": "newsletter-research",
+      "settings": {
+        "eyebrow": "Research updates",
+        "heading": "First to know. First to research.",
+        "body": "New compound releases, COA updates, research protocols, and exclusive pricing — delivered to your inbox. Unsubscribe anytime.",
+        "input_placeholder": "Your email address",
+        "submit_label": "Subscribe",
+        "reassurance": "No spam. Research updates and offers only.",
+        "success_message": "Subscribed. Welcome aboard.",
+        "color_scheme": "scheme-1",
+        "padding-block-start": 96,
+        "padding-block-end": 120
+      }
     }
   },
   "order": [
     "hero_p9CmMG",
     "trust_strip_main",
-    "product_list_themegen"
+    "product_list_themegen",
+    "process_steps_rue",
+    "precision_verify_rue",
+    "cta_research_rue",
+    "faq_accordion_rue",
+    "newsletter_research_rue"
   ]
 }

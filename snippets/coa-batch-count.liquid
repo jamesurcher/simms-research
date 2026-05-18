@@ -1,0 +1,35 @@
+{%- comment -%}
+  COA batch count — single source of truth.
+
+  Iterates `collections.all.products` and totals every batch present on the
+  COA metafield (either `coa.batches` list or single `coa.batch` ref). Used
+  by the lab-results dashboard (for the headline batch count) and by any
+  homepage stat block that wants to auto-fill the same number.
+
+  Outputs ONLY the integer (no HTML, no whitespace). Callers read it via
+  the capture + render pattern:
+
+    {%- capture _batches -%}{% render 'coa-batch-count' %}{%- endcapture -%}
+    {%- assign total_batches = _batches | strip | times: 1 -%}
+
+  Note: `collections.all.products` is capped at 50 in a non-paginated for
+  loop. If the catalog ever exceeds 50 SKUs with COA data, switch to a
+  paginated render or pass a dedicated collection in.
+{%- endcomment -%}
+{%- liquid
+  assign total_batches = 0
+
+  for product in collections.all.products
+    assign batches = product.metafields.coa.batches.value
+    assign single_batch = product.metafields.coa.batch.value
+
+    if batches != blank
+      for batch in batches
+        assign total_batches = total_batches | plus: 1
+      endfor
+    elsif single_batch != blank
+      assign total_batches = total_batches | plus: 1
+    endif
+  endfor
+-%}
+{{- total_batches -}}

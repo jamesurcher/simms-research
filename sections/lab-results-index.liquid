@@ -12,20 +12,22 @@
   (e.g. batch.batch_id.value).
 {% endcomment %}
 
+{%- capture coa_batch_count_raw -%}{% render 'coa-batch-count' %}{%- endcapture -%}
 {%- liquid
-  assign total_batches = 0
+  assign total_batches = coa_batch_count_raw | strip | times: 1
   assign sum_purity = 0.0
   assign count_purity = 0
   assign entries_present = false
 
-  # Pre-pass: compute totals across all products with COA data
+  # Purity averaging pre-pass. Batch count comes from the shared snippet
+  # (see snippets/coa-batch-count.liquid) so the homepage stat and this
+  # dashboard never drift apart.
   for product in collections.all.products
     assign batches = product.metafields.coa.batches.value
     assign single_batch = product.metafields.coa.batch.value
 
     if batches != blank
       for batch in batches
-        assign total_batches = total_batches | plus: 1
         assign p_raw = batch.purity.value | default: batch.avg_purity.value
         if p_raw != blank
           assign p_num = p_raw | replace: '%', '' | strip | times: 1.0
@@ -37,7 +39,6 @@
       endfor
       assign entries_present = true
     elsif single_batch != blank
-      assign total_batches = total_batches | plus: 1
       assign p_raw = single_batch.purity.value | default: single_batch.avg_purity.value
       if p_raw != blank
         assign p_num = p_raw | replace: '%', '' | strip | times: 1.0

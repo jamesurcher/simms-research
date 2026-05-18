@@ -1,0 +1,347 @@
+{%- comment -%}
+  Precision verify — split header + 4-pillar grid + 4-stat row.
+
+  Inspired by Rue Peptides' "Precision you can verify" section. Header is a
+  two-column layout (eyebrow + heading on left, supporting paragraph on
+  right). Below sit two stacked rows inside a soft panel: pillars (numbered
+  trust statements with body copy) and stats (display numerals with mono
+  labels). Translated to the Simms voice — Inter heading, mono caps,
+  hairline rules between cells.
+{%- endcomment -%}
+
+{%- assign pillars = section.blocks | where: 'type', 'pillar' -%}
+{%- assign stats = section.blocks | where: 'type', 'stat' -%}
+
+{%- comment -%}
+  Only compute the live COA batch count if at least one stat block opts
+  into auto-fill. Iterating collections.all.products on every homepage
+  render isn't free — keep it gated.
+{%- endcomment -%}
+{%- assign needs_batch_count = false -%}
+{%- for block in stats -%}
+  {%- if block.settings.auto_fill -%}
+    {%- assign needs_batch_count = true -%}
+    {%- break -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- if needs_batch_count -%}
+  {%- capture coa_batch_count_raw -%}{% render 'coa-batch-count' %}{%- endcapture -%}
+  {%- assign auto_batch_count = coa_batch_count_raw | strip | times: 1 -%}
+{%- endif -%}
+
+<section
+  class="precision-verify section section--page-width color-{{ section.settings.color_scheme }}"
+  style="
+    --precision-verify-padding-block-start: {{ section.settings['padding-block-start'] }}px;
+    --precision-verify-padding-block-end: {{ section.settings['padding-block-end'] }}px;
+  "
+>
+  <div class="precision-verify__inner">
+
+    <header class="precision-verify__hero">
+      <div class="precision-verify__hero-left">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="precision-verify__eyebrow">
+            <span class="precision-verify__eyebrow-rule" aria-hidden="true"></span>
+            <span>{{ section.settings.eyebrow }}</span>
+          </p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="precision-verify__heading">{{ section.settings.heading | newline_to_br }}</h2>
+        {%- endif -%}
+      </div>
+      {%- if section.settings.body != blank -%}
+        <div class="precision-verify__hero-right">
+          <p class="precision-verify__body">{{ section.settings.body }}</p>
+        </div>
+      {%- endif -%}
+    </header>
+
+    {%- if pillars.size > 0 -%}
+      <div class="precision-verify__pillars">
+        {%- for block in pillars -%}
+          {%- assign pillar_num = forloop.index | prepend: '0' | slice: -2, 2 -%}
+          <article class="precision-verify__pillar" {{ block.shopify_attributes }}>
+            <p class="precision-verify__pillar-num">{{ pillar_num }}</p>
+            <h3 class="precision-verify__pillar-title">{{ block.settings.title }}</h3>
+            {%- if block.settings.body != blank -%}
+              <p class="precision-verify__pillar-body">{{ block.settings.body }}</p>
+            {%- endif -%}
+          </article>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    {%- if stats.size > 0 -%}
+      <div class="precision-verify__stats">
+        {%- for block in stats -%}
+          {%- assign stat_value = block.settings.value -%}
+          {%- if block.settings.auto_fill -%}
+            {%- if auto_batch_count > 0 -%}
+              {%- assign stat_value = auto_batch_count | append: block.settings.auto_fill_suffix -%}
+            {%- endif -%}
+          {%- endif -%}
+          <div class="precision-verify__stat" {{ block.shopify_attributes }}>
+            <p class="precision-verify__stat-value">{{ stat_value }}</p>
+            {%- if block.settings.label != blank -%}
+              <p class="precision-verify__stat-label">{{ block.settings.label }}</p>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.disclaimer != blank -%}
+      <p class="precision-verify__disclaimer">{{ section.settings.disclaimer }}</p>
+    {%- endif -%}
+
+  </div>
+</section>
+
+{% stylesheet %}
+  .precision-verify {
+    padding-block-start: var(--precision-verify-padding-block-start, 96px);
+    padding-block-end: var(--precision-verify-padding-block-end, 96px);
+  }
+
+  .precision-verify__inner {
+    width: 85%;
+    margin-inline: auto;
+  }
+
+  /* ── Hero header (two-col) ── */
+  .precision-verify__hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    column-gap: clamp(2rem, 6vw, 5rem);
+    row-gap: 1.5rem;
+    align-items: end;
+    margin-block-end: 3.5rem;
+  }
+
+  .precision-verify__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--font-mono--family);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgb(var(--color-foreground-rgb) / 0.55);
+    margin: 0 0 1.5rem 0;
+  }
+
+  .precision-verify__eyebrow-rule {
+    display: inline-block;
+    width: 1.75rem;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.55;
+  }
+
+  .precision-verify__heading {
+    font-family: var(--font-heading--family);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--color-foreground-heading);
+    margin: 0;
+    max-width: 14ch;
+  }
+
+  .precision-verify__body {
+    font-family: var(--font-body--family);
+    font-size: clamp(0.9375rem, 1.2vw, 1.0625rem);
+    line-height: 1.6;
+    color: rgb(var(--color-foreground-rgb) / 0.7);
+    margin: 0;
+    max-width: 44ch;
+  }
+
+  /* ── Pillars row (numbered cards in a soft panel) ── */
+  .precision-verify__pillars {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1px;
+    background: rgb(var(--color-foreground-rgb) / 0.1);
+    border: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-block-end: 1.25rem;
+  }
+
+  .precision-verify__pillar {
+    background: rgb(var(--color-foreground-rgb) / 0.025);
+    padding: 1.75rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .precision-verify__pillar-num {
+    font-family: var(--font-mono--family);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    color: rgb(var(--color-foreground-rgb) / 0.4);
+    margin: 0 0 0.75rem 0;
+  }
+
+  .precision-verify__pillar-title {
+    font-family: var(--font-heading--family);
+    font-size: 1.0625rem;
+    font-weight: 500;
+    line-height: 1.25;
+    color: var(--color-foreground-heading);
+    margin: 0;
+  }
+
+  .precision-verify__pillar-body {
+    font-family: var(--font-body--family);
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: rgb(var(--color-foreground-rgb) / 0.65);
+    margin: 0;
+  }
+
+  /* ── Stats row (display numerals) ── */
+  .precision-verify__stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1px;
+    background: rgb(var(--color-foreground-rgb) / 0.1);
+    border: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .precision-verify__stat {
+    background: rgb(var(--color-foreground-rgb) / 0.025);
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+
+  .precision-verify__stat-value {
+    font-family: var(--font-heading--family);
+    font-size: clamp(2.25rem, 3.5vw, 3rem);
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.025em;
+    color: var(--color-foreground-heading);
+    margin: 0;
+  }
+
+  .precision-verify__stat-label {
+    font-family: var(--font-mono--family);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgb(var(--color-foreground-rgb) / 0.5);
+    margin: 0;
+  }
+
+  /* ── Footnote / disclaimer ── */
+  .precision-verify__disclaimer {
+    font-family: var(--font-body--family);
+    font-size: 0.8125rem;
+    line-height: 1.55;
+    color: rgb(var(--color-foreground-rgb) / 0.45);
+    max-width: 80ch;
+    margin: 1.75rem 0 0;
+  }
+
+  @media (max-width: 989px) {
+    .precision-verify__hero {
+      grid-template-columns: 1fr;
+      align-items: start;
+    }
+
+    .precision-verify__pillars,
+    .precision-verify__stats {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 749px) {
+    .precision-verify__inner {
+      width: 100%;
+      padding-inline: 1.25rem;
+    }
+
+    .precision-verify__hero {
+      margin-block-end: 2.25rem;
+    }
+
+    .precision-verify__pillars,
+    .precision-verify__stats {
+      grid-template-columns: 1fr;
+    }
+
+    .precision-verify__pillar,
+    .precision-verify__stat {
+      padding: 1.5rem 1.25rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Precision verify",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Hero" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow (mono caps)", "default": "Why Simms Research" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Precision you can verify." },
+    { "type": "textarea", "id": "body", "label": "Supporting paragraph", "default": "We connect researchers with precision-grade peptides through expert synthesis, independent third-party testing, and complete documentation — every step of the way." },
+    { "type": "header", "content": "Footnote" },
+    { "type": "textarea", "id": "disclaimer", "label": "Disclaimer (optional)", "default": "This product is intended for research and laboratory use only. It is not a drug, food, or cosmetic and should not be used for any purpose other than legitimate scientific research. Not for human or animal consumption." },
+    { "type": "header", "content": "Layout" },
+    { "type": "color_scheme", "id": "color_scheme", "label": "Color scheme", "default": "scheme-1" },
+    { "type": "range", "id": "padding-block-start", "label": "Top padding", "min": 0, "max": 200, "step": 8, "unit": "px", "default": 96 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom padding", "min": 0, "max": 200, "step": 8, "unit": "px", "default": 96 }
+  ],
+  "blocks": [
+    {
+      "type": "pillar",
+      "name": "Trust pillar",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "Independent Verification" },
+        { "type": "textarea", "id": "body", "label": "Body", "default": "Every compound verified by third-party HPLC and Mass Spectrometry before it ships. No exceptions." }
+      ]
+    },
+    {
+      "type": "stat",
+      "name": "Stat",
+      "settings": [
+        { "type": "text", "id": "value", "label": "Value", "default": "≥99%" },
+        { "type": "text", "id": "label", "label": "Label", "default": "Minimum purity" },
+        { "type": "header", "content": "Auto-fill from COA library" },
+        { "type": "paragraph", "content": "When enabled, the value above is replaced with the live total batch count read from product COA metafields. Falls back to the manual value if no batches are found." },
+        { "type": "checkbox", "id": "auto_fill", "label": "Auto-fill batch count", "default": false },
+        { "type": "text", "id": "auto_fill_suffix", "label": "Suffix (e.g. +)", "default": "+" }
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "presets": [
+    {
+      "name": "Precision verify",
+      "blocks": [
+        { "type": "pillar", "settings": { "title": "Independent Verification", "body": "Every compound verified by third-party HPLC and Mass Spectrometry before it ships. No exceptions." } },
+        { "type": "pillar", "settings": { "title": "Full COA Transparency", "body": "Certificates of Analysis published for every product, every batch." } },
+        { "type": "pillar", "settings": { "title": "Free Shipping", "body": "Via 2-Day Air on all orders over $250 to anywhere in the United States, including Alaska and Hawaii." } },
+        { "type": "pillar", "settings": { "title": "Complete Scientific Documentation", "body": "CAS number, molecular weight, amino acid sequence, and storage specifications included." } },
+        { "type": "stat", "settings": { "value": "≥99%", "label": "Minimum purity" } },
+        { "type": "stat", "settings": { "value": "100%", "label": "COA coverage" } },
+        { "type": "stat", "settings": { "value": "20+", "label": "Batches tested" } },
+        { "type": "stat", "settings": { "value": "Same day", "label": "Processing" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

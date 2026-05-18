@@ -1,0 +1,355 @@
+{%- comment -%}
+  CTA research — dark rounded card with closing pitch.
+
+  Inspired by Rue Peptides' "Ready to advance your research?" closing block.
+  A self-contained dark panel sitting inside the page width rail: eyebrow
+  with institutions claim, large display headline, supporting sub, two
+  buttons (filled white + outlined ghost), and an inline row of trust marks
+  at the bottom. Acts as a rhythm break from the surrounding light sections.
+{%- endcomment -%}
+
+{%- assign badges = section.blocks | where: 'type', 'badge' -%}
+
+<section
+  class="cta-research section section--page-width"
+  style="
+    --cta-research-padding-block-start: {{ section.settings['padding-block-start'] }}px;
+    --cta-research-padding-block-end: {{ section.settings['padding-block-end'] }}px;
+  "
+>
+  <div class="cta-research__inner">
+    <div class="cta-research__card">
+      <div class="cta-research__glow" aria-hidden="true"></div>
+
+      <div class="cta-research__content">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="cta-research__eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+
+        {%- if section.settings.heading != blank -%}
+          <h2 class="cta-research__heading">{{ section.settings.heading | newline_to_br }}</h2>
+        {%- endif -%}
+
+        {%- if section.settings.subhead != blank -%}
+          <p class="cta-research__subhead">{{ section.settings.subhead | newline_to_br }}</p>
+        {%- endif -%}
+
+        {%- if section.settings.primary_label != blank or section.settings.secondary_label != blank -%}
+          <div class="cta-research__buttons">
+            {%- if section.settings.primary_label != blank -%}
+              <a
+                href="{{ section.settings.primary_url | default: '/collections/all' }}"
+                class="cta-research__btn cta-research__btn--primary"
+              >
+                <span>{{ section.settings.primary_label }}</span>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                  <path d="M1 7H13M13 7L8 2M13 7L8 12" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </a>
+            {%- endif -%}
+            {%- if section.settings.secondary_label != blank -%}
+              <a
+                href="{{ section.settings.secondary_url | default: '/pages/lab-results' }}"
+                class="cta-research__btn cta-research__btn--secondary"
+              >
+                {%- assign icon_file = 'icon-' | append: section.settings.secondary_icon | append: '.svg' -%}
+                {%- if section.settings.secondary_icon != blank and section.settings.secondary_icon != 'none' -%}
+                  <span class="cta-research__btn-icon" aria-hidden="true">
+                    {{ icon_file | inline_asset_content }}
+                  </span>
+                {%- endif -%}
+                <span>{{ section.settings.secondary_label }}</span>
+              </a>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+
+        {%- if badges.size > 0 -%}
+          <ul class="cta-research__badges">
+            {%- for block in badges -%}
+              <li class="cta-research__badge" {{ block.shopify_attributes }}>
+                {%- if block.settings.icon != blank and block.settings.icon != 'none' -%}
+                  <span class="cta-research__badge-icon" aria-hidden="true">
+                    {%- assign badge_icon = 'icon-' | append: block.settings.icon | append: '.svg' -%}
+                    {{ badge_icon | inline_asset_content }}
+                  </span>
+                {%- endif -%}
+                <span>{{ block.settings.label }}</span>
+              </li>
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .cta-research {
+    padding-block-start: var(--cta-research-padding-block-start, 96px);
+    padding-block-end: var(--cta-research-padding-block-end, 96px);
+  }
+
+  .cta-research__inner {
+    width: 85%;
+    margin-inline: auto;
+  }
+
+  .cta-research__card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 28px;
+    background: #0a1620;
+    color: #f7f8f9;
+    padding: clamp(3rem, 7vw, 6rem) clamp(1.5rem, 5vw, 4rem);
+  }
+
+  /* Subtle radial glow toward the bottom — Rue's signature mood */
+  .cta-research__glow {
+    position: absolute;
+    inset-block-end: -20%;
+    inset-inline-start: 50%;
+    width: 70%;
+    aspect-ratio: 1;
+    transform: translateX(-50%);
+    background: radial-gradient(circle, rgb(64 120 140 / 0.32) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .cta-research__content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 44rem;
+    margin-inline: auto;
+  }
+
+  .cta-research__eyebrow {
+    font-family: var(--font-mono--family);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgb(247 248 249 / 0.55);
+    margin: 0 0 2rem 0;
+  }
+
+  .cta-research__heading {
+    font-family: var(--font-heading--family);
+    font-size: clamp(2.25rem, 4.5vw, 3.75rem);
+    font-weight: 500;
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    color: #f7f8f9;
+    margin: 0;
+  }
+
+  .cta-research__subhead {
+    font-family: var(--font-body--family);
+    font-size: clamp(0.9375rem, 1.2vw, 1.0625rem);
+    line-height: 1.55;
+    color: rgb(247 248 249 / 0.62);
+    max-width: 40ch;
+    margin: 1.5rem 0 0;
+  }
+
+  .cta-research__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-block-start: 2.5rem;
+  }
+
+  .cta-research__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.95rem 1.5rem;
+    border-radius: var(--style-border-radius-buttons-primary);
+    font-family: var(--font-body--family);
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    text-decoration: none;
+    transition:
+      background 180ms ease,
+      color 180ms ease,
+      border-color 180ms ease,
+      opacity 180ms ease;
+  }
+
+  .cta-research__btn--primary {
+    background: #f7f8f9;
+    color: #0a1620;
+    border: 1px solid #f7f8f9;
+  }
+
+  .cta-research__btn--primary:hover {
+    opacity: 0.9;
+  }
+
+  .cta-research__btn--secondary {
+    background: transparent;
+    color: #f7f8f9;
+    border: 1px solid rgb(247 248 249 / 0.35);
+  }
+
+  .cta-research__btn--secondary:hover {
+    background: rgb(247 248 249 / 0.08);
+    border-color: rgb(247 248 249 / 0.65);
+  }
+
+  .cta-research__btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1rem;
+    height: 1rem;
+    opacity: 0.75;
+  }
+
+  .cta-research__btn-icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .cta-research__badges {
+    list-style: none;
+    margin: 3rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.25rem 2rem;
+  }
+
+  .cta-research__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-body--family);
+    font-size: 0.8125rem;
+    color: rgb(247 248 249 / 0.62);
+  }
+
+  .cta-research__badge-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1rem;
+    height: 1rem;
+    opacity: 0.75;
+  }
+
+  .cta-research__badge-icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  @media (max-width: 749px) {
+    .cta-research__inner {
+      width: 100%;
+      padding-inline: 1.25rem;
+    }
+
+    .cta-research__card {
+      border-radius: 20px;
+      padding: 3rem 1.5rem 3rem;
+    }
+
+    .cta-research__buttons {
+      flex-direction: column;
+      align-items: stretch;
+      width: 100%;
+      max-width: 18rem;
+    }
+
+    .cta-research__btn {
+      justify-content: center;
+      padding: 1rem 1.5rem;
+    }
+
+    .cta-research__badges {
+      gap: 0.9rem 1.5rem;
+      margin-block-start: 2.25rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "CTA research",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Content" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow (mono caps)", "default": "500+ research institutions served" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Ready to advance your research?" },
+    { "type": "textarea", "id": "subhead", "label": "Subheading", "default": "Verified compounds with full COA documentation. Ships same-day, arrives research-ready." },
+    { "type": "header", "content": "Primary button" },
+    { "type": "text", "id": "primary_label", "label": "Label", "default": "Shop all peptides" },
+    { "type": "url", "id": "primary_url", "label": "Link" },
+    { "type": "header", "content": "Secondary button" },
+    { "type": "text", "id": "secondary_label", "label": "Label", "default": "View COA library" },
+    { "type": "url", "id": "secondary_url", "label": "Link" },
+    {
+      "type": "select",
+      "id": "secondary_icon",
+      "label": "Secondary icon",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "file-text", "label": "Document" },
+        { "value": "flask-conical", "label": "Flask" },
+        { "value": "microscope", "label": "Microscope" },
+        { "value": "clipboard-list", "label": "Clipboard" },
+        { "value": "shield-check", "label": "Shield" }
+      ],
+      "default": "file-text"
+    },
+    { "type": "header", "content": "Layout" },
+    { "type": "range", "id": "padding-block-start", "label": "Top padding", "min": 0, "max": 200, "step": 8, "unit": "px", "default": 96 },
+    { "type": "range", "id": "padding-block-end", "label": "Bottom padding", "min": 0, "max": 200, "step": 8, "unit": "px", "default": 96 }
+  ],
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "Trust badge",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "none", "label": "None" },
+            { "value": "shield-check", "label": "Shield" },
+            { "value": "flask-conical", "label": "Flask" },
+            { "value": "file-text", "label": "Document" },
+            { "value": "truck", "label": "Truck" },
+            { "value": "package", "label": "Package" },
+            { "value": "microscope", "label": "Microscope" },
+            { "value": "gauge", "label": "Gauge" },
+            { "value": "award", "label": "Award" }
+          ],
+          "default": "shield-check"
+        },
+        { "type": "text", "id": "label", "label": "Label", "default": "≥99% HPLC purity" }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "CTA research",
+      "blocks": [
+        { "type": "badge", "settings": { "icon": "shield-check", "label": "≥99% HPLC purity" } },
+        { "type": "badge", "settings": { "icon": "flask-conical", "label": "Third-party tested" } },
+        { "type": "badge", "settings": { "icon": "file-text", "label": "COA every batch" } },
+        { "type": "badge", "settings": { "icon": "truck", "label": "Free 2-day shipping" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
