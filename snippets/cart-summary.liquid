@@ -220,7 +220,7 @@
   {% endif %}
 
   {%- liquid
-    assign free_shipping_threshold = 25000
+    assign free_shipping_threshold = 20000
     assign free_shipping_remaining = free_shipping_threshold | minus: cart.total_price
     assign free_shipping_progress = cart.total_price | times: 100 | divided_by: free_shipping_threshold
     if free_shipping_progress > 100
@@ -233,10 +233,10 @@
       <div class="cart-free-shipping__label">
         {%- if free_shipping_remaining > 0 -%}
           <span>{{ free_shipping_remaining | money }} away from free shipping</span>
-          <span>$250 threshold</span>
+          <span>$200 threshold</span>
         {%- else -%}
           <span>Free shipping unlocked</span>
-          <span>$250 threshold met</span>
+          <span>$200 threshold met</span>
         {%- endif -%}
       </div>
       <div class="cart-free-shipping__track" aria-hidden="true">

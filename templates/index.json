@@ -645,7 +645,7 @@
         "eyebrow": "Simple process",
         "heading": "Three steps to your next compound.",
         "subhead": "Verified compounds with full documentation — no paperwork headaches.",
-        "footnote": "Same-day shipping. Free 2-day air on orders $250+.",
+        "footnote": "Same-day shipping. Free 2-day air on orders $200+.",
         "cta_label": "Browse compounds",
         "cta_url": "/collections/all",
         "color_scheme": "scheme-1",
@@ -674,7 +674,7 @@
           "type": "pillar",
           "settings": {
             "title": "Free Shipping",
-            "body": "Via 2-Day Air on all orders over $250 to anywhere in the United States, including Alaska and Hawaii."
+            "body": "Via 2-Day Air on orders $200+ to anywhere in the United States, including Alaska and Hawaii."
           }
         },
         "pillar_4": {
