@@ -255,7 +255,7 @@
       "type": "trust-strip",
       "settings": {
         "eyebrow": "",
-        "icon_1": "award",
+        "icon_1": "badge-check",
         "value_1": "99%+",
         "label_1": "Purity Guaranteed",
         "icon_2": "file-text",
