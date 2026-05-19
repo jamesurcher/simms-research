@@ -136,6 +136,38 @@
 
   assign current_purity = current_batch.purity.value | default: current_batch.avg_purity.value
   assign current_avg_purity = current_batch.avg_purity.value | default: current_purity
+  assign current_purity_display = current_purity | strip
+  if current_purity_display != blank
+    assign current_purity_display_downcase = current_purity_display | downcase
+    if current_purity_display_downcase contains 'pure'
+      assign current_purity_display = current_purity_display | remove: 'Pure' | remove: 'pure' | remove: 'PURE' | strip
+      assign current_purity_display_downcase = current_purity_display | downcase
+    endif
+    if current_purity_display != blank
+      unless current_purity_display contains '%' or current_purity_display_downcase contains 'n/a' or current_purity_display_downcase contains 'not tested' or current_purity_display == '—'
+        assign current_purity_display = current_purity_display | append: '%'
+      endunless
+    endif
+  else
+    assign current_purity_display_downcase = blank
+  endif
+
+  assign current_avg_purity_display = current_avg_purity | strip
+  if current_avg_purity_display != blank
+    assign current_avg_purity_display_downcase = current_avg_purity_display | downcase
+    if current_avg_purity_display_downcase contains 'pure'
+      assign current_avg_purity_display = current_avg_purity_display | remove: 'Pure' | remove: 'pure' | remove: 'PURE' | strip
+      assign current_avg_purity_display_downcase = current_avg_purity_display | downcase
+    endif
+    if current_avg_purity_display != blank
+      unless current_avg_purity_display contains '%' or current_avg_purity_display_downcase contains 'n/a' or current_avg_purity_display_downcase contains 'not tested' or current_avg_purity_display == '—'
+        assign current_avg_purity_display = current_avg_purity_display | append: '%'
+      endunless
+    endif
+  else
+    assign current_avg_purity_display_downcase = blank
+  endif
+
   assign current_vials_tested = current_batch.vials_tested.value
   assign current_labeled_content = current_batch.labeled_content.value
   assign current_net_content = current_batch.net_content.value
@@ -223,15 +255,14 @@
           <span class="batch-verification__title">Certificate of Analysis</span>
         </span>
 
-        {% if current_purity != blank %}
+        {% if current_purity_display != blank %}
           {% liquid
-            assign current_purity_downcase = current_purity | downcase
-            assign current_purity_label = current_purity
-            unless current_purity_downcase contains 'pure'
-              assign current_purity_label = current_purity | append: ' Pure'
+            assign current_purity_label = current_purity_display
+            unless current_purity_display_downcase contains 'n/a' or current_purity_display_downcase contains 'not tested' or current_purity_display == '—'
+              assign current_purity_label = current_purity_display | append: ' Pure'
             endunless
           %}
-          <span class="batch-verification__purity-pill">{{ current_purity_label }}</span>
+          <span class="batch-verification__purity-pill">{{ current_purity_label | escape }}</span>
         {% endif %}
 
         <span class="batch-verification__chevron" aria-hidden="true"></span>
@@ -239,10 +270,10 @@
 
       <div class="batch-verification__body">
         <dl class="batch-verification__metrics">
-          {% if current_avg_purity != blank %}
+          {% if current_avg_purity_display != blank %}
             <div class="batch-verification__metric">
               <dt>Avg Purity</dt>
-              <dd class="batch-verification__value">{{ current_avg_purity }}</dd>
+              <dd class="batch-verification__value">{{ current_avg_purity_display | escape }}</dd>
             </div>
           {% endif %}
 
