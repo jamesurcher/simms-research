@@ -246,13 +246,29 @@
               },
               "blocks": {}
             },
-            "product_stock_status_1": {
-              "type": "product-stock-status",
+            "product_shipping_strip_1": {
+              "type": "product-shipping-strip",
               "settings": {
-                "in_stock_label": "In stock",
-                "out_of_stock_label": "Out of stock",
-                "shipping_note": "Ships within 1–2 business days",
-                "padding-block-start": 0,
+                "show_delivery": true,
+                "min_business_days": 3,
+                "max_business_days": 6,
+                "delivery_fallback": "Arrives in 3-6 days",
+                "show_protection": true,
+                "protection_label": "Shipment protection",
+                "show_overnight": true,
+                "overnight_label": "2-day shipping",
+                "padding-block-start": 8,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "product_payment_row_1": {
+              "type": "product-payment-row",
+              "settings": {
+                "label": "We accept",
+                "padding-block-start": 8,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
@@ -290,8 +306,9 @@
             "group_icgrde",
             "product_trust_badges_1",
             "variant_picker_R3rGDr",
-            "product_stock_status_1",
             "buy_buttons_eYQEYi",
+            "product_shipping_strip_1",
+            "product_payment_row_1",
             "text_product_research_details"
           ]
         }
@@ -305,6 +322,44 @@
         "color_scheme": "",
         "padding-block-start": 0,
         "padding-block-end": 0
+      }
+    },
+    "pdp_trust_strip": {
+      "type": "pdp-trust-strip",
+      "blocks": {
+        "trust_item_shipping": {
+          "type": "trust_item",
+          "settings": {
+            "icon": "truck",
+            "title": "Free shipping",
+            "subtitle": "on orders over $200"
+          }
+        },
+        "trust_item_protection": {
+          "type": "trust_item",
+          "settings": {
+            "icon": "shield-check",
+            "title": "Damage protection",
+            "subtitle": "covered in transit"
+          }
+        },
+        "trust_item_checkout": {
+          "type": "trust_item",
+          "settings": {
+            "icon": "lock",
+            "title": "Secure checkout",
+            "subtitle": "256-bit SSL"
+          }
+        }
+      },
+      "block_order": [
+        "trust_item_shipping",
+        "trust_item_protection",
+        "trust_item_checkout"
+      ],
+      "settings": {
+        "padding-block-start": 48,
+        "padding-block-end": 48
       }
     },
     "product_recommendations_qggXJq": {
@@ -451,6 +506,7 @@
   },
   "order": [
     "main",
+    "pdp_trust_strip",
     "product_recommendations_qggXJq"
   ]
 }

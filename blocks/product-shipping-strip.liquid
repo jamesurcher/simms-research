@@ -1,0 +1,295 @@
+{%- comment -%}
+  Product shipping strip — soft surface row in the product info column.
+  Three items: delivery date estimate, shipment protection, 2-day shipping.
+  Dates render client-side via a custom element so CDN caching cannot
+  freeze the value.
+{%- endcomment -%}
+
+{%- liquid
+  assign block_settings = block.settings
+  assign min_days = block_settings.min_business_days | default: 3
+  assign max_days = block_settings.max_business_days | default: 6
+  assign locale = request.locale.iso_code | default: 'en-US'
+-%}
+
+<script src="{{ 'shipping-estimate.js' | asset_url }}" defer></script>
+
+<div
+  class="product-shipping-strip spacing-style"
+  style="{% render 'spacing-style', settings: block_settings %}"
+  {{ block.shopify_attributes }}
+>
+  {%- if block_settings.show_delivery -%}
+    <div class="product-shipping-strip__item product-shipping-strip__item--delivery">
+      <span class="product-shipping-strip__icon" aria-hidden="true">
+        {{- 'icon-truck.svg' | inline_asset_content -}}
+      </span>
+      <shipping-estimate
+        class="product-shipping-strip__estimate"
+        data-min-days="{{ min_days }}"
+        data-max-days="{{ max_days }}"
+        data-locale="{{ locale }}"
+      >
+        <span class="product-shipping-strip__label">{{ block_settings.delivery_fallback }}</span>
+      </shipping-estimate>
+    </div>
+  {%- endif -%}
+
+  {%- if block_settings.show_protection -%}
+    <div class="product-shipping-strip__item">
+      <span class="product-shipping-strip__icon" aria-hidden="true">
+        {{- 'icon-shield-check.svg' | inline_asset_content -}}
+      </span>
+      {%- if block_settings.protection_url != blank -%}
+        <a
+          class="product-shipping-strip__label product-shipping-strip__label--link"
+          href="{{ block_settings.protection_url }}"
+        >
+          {{ block_settings.protection_label }}
+        </a>
+      {%- else -%}
+        <span class="product-shipping-strip__label">{{ block_settings.protection_label }}</span>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  {%- if block_settings.show_overnight -%}
+    <div class="product-shipping-strip__item">
+      <span class="product-shipping-strip__icon" aria-hidden="true">
+        {{- 'icon-zap.svg' | inline_asset_content -}}
+      </span>
+      <span class="product-shipping-strip__label">{{ block_settings.overnight_label }}</span>
+    </div>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .product-shipping-strip {
+    --psstrip-accent: #4d8a5f;
+    --psstrip-surface: rgb(var(--color-foreground-rgb) / 0.03);
+    --psstrip-border: rgb(var(--color-foreground-rgb) / 0.08);
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+    gap: 0.625rem 0.5rem;
+    padding: 0.75rem 0.625rem;
+    background: var(--psstrip-surface);
+    border: 1px solid var(--psstrip-border);
+    border-radius: 12px;
+  }
+
+  .product-shipping-strip__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    text-align: center;
+    flex: 0 1 auto;
+  }
+
+  .product-shipping-strip__label {
+    white-space: nowrap;
+  }
+
+  .product-shipping-strip__estimate {
+    white-space: nowrap;
+  }
+
+  .product-shipping-strip__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.125rem;
+    height: 1.125rem;
+    color: var(--psstrip-accent);
+    flex-shrink: 0;
+  }
+
+  .product-shipping-strip__icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .product-shipping-strip__label {
+    font-family: var(--font-body--family);
+    font-size: 0.75rem;
+    line-height: 1.25;
+    color: rgb(var(--color-foreground-rgb) / 0.78);
+    margin: 0;
+  }
+
+  .product-shipping-strip__label--link {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-color: rgb(var(--color-foreground-rgb) / 0.25);
+    transition: text-decoration-color 160ms ease, color 160ms ease;
+  }
+
+  .product-shipping-strip__label--link:hover {
+    color: var(--color-foreground);
+    text-decoration-color: currentColor;
+  }
+
+  .product-shipping-strip__estimate {
+    display: block;
+    font-family: var(--font-body--family);
+    font-size: 0.75rem;
+    line-height: 1.25;
+    color: rgb(var(--color-foreground-rgb) / 0.78);
+  }
+
+  @media (max-width: 989px) {
+    .product-shipping-strip {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.625rem;
+      padding: 0.875rem;
+    }
+
+    .product-shipping-strip__item {
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 0.6rem;
+      text-align: left;
+    }
+
+    .product-shipping-strip__label,
+    .product-shipping-strip__estimate {
+      white-space: normal;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Shipping Strip",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Delivery estimate"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_delivery",
+      "label": "Show delivery estimate",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "min_business_days",
+      "label": "Min business days",
+      "min": 1,
+      "max": 14,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "max_business_days",
+      "label": "Max business days",
+      "min": 2,
+      "max": 21,
+      "step": 1,
+      "default": 6
+    },
+    {
+      "type": "text",
+      "id": "delivery_fallback",
+      "label": "Fallback text",
+      "info": "Shown before JavaScript renders the live date range",
+      "default": "Arrives in 3-6 days"
+    },
+    {
+      "type": "header",
+      "content": "Shipment protection"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_protection",
+      "label": "Show shipment protection",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "protection_label",
+      "label": "Label",
+      "default": "Shipment protection"
+    },
+    {
+      "type": "url",
+      "id": "protection_url",
+      "label": "Optional link"
+    },
+    {
+      "type": "header",
+      "content": "Expedited shipping"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_overnight",
+      "label": "Show expedited shipping",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "overnight_label",
+      "label": "Label",
+      "default": "2-day shipping"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "Left",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "Right",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shipping Strip",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

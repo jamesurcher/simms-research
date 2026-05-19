@@ -1,0 +1,133 @@
+{%- comment -%}
+  Product payment row — small "We accept" label paired with the shop's
+  enabled payment-type SVGs. Mirrors the trust footer of the inspo PDP.
+{%- endcomment -%}
+
+{%- liquid
+  assign block_settings = block.settings
+-%}
+
+<div
+  class="product-payment-row spacing-style"
+  style="{% render 'spacing-style', settings: block_settings %}"
+  {{ block.shopify_attributes }}
+>
+  {%- if block_settings.label != blank -%}
+    <span class="product-payment-row__label">{{ block_settings.label }}</span>
+  {%- endif -%}
+  <span class="visually-hidden">{{ 'blocks.payment_methods' | t }}</span>
+  <ul class="product-payment-row__list" role="list">
+    {%- for type in shop.enabled_payment_types -%}
+      <li class="product-payment-row__item">
+        {{ type | payment_type_svg_tag: class: 'icon icon--full-color' }}
+      </li>
+    {%- endfor -%}
+  </ul>
+</div>
+
+{% stylesheet %}
+  .product-payment-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.625rem 0.875rem;
+  }
+
+  .product-payment-row__label {
+    font-family: var(--font-body--family);
+    font-size: 0.8125rem;
+    color: rgb(var(--color-foreground-rgb) / 0.55);
+  }
+
+  .product-payment-row__list {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .product-payment-row__item {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .product-payment-row__item .icon {
+    height: 1.5rem;
+    width: auto;
+    display: block;
+  }
+
+  @media (max-width: 749px) {
+    .product-payment-row {
+      gap: 0.5rem 0.75rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Payment Row",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "Label",
+      "default": "We accept"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "Left",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "Right",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Payment Row",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

@@ -1254,6 +1254,14 @@
     }
   }
 
+  /* ---- Single-value variant pill --------------------------------------
+     When a product has a Dosage option with only one value, render the
+     value as a pill matching the multi-variant case (~half container)
+     instead of letting the equal-width grid stretch it edge-to-edge. */
+  .variant-option--equal-width-buttons:not(:has(.variant-option__button-label + .variant-option__button-label)) {
+    grid-template-columns: minmax(0, calc(50% - var(--gap-sm) / 2));
+  }
+
   /* ---- Mobile tap targets (≥44px iOS guideline) ----------------------- */
   @media screen and (max-width: 749px) {
     .variant-option__button-label {
