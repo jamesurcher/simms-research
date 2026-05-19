@@ -121,7 +121,22 @@
         var scope = selector.closest('form') || selector.closest('product-form-component') || document;
         var qtyInput = scope.querySelector('input[name="quantity"]');
         if (!qtyInput) return;
-        qtyInput.value = qty;
+        var quantitySelector = qtyInput.closest('quantity-selector-component');
+        var nextQty = String(qty);
+
+        if (quantitySelector && typeof quantitySelector.setValue === 'function') {
+          quantitySelector.setValue(nextQty);
+        } else {
+          qtyInput.value = nextQty;
+        }
+
+        if (quantitySelector && typeof quantitySelector.onQuantityChange === 'function') {
+          quantitySelector.onQuantityChange();
+        }
+        if (quantitySelector && typeof quantitySelector.updateButtonStates === 'function') {
+          quantitySelector.updateButtonStates();
+        }
+
         qtyInput.dispatchEvent(new Event('input', { bubbles: true }));
         qtyInput.dispatchEvent(new Event('change', { bubbles: true }));
       }

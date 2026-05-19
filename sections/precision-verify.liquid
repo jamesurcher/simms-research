@@ -42,8 +42,7 @@
       <div class="precision-verify__hero-left">
         {%- if section.settings.eyebrow != blank -%}
           <p class="precision-verify__eyebrow">
-            <span class="precision-verify__eyebrow-rule" aria-hidden="true"></span>
-            <span>{{ section.settings.eyebrow }}</span>
+            {{ section.settings.eyebrow }}
           </p>
         {%- endif -%}
         {%- if section.settings.heading != blank -%}
@@ -120,9 +119,6 @@
   }
 
   .precision-verify__eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.75rem;
     font-family: var(--font-mono--family);
     font-size: 0.6875rem;
     font-weight: 500;
@@ -130,14 +126,6 @@
     text-transform: uppercase;
     color: rgb(var(--color-foreground-rgb) / 0.55);
     margin: 0 0 1.5rem 0;
-  }
-
-  .precision-verify__eyebrow-rule {
-    display: inline-block;
-    width: 1.75rem;
-    height: 1px;
-    background: currentColor;
-    opacity: 0.55;
   }
 
   .precision-verify__heading {

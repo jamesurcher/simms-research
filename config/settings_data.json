@@ -9,8 +9,7 @@
  */
 {
   "current": {
-    "tos_gate_background": "shopify://shop_images/Main_Hero_Image.jpg",
-    "notify_endpoint": "https://script.google.com/macros/s/AKfycbxdpe_xtH4OgHZiGM92wThh7ATC1QrgJeCC_1EiYByT5g77QdVD78UTfs0qIdrRzf9t/exec",
+    "tos_gate_background": "shopify://shop_images/c01728b3e56f1292a7fd6d9ee9b60fa0.png",
     "logo": "shopify://shop_images/Simms_Logo_Banner_4.png",
     "logo_inverse": "shopify://shop_images/Simms_Logo_Banner_3.png",
     "logo_height": 60,
@@ -64,6 +63,7 @@
     "variant_button_border_width": 1,
     "variant_button_radius": 0,
     "variant_button_width": "equal-width-buttons",
+    "notify_endpoint": "https://script.google.com/macros/s/AKfycbxdpe_xtH4OgHZiGM92wThh7ATC1QrgJeCC_1EiYByT5g77QdVD78UTfs0qIdrRzf9t/exec",
     "content_for_index": [],
     "color_schemes": {
       "scheme-1": {

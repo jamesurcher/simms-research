@@ -26,11 +26,12 @@
      Replace the default chunky rich-text treatment with the same restrained
      editorial system used across the research and lab sections. */
 
-  [class*='__text_MEWCAN'] p {
+  .text-block--text_MEWCAN p,
+  [class*='text_MEWCAN'] p {
     font-family: var(--font-mono--family);
     font-size: 0.6875rem;
     font-weight: 500;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.18em;
     line-height: 1.2;
     text-transform: uppercase;
     color: rgb(var(--color-foreground-rgb) / 0.55);

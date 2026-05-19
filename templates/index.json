@@ -221,7 +221,7 @@
       "name": "t:names.hero",
       "settings": {
         "media_type_1": "image",
-        "image_1": "shopify://shop_images/Main_Hero_Image.jpg",
+        "image_1": "shopify://shop_images/c01728b3e56f1292a7fd6d9ee9b60fa0.png",
         "media_type_2": "image",
         "stack_media_on_mobile": false,
         "custom_mobile_media": false,
@@ -640,11 +640,15 @@
           }
         }
       },
-      "block_order": ["step_browse", "step_review", "step_order"],
+      "block_order": [
+        "step_browse",
+        "step_review",
+        "step_order"
+      ],
       "settings": {
         "eyebrow": "Simple process",
         "heading": "Three steps to your next compound.",
-        "subhead": "Verified compounds with full documentation — no paperwork headaches.",
+        "subhead": "Verified compounds with full documentation.",
         "footnote": "Same-day shipping. Free 2-day air on orders $200+.",
         "cta_label": "Browse compounds",
         "cta_url": "/collections/all",
@@ -686,11 +690,21 @@
         },
         "stat_1": {
           "type": "stat",
-          "settings": { "value": "≥99%", "label": "Minimum purity" }
+          "settings": {
+            "value": "≥99%",
+            "label": "Minimum purity",
+            "auto_fill": false,
+            "auto_fill_suffix": "+"
+          }
         },
         "stat_2": {
           "type": "stat",
-          "settings": { "value": "100%", "label": "COA coverage" }
+          "settings": {
+            "value": "100%",
+            "label": "COA coverage",
+            "auto_fill": false,
+            "auto_fill_suffix": "+"
+          }
         },
         "stat_3": {
           "type": "stat",
@@ -703,10 +717,24 @@
         },
         "stat_4": {
           "type": "stat",
-          "settings": { "value": "Same day", "label": "Processing" }
+          "settings": {
+            "value": "Same day",
+            "label": "Processing",
+            "auto_fill": false,
+            "auto_fill_suffix": "+"
+          }
         }
       },
-      "block_order": ["pillar_1", "pillar_2", "pillar_3", "pillar_4", "stat_1", "stat_2", "stat_3", "stat_4"],
+      "block_order": [
+        "pillar_1",
+        "pillar_2",
+        "pillar_3",
+        "pillar_4",
+        "stat_1",
+        "stat_2",
+        "stat_3",
+        "stat_4"
+      ],
       "settings": {
         "eyebrow": "Why Simms Research",
         "heading": "Precision you can verify.",
@@ -714,41 +742,7 @@
         "disclaimer": "",
         "color_scheme": "scheme-1",
         "padding-block-start": 96,
-        "padding-block-end": 96
-      }
-    },
-    "cta_research_rue": {
-      "type": "cta-research",
-      "blocks": {
-        "badge_1": {
-          "type": "badge",
-          "settings": { "icon": "shield-check", "label": "≥99% HPLC purity" }
-        },
-        "badge_2": {
-          "type": "badge",
-          "settings": { "icon": "flask-conical", "label": "Third-party tested" }
-        },
-        "badge_3": {
-          "type": "badge",
-          "settings": { "icon": "file-text", "label": "COA every batch" }
-        },
-        "badge_4": {
-          "type": "badge",
-          "settings": { "icon": "truck", "label": "Free 2-day shipping" }
-        }
-      },
-      "block_order": ["badge_1", "badge_2", "badge_3", "badge_4"],
-      "settings": {
-        "eyebrow": "7,500+ Vials Delivered",
-        "heading": "Ready to start your research?",
-        "subhead": "Verified compounds with full COA documentation. Ships same-day, arrives research-ready.",
-        "primary_label": "Shop all peptides",
-        "primary_url": "/collections/all",
-        "secondary_label": "View COA library",
-        "secondary_url": "/pages/lab-results",
-        "secondary_icon": "file-text",
-        "padding-block-start": 112,
-        "padding-block-end": 112
+        "padding-block-end": 72
       }
     },
     "faq_accordion_rue": {
@@ -811,7 +805,16 @@
           }
         }
       },
-      "block_order": ["q_1", "q_2", "q_3", "q_4", "q_5", "q_6", "q_7", "q_8"],
+      "block_order": [
+        "q_1",
+        "q_2",
+        "q_3",
+        "q_4",
+        "q_5",
+        "q_6",
+        "q_7",
+        "q_8"
+      ],
       "settings": {
         "eyebrow": "FAQ",
         "heading": "Questions researchers ask.",
@@ -819,8 +822,59 @@
         "contact_label": "Contact us",
         "contact_url": "/pages/contact",
         "color_scheme": "scheme-1",
-        "padding-block-start": 96,
-        "padding-block-end": 96
+        "padding-block-start": 48,
+        "padding-block-end": 72
+      }
+    },
+    "cta_research_rue": {
+      "type": "cta-research",
+      "blocks": {
+        "badge_1": {
+          "type": "badge",
+          "settings": {
+            "icon": "shield-check",
+            "label": "≥99% HPLC purity"
+          }
+        },
+        "badge_2": {
+          "type": "badge",
+          "settings": {
+            "icon": "flask-conical",
+            "label": "Third-party tested"
+          }
+        },
+        "badge_3": {
+          "type": "badge",
+          "settings": {
+            "icon": "file-text",
+            "label": "COA every batch"
+          }
+        },
+        "badge_4": {
+          "type": "badge",
+          "settings": {
+            "icon": "truck",
+            "label": "Free 2-day shipping"
+          }
+        }
+      },
+      "block_order": [
+        "badge_1",
+        "badge_2",
+        "badge_3",
+        "badge_4"
+      ],
+      "settings": {
+        "eyebrow": "7,500+ Vials Delivered",
+        "heading": "Ready to start your research?",
+        "subhead": "Verified compounds with full COA documentation. Ships same-day, arrives research-ready.",
+        "primary_label": "Shop all peptides",
+        "primary_url": "/collections/all",
+        "secondary_label": "View COA library",
+        "secondary_url": "/pages/lab-results",
+        "secondary_icon": "file-text",
+        "padding-block-start": 112,
+        "padding-block-end": 112
       }
     },
     "newsletter_research_rue": {
@@ -831,7 +885,7 @@
         "body": "New compound releases, COA updates, research protocols, and exclusive pricing — delivered to your inbox. Unsubscribe anytime.",
         "input_placeholder": "Your email address",
         "submit_label": "Subscribe",
-        "reassurance": "No spam. Research updates and offers only.",
+        "reassurance": "",
         "success_message": "Subscribed. Welcome aboard.",
         "color_scheme": "scheme-1",
         "padding-block-start": 56,
