@@ -568,11 +568,12 @@
           if (this.searchClear) this.searchClear.hidden = query.length === 0;
           if (!this.status) return;
 
-          this.status.hidden = total === 0;
           if (query) {
+            this.status.hidden = false;
             this.status.textContent = `Showing ${visible} of ${total} compounds matching "${query}"`;
           } else {
-            this.status.textContent = `Showing ${total} of ${total} compounds`;
+            this.status.hidden = true;
+            this.status.textContent = '';
           }
         }
 
