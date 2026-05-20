@@ -578,6 +578,15 @@
 
         openDialog(url, title) {
           if (!this.dialog || !url) return;
+          // iOS Safari (and several Android browsers) render PDFs in iframes
+          // at the PDF's natural size from the top-left — the user sees a
+          // zoomed-in corner of page 1. Hand off to the OS PDF viewer on
+          // mobile instead of using the in-page dialog.
+          const isMobile = window.matchMedia('(max-width: 749px)').matches;
+          if (isMobile) {
+            window.open(url, '_blank', 'noopener');
+            return;
+          }
           if (this.dialogFrame) this.dialogFrame.src = url;
           if (this.dialogTitle && title) this.dialogTitle.textContent = title;
           if (typeof this.dialog.showModal === 'function') {
