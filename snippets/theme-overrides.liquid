@@ -48,6 +48,17 @@
     margin: 0;
   }
 
+  /* ---- Product card price ----------------------------------------------
+     Body font with Medium weight so price reads as a confident label rather
+     than running body copy. !important is required because the price block's
+     inline style sets --font-weight directly on product-price, which would
+     otherwise outrank an external selector. */
+  .product-card product-price.text-block,
+  .product-grid product-price.text-block {
+    --font-weight: 500 !important;
+    font-weight: 500;
+  }
+
   /* ---- Legal pages ------------------------------------------------------
      Keep policy pages deliberately plain and document-like. The page copy was
      pasted with external utility classes, so this neutralizes that formatting
