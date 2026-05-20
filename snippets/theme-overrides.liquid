@@ -54,7 +54,8 @@
      inline style sets --font-weight directly on product-price, which would
      otherwise outrank an external selector. */
   .product-card product-price.text-block,
-  .product-grid product-price.text-block {
+  .product-grid product-price.text-block,
+  .product-information product-price.text-block {
     --font-weight: 500 !important;
     font-weight: 500;
   }
