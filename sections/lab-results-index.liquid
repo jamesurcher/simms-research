@@ -109,7 +109,6 @@
           </svg>
         </button>
       </div>
-      <p class="lab-results__status" data-lab-status aria-live="polite" hidden></p>
 
       <dl class="lab-results__stats">
         <div class="lab-results__stat">
@@ -434,7 +433,6 @@
           this.details    = this.querySelectorAll('[data-lab-detail]');
           this.searchInput = this.querySelector('[data-lab-search]');
           this.searchClear = this.querySelector('[data-lab-search-clear]');
-          this.status     = this.querySelector('[data-lab-status]');
           this.noResults  = this.querySelector('[data-lab-no-results]');
           this.dialog     = this.querySelector('[data-lab-dialog]');
           this.dialogFrame = this.querySelector('[data-lab-dialog-frame]');
@@ -556,25 +554,11 @@
           if (this.noResults) {
             this.noResults.hidden = (visible > 0 || terms.length === 0);
           }
-          this.updateSearchUi(visible, raw);
+          if (this.searchClear) this.searchClear.hidden = raw.length === 0;
         }
 
         normalizeSearchValue(value) {
           return value.toLowerCase().replace(/[^a-z0-9]+/g, '');
-        }
-
-        updateSearchUi(visible, query) {
-          const total = this.cards?.length || 0;
-          if (this.searchClear) this.searchClear.hidden = query.length === 0;
-          if (!this.status) return;
-
-          if (query) {
-            this.status.hidden = false;
-            this.status.textContent = `Showing ${visible} of ${total} compounds matching "${query}"`;
-          } else {
-            this.status.hidden = true;
-            this.status.textContent = '';
-          }
         }
 
         openDialog(url, title) {
@@ -823,15 +807,6 @@
   }
 
   .lab-results__search-clear[hidden] { display: none; }
-
-  .lab-results__status {
-    margin-block: -0.25rem 1rem;
-    font-family: var(--font-body--family);
-    font-size: 0.8125rem;
-    color: rgb(var(--color-foreground-rgb) / 0.55);
-  }
-
-  .lab-results__status[hidden] { display: none; }
 
   /* ---------- Index grid ---------- */
 
