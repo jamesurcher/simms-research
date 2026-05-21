@@ -17,7 +17,7 @@
         "announcement_memorial_day": {
           "type": "_announcement",
           "settings": {
-            "text": "MEMORIAL DAY SALE: 20% OFF SITEWIDE WITH CODE MEMORIAL20 — ENDS MAY 25",
+            "text": "MEMORIAL DAY SALE: 20% OFF SITEWIDE | USE CODE: MEMORIAL20 | ENDS MAY 25",
             "link": "/discount/MEMORIAL20?redirect=/collections/all",
             "font": "var(--font-body--family)",
             "font_size": "0.75rem",
