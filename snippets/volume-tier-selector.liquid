@@ -1,14 +1,14 @@
 {% doc %}
-  Renders the interactive volume-tier selector on the PDP.
+  Renders a static volume-discount info table on the PDP.
 
   Tier definitions come from theme settings (settings.volume_tier_N_qty /
-  volume_tier_N_pct). Discounts are computed against variant.price so they
-  display correctly across variants. The actual checkout discount is
-  applied by a matching Shopify automatic Volume discount campaign — keep
-  the numbers in sync between this snippet's settings and that campaign.
+  volume_tier_N_pct). The actual checkout discount is applied by a matching
+  Shopify automatic Volume discount campaign — keep the numbers in sync.
+
+  This is a non-interactive display only. Users control quantity via the
+  standard quantity selector (+/- buttons).
 
   @param {variant} variant - The currently selected variant.
-  @param {string} [block_id] - Used to scope the radio group when multiple selectors render on a page.
 {% enddoc %}
 
 {%- liquid
@@ -33,244 +33,87 @@
 -%}
 
 {%- if enabled and has_any_tier and variant -%}
-  {%- liquid
-    assign group_id = 'volume-tier-' | append: variant.id | append: '-' | append: block_id
-    assign base_price = variant.price
-    assign compare_price = variant.compare_at_price
-  -%}
+  <div class="volume-discount-table">
+    <span class="volume-discount-table__heading">Volume Discounts</span>
+    <div class="volume-discount-table__tiers">
+      {%- for i in (1..3) -%}
+        {%- liquid
+          case i
+            when 1
+              assign tier_qty = t1_qty
+              assign tier_pct = t1_pct
+            when 2
+              assign tier_qty = t2_qty
+              assign tier_pct = t2_pct
+            when 3
+              assign tier_qty = t3_qty
+              assign tier_pct = t3_pct
+          endcase
 
-  <volume-tier-selector class="volume-tier-selector" data-group-id="{{ group_id }}">
-    <label class="volume-tier" data-tier-qty="1">
-      <input
-        type="radio"
-        name="{{ group_id }}"
-        value="1"
-        class="volume-tier__radio"
-        checked
-      >
-      <span class="volume-tier__indicator" aria-hidden="true"></span>
-      <span class="volume-tier__label">Buy 1</span>
-      <span class="volume-tier__price">
-        <span class="volume-tier__unit-price">{{ base_price | money }}</span>
-        {%- if compare_price > base_price -%}
-          <span class="volume-tier__total">
-            Total: <s>{{ compare_price | money }}</s> <strong>{{ base_price | money }}</strong>
-          </span>
-        {%- endif -%}
-      </span>
-    </label>
+          if tier_qty <= 0 or tier_pct <= 0
+            continue
+          endif
+        -%}
 
-    {%- for i in (1..3) -%}
-      {%- liquid
-        case i
-          when 1
-            assign tier_qty = t1_qty
-            assign tier_pct = t1_pct
-          when 2
-            assign tier_qty = t2_qty
-            assign tier_pct = t2_pct
-          when 3
-            assign tier_qty = t3_qty
-            assign tier_pct = t3_pct
-        endcase
-
-        if tier_qty <= 0 or tier_pct <= 0
-          continue
-        endif
-
-        assign discount_amount = base_price | times: tier_pct | divided_by: 100
-        assign tier_unit_price = base_price | minus: discount_amount
-
-        assign is_last_active = false
-        if i == 3 and t3_qty > 0
-          assign is_last_active = true
-        elsif i == 2 and t3_qty <= 0
-          assign is_last_active = true
-        elsif i == 1 and t2_qty <= 0 and t3_qty <= 0
-          assign is_last_active = true
-        endif
-      -%}
-
-      <label class="volume-tier" data-tier-qty="{{ tier_qty }}">
-        <span class="volume-tier__badge">{{ tier_pct }}% off</span>
-        <input
-          type="radio"
-          name="{{ group_id }}"
-          value="{{ tier_qty }}"
-          class="volume-tier__radio"
-        >
-        <span class="volume-tier__indicator" aria-hidden="true"></span>
-        <span class="volume-tier__label">
-          Buy {{ tier_qty }}{% if is_last_active %}+{% endif %} and save {{ tier_pct }}%
-        </span>
-        <span class="volume-tier__price">
-          <span class="volume-tier__unit-price">
-            <s>{{ base_price | money }}</s> <strong>{{ tier_unit_price | money }}</strong>
-          </span>
-        </span>
-      </label>
-    {%- endfor -%}
-  </volume-tier-selector>
+        <div class="volume-discount-table__tier">
+          <span class="volume-discount-table__pct">{{ tier_pct }}% off</span>
+          <span class="volume-discount-table__qty">{{ tier_qty }}+ vials</span>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
 {%- endif -%}
 
 {% stylesheet %}
-  .volume-tier-selector {
+  .volume-discount-table {
     display: flex;
     flex-direction: column;
-    gap: 0;
-    margin-block: 1.25rem;
+    gap: 0.6rem;
     width: 100%;
     flex: 1 0 100%;
     grid-column: 1 / -1;
-    border-block: 1px solid rgb(10 10 10 / 0.08);
+    margin-block: 1rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid rgb(10 10 10 / 0.1);
+    border-radius: 6px;
+    background: rgb(10 10 10 / 0.02);
   }
 
-  .volume-tier-selector .volume-tier {
-    position: relative;
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto auto;
-    align-items: center;
-    gap: 1.1rem;
-    padding: 1.1rem 1.25rem;
-    background: transparent;
-    cursor: pointer;
-    transition: background 180ms ease;
-    border-bottom: 1px solid rgb(10 10 10 / 0.06);
-  }
-
-  .volume-tier-selector .volume-tier:last-child {
-    border-bottom: none;
-  }
-
-  .volume-tier-selector .volume-tier:hover {
-    background: rgb(10 10 10 / 0.025);
-  }
-
-  .volume-tier-selector .volume-tier:has(.volume-tier__radio:checked) {
-    background: #f1f7fb;
-  }
-
-  .volume-tier__radio {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    opacity: 0;
-    cursor: pointer;
-  }
-
-  .volume-tier__indicator {
-    position: relative;
-    grid-column: 1;
-    grid-row: 1;
-    width: 0.95rem;
-    height: 0.95rem;
-    border-radius: 50%;
-    border: 1px solid rgb(10 10 10 / 0.3);
-    background: transparent;
-    flex-shrink: 0;
-    transition: border-color 180ms ease;
-  }
-
-  .volume-tier-selector .volume-tier:has(.volume-tier__radio:checked) .volume-tier__indicator {
-    border-color: #0a0a0a;
-  }
-
-  .volume-tier-selector .volume-tier:has(.volume-tier__radio:checked) .volume-tier__indicator::after {
-    content: '';
-    position: absolute;
-    inset: 3px;
-    border-radius: 50%;
-    background: #0a0a0a;
-  }
-
-  .volume-tier__radio:focus-visible ~ .volume-tier__indicator {
-    outline: 1.5px solid #0a0a0a;
-    outline-offset: 3px;
-  }
-
-  .volume-tier__label {
-    grid-column: 2;
-    grid-row: 1;
-    min-width: 0;
-    font-size: 0.92rem;
-    font-weight: 500;
-    color: #0a0a0a;
-    line-height: 1.3;
-    letter-spacing: -0.005em;
-  }
-
-  .volume-tier__price {
-    display: flex;
-    grid-column: 3;
-    grid-row: 1;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 0.15rem;
-    min-width: max-content;
-    text-align: right;
-  }
-
-  .volume-tier__unit-price {
-    font-size: 0.92rem;
-    color: #0a0a0a;
-    font-variant-numeric: tabular-nums;
-    white-space: nowrap;
-  }
-
-  .volume-tier__unit-price strong {
+  .volume-discount-table__heading {
+    font-size: 0.68rem;
     font-weight: 600;
-  }
-
-  .volume-tier__unit-price s {
-    color: rgb(10 10 10 / 0.35);
-    font-weight: 400;
-    margin-right: 0.45rem;
-    text-decoration-thickness: 1px;
-  }
-
-  .volume-tier__total {
-    font-size: 0.72rem;
-    color: rgb(10 10 10 / 0.5);
-    letter-spacing: 0.04em;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .volume-tier__total s {
-    margin-right: 0.3rem;
-    text-decoration-thickness: 1px;
-  }
-
-  .volume-tier__badge {
-    position: static;
-    grid-column: 4;
-    grid-row: 1;
-    justify-self: end;
-    padding: 0.22rem 0.5rem;
-    background: #0a0a0a;
-    color: #ffffff;
-    font-size: 0.62rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    border-radius: 2px;
-    pointer-events: none;
-    line-height: 1;
-    white-space: nowrap;
+    color: rgb(10 10 10 / 0.5);
   }
 
-  @media (max-width: 600px) {
-    .volume-tier-selector .volume-tier {
-      grid-template-columns: auto minmax(0, 1fr) auto;
-      padding: 1rem 1rem;
-      gap: 0.85rem;
-    }
+  .volume-discount-table__tiers {
+    display: flex;
+    gap: 0.6rem;
+  }
 
-    .volume-tier__badge {
-      grid-column: 2 / -1;
-      grid-row: 2;
-      justify-self: start;
-    }
+  .volume-discount-table__tier {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.75rem 0.5rem;
+    border: 1px solid rgb(10 10 10 / 0.08);
+    border-radius: 4px;
+    background: #fff;
+  }
+
+  .volume-discount-table__pct {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #0a0a0a;
+    line-height: 1.2;
+  }
+
+  .volume-discount-table__qty {
+    font-size: 0.75rem;
+    color: rgb(10 10 10 / 0.5);
+    line-height: 1.2;
   }
 {% endstylesheet %}

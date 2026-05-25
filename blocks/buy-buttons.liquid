@@ -67,7 +67,7 @@
           {%- render 'gift-card-recipient-form', product: product, form: form, section: section, block: block -%}
           <span class="buy-buttons-block__bar">
         {%- endif -%}
-        {% render 'volume-tier-selector', variant: variant, block_id: block.id %}
+        {% render 'volume-tier-selector', variant: variant %}
         <div
           class="product-form-buttons spacing-style{% if block_settings.stacking %} product-form-buttons--stacked{% endif %}"
           style="{% render 'spacing-style', settings: block_settings %}"
@@ -91,21 +91,19 @@
             endif
           -%}
 
-          {%- if has_quantity_rules -%}
-            {%- assign cart_quantity = cart | item_count_for_variant: variant.id -%}
-            <div
-              class="quantity-label"
-              ref="quantityLabel"
+          {%- assign cart_quantity = cart | item_count_for_variant: variant.id -%}
+          <div
+            class="quantity-label"
+            ref="quantityLabel"
+          >
+            {{ 'products.product.quantity' | t }}
+            <span
+              class="quantity-label__cart-count{% if cart_quantity == 0 %} hidden{% endif %}"
+              ref="quantityLabelCartCount"
+              >({{ cart_quantity }}
+              {{ 'products.product.in_cart' | t }})</span
             >
-              {{ 'products.product.quantity' | t }}
-              <span
-                class="quantity-label__cart-count{% if cart_quantity == 0 %} hidden{% endif %}"
-                ref="quantityLabelCartCount"
-                >({{ cart_quantity }}
-                {{ 'products.product.in_cart' | t }})</span
-              >
-            </div>
-          {%- endif -%}
+          </div>
 
           {% content_for 'block', type: 'quantity', id: 'quantity' %}
 
