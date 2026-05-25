@@ -82,7 +82,7 @@
     }
   </style>
   <div class="volume-discount-table">
-    <span class="volume-discount-table__heading">Volume Discounts</span>
+    <span class="volume-discount-table__heading">Bundle & Save</span>
     <div class="volume-discount-table__tiers">
       {%- for i in (1..3) -%}
         {%- liquid
@@ -104,8 +104,8 @@
         -%}
 
         <div class="volume-discount-table__tier">
-          <span class="volume-discount-table__pct">{{ tier_pct }}% off</span>
           <span class="volume-discount-table__qty">{{ tier_qty }}+ vials</span>
+          <span class="volume-discount-table__pct">{{ tier_pct }}% off</span>
         </div>
       {%- endfor -%}
     </div>
