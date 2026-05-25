@@ -33,6 +33,54 @@
 -%}
 
 {%- if enabled and has_any_tier and variant -%}
+  <style>
+    .volume-discount-table {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      width: 100%;
+      flex: 1 0 100%;
+      grid-column: 1 / -1;
+      margin-block: 1rem;
+      padding: 1rem 1.25rem;
+      border: 1px solid rgb(10 10 10 / 0.1);
+      border-radius: 6px;
+      background: rgb(10 10 10 / 0.02);
+    }
+    .volume-discount-table__heading {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgb(10 10 10 / 0.5);
+    }
+    .volume-discount-table__tiers {
+      display: flex;
+      gap: 0.6rem;
+    }
+    .volume-discount-table__tier {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.75rem 0.5rem;
+      border: 1px solid rgb(10 10 10 / 0.08);
+      border-radius: 4px;
+      background: #fff;
+    }
+    .volume-discount-table__pct {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #0a0a0a;
+      line-height: 1.2;
+    }
+    .volume-discount-table__qty {
+      font-size: 0.75rem;
+      color: rgb(10 10 10 / 0.5);
+      line-height: 1.2;
+    }
+  </style>
   <div class="volume-discount-table">
     <span class="volume-discount-table__heading">Volume Discounts</span>
     <div class="volume-discount-table__tiers">
@@ -63,57 +111,3 @@
     </div>
   </div>
 {%- endif -%}
-
-{% stylesheet %}
-  .volume-discount-table {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-    width: 100%;
-    flex: 1 0 100%;
-    grid-column: 1 / -1;
-    margin-block: 1rem;
-    padding: 1rem 1.25rem;
-    border: 1px solid rgb(10 10 10 / 0.1);
-    border-radius: 6px;
-    background: rgb(10 10 10 / 0.02);
-  }
-
-  .volume-discount-table__heading {
-    font-size: 0.68rem;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: rgb(10 10 10 / 0.5);
-  }
-
-  .volume-discount-table__tiers {
-    display: flex;
-    gap: 0.6rem;
-  }
-
-  .volume-discount-table__tier {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.25rem;
-    padding: 0.75rem 0.5rem;
-    border: 1px solid rgb(10 10 10 / 0.08);
-    border-radius: 4px;
-    background: #fff;
-  }
-
-  .volume-discount-table__pct {
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: #0a0a0a;
-    line-height: 1.2;
-  }
-
-  .volume-discount-table__qty {
-    font-size: 0.75rem;
-    color: rgb(10 10 10 / 0.5);
-    line-height: 1.2;
-  }
-{% endstylesheet %}
