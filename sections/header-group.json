@@ -14,19 +14,6 @@
     "header_announcements_QTBwtW": {
       "type": "header-announcements",
       "blocks": {
-        "announcement_memorial_day": {
-          "type": "_announcement",
-          "settings": {
-            "text": "MEMORIAL DAY SALE: 20% OFF SITEWIDE | USE CODE: MEMORIAL20 | ENDS MAY 25",
-            "link": "/discount/MEMORIAL20?redirect=/collections/all",
-            "font": "var(--font-body--family)",
-            "font_size": "0.75rem",
-            "weight": "",
-            "letter_spacing": "normal",
-            "case": "none"
-          },
-          "blocks": {}
-        },
         "announcement_cXDVCA": {
           "type": "_announcement",
           "settings": {
@@ -68,7 +55,6 @@
         }
       },
       "block_order": [
-        "announcement_memorial_day",
         "announcement_cXDVCA",
         "announcement_batch_testing",
         "announcement_research_only"
