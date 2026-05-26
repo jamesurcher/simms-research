@@ -1,6 +1,28 @@
 {% liquid
   assign contact_url = section.settings.contact_url | default: '/pages/contact'
+  assign faq_blocks = section.blocks | where: 'type', 'faq'
 %}
+
+{%- if faq_blocks.size > 0 -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {%- for block in faq_blocks -%}
+          {
+            "@type": "Question",
+            "name": {{ block.settings.question | json }},
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": {{ block.settings.answer | strip_html | json }}
+            }
+          }{%- unless forloop.last -%},{%- endunless -%}
+        {%- endfor -%}
+      ]
+    }
+  </script>
+{%- endif -%}
 
 <section
   class="faq-page section section--page-width color-{{ section.settings.color_scheme }}"

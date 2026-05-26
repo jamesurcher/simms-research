@@ -1,0 +1,44 @@
+{%- comment -%}
+  Custom robots.txt — explicitly allows AI crawlers alongside
+  Shopify's default directives.
+{%- endcomment -%}
+User-agent: *
+Disallow: /admin
+Disallow: /cart
+Disallow: /orders
+Disallow: /checkouts/
+Disallow: /checkout
+Disallow: /carts
+Disallow: /account
+Disallow: /*?*variant=*
+Disallow: /*?*discount=*
+Disallow: /*?*preview_theme_id*
+Disallow: /*?*preview_key*
+Allow: /collections/
+Allow: /products/
+Allow: /pages/
+Allow: /blogs/
+
+Sitemap: {{ request.origin }}/sitemap.xml
+
+# AI Crawlers — explicitly permitted
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /

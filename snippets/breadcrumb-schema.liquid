@@ -1,0 +1,60 @@
+{%- comment -%}
+  Renders BreadcrumbList JSON-LD for product and collection pages.
+  No visible output — structured data only.
+{%- endcomment -%}
+
+{%- if request.page_type == 'product' -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": {{ request.origin | json }}
+        },
+        {%- if product.collections.size > 0 -%}
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": {{ product.collections.first.title | json }},
+            "item": {{ request.origin | append: product.collections.first.url | json }}
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": {{ product.title | json }}
+          }
+        {%- else -%}
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": {{ product.title | json }}
+          }
+        {%- endif -%}
+      ]
+    }
+  </script>
+{%- elsif request.page_type == 'collection' -%}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": {{ request.origin | json }}
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": {{ collection.title | json }}
+        }
+      ]
+    }
+  </script>
+{%- endif -%}
