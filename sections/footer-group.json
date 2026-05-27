@@ -182,11 +182,22 @@
                         "padding-inline-end": 0
                       },
                       "blocks": {}
+                    },
+                    "social_links_simms": {
+                      "type": "social-links",
+                      "name": "Social links",
+                      "settings": {
+                        "facebook_url": "https://www.facebook.com/simmsresearch",
+                        "instagram_url": "https://www.instagram.com/simmsresearch/",
+                        "tiktok_url": "https://www.tiktok.com/@simmsresearch"
+                      },
+                      "blocks": {}
                     }
                   },
                   "block_order": [
                     "image_dDbEUj",
-                    "text_FNF9RH"
+                    "text_FNF9RH",
+                    "social_links_simms"
                   ]
                 },
                 "group_Q9dAhr": {
