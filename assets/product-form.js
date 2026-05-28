@@ -208,9 +208,11 @@ class ProductFormComponent extends Component {
     const target = this.closest('.shopify-section, dialog, product-card');
     target?.addEventListener(ThemeEvents.variantUpdate, this.#onVariantUpdate, { signal });
     target?.addEventListener(ThemeEvents.variantSelected, this.#onVariantSelected, { signal });
+    this.addEventListener(ThemeEvents.quantitySelectorUpdate, this.#onQuantitySelectorUpdate, { signal });
 
     // Listen for cart updates to sync data-cart-quantity
     document.addEventListener(ThemeEvents.cartUpdate, this.#onCartUpdate, { signal });
+    this.#updateVolumeTierSelection();
   }
 
   disconnectedCallback() {
@@ -239,8 +241,24 @@ class ProductFormComponent extends Component {
 
     // Update quantity label if it exists
     this.#updateQuantityLabel(cartQty);
+    this.#updateVolumeTierSelection();
 
     return cartQty;
+  }
+
+  /**
+   * Sets the product quantity when a Bundle & Save tier is selected.
+   * @param {{ quantity?: number }} data
+   * @param {Event} event
+   */
+  selectVolumeTier(data, event) {
+    event.preventDefault();
+
+    const quantity = Number(data?.quantity);
+    if (!Number.isFinite(quantity) || quantity <= 0) return;
+
+    const appliedQuantity = this.refs.quantitySelector?.setQuantityValue?.(quantity);
+    this.#updateVolumeTierSelection(typeof appliedQuantity === 'number' ? appliedQuantity : quantity);
   }
 
   /**
@@ -277,6 +295,16 @@ class ProductFormComponent extends Component {
     } else {
       await this.#fetchAndUpdateCartQuantity();
     }
+  };
+
+  /**
+   * Keeps Bundle & Save button state in sync with the quantity selector.
+   * @param {Event & { detail?: { quantity?: number } }} event
+   */
+  #onQuantitySelectorUpdate = (event) => {
+    if (!(event.target instanceof Node) || !this.contains(event.target)) return;
+
+    this.#updateVolumeTierSelection(Number(event.detail?.quantity));
   };
 
   /** @param {Event} event */
@@ -709,6 +737,7 @@ class ProductFormComponent extends Component {
 
     if (quantitySelector?.updateConstraints && newQuantityInput) {
       quantitySelector.updateConstraints(newQuantityInput.min, newQuantityInput.max || null, newQuantityInput.step);
+      this.#updateVolumeTierSelection();
     }
 
     const newQuantityRules = event.detail.data.html.querySelector('.quantity-rules');
@@ -774,6 +803,35 @@ class ProductFormComponent extends Component {
   #onVariantSelected = (_event) => {
     this.#variantChangeInProgress = true;
   };
+
+  /**
+   * Marks the highest qualifying Bundle & Save tier as active.
+   * @param {number} [quantity]
+   */
+  #updateVolumeTierSelection(quantity = this.#getQuantity()) {
+    const tierButtons = this.querySelectorAll('[data-volume-tier-quantity]');
+    if (!tierButtons.length) return;
+
+    const currentQuantity = Number(quantity) || 0;
+    let activeButton = null;
+    let activeQuantity = 0;
+
+    for (const button of tierButtons) {
+      if (!(button instanceof HTMLElement)) continue;
+
+      const tierQuantity = Number(button.dataset.volumeTierQuantity) || 0;
+      if (currentQuantity >= tierQuantity && tierQuantity >= activeQuantity) {
+        activeButton = button;
+        activeQuantity = tierQuantity;
+      }
+    }
+
+    for (const button of tierButtons) {
+      const isActive = button === activeButton;
+      button.setAttribute('aria-pressed', isActive.toString());
+      button.classList.toggle('volume-discount-table__tier--active', isActive);
+    }
+  }
 }
 
 if (!customElements.get('product-form-component')) {

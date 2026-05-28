@@ -89,6 +89,31 @@ export class QuantitySelectorComponent extends Component {
   }
 
   /**
+   * Sets quantity from another control while respecting min/max/step rules.
+   * @param {number | string} value - The requested quantity value
+   * @returns {number} The quantity that was applied
+   */
+  setQuantityValue(value) {
+    const { quantityInput } = this.refs;
+    const { min, step } = this.getCurrentValues();
+    const effectiveMax = this.getEffectiveMax();
+    const parsedValue = parseIntOrDefault(value, min);
+
+    let newValue = Math.max(min, parsedValue);
+    if ((newValue - min) % step !== 0) {
+      newValue = min + Math.ceil((newValue - min) / step) * step;
+    }
+
+    newValue = Math.min(effectiveMax ?? Infinity, Math.max(min, newValue));
+
+    quantityInput.value = newValue.toString();
+    this.onQuantityChange();
+    this.updateButtonStates();
+
+    return newValue;
+  }
+
+  /**
    * Updates min/max/step constraints and snaps value to valid increment
    * @param {string} min - Minimum value
    * @param {string|null} max - Maximum value (null if no max)

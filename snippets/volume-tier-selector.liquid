@@ -1,12 +1,12 @@
 {% doc %}
-  Renders a static volume-discount info table on the PDP.
+  Renders volume-discount quantity shortcuts on the PDP.
 
   Tier definitions come from theme settings (settings.volume_tier_N_qty /
   volume_tier_N_pct). The actual checkout discount is applied by a matching
   Shopify automatic Volume discount campaign — keep the numbers in sync.
 
-  This is a non-interactive display only. Users control quantity via the
-  standard quantity selector (+/- buttons).
+  Buttons set the standard quantity selector to the tier minimum so the
+  native product form can submit the selected quantity.
 
   @param {variant} variant - The currently selected variant.
 {% enddoc %}
@@ -57,8 +57,12 @@
     .volume-discount-table__tiers {
       display: flex;
       gap: 0.6rem;
+      padding-block-start: 0.45rem;
     }
     .volume-discount-table__tier {
+      appearance: none;
+      -webkit-appearance: none;
+      position: relative;
       flex: 1;
       display: flex;
       flex-direction: column;
@@ -68,17 +72,67 @@
       border: 1px solid rgb(10 10 10 / 0.08);
       border-radius: 4px;
       background: #fff;
+      color: #0a0a0a;
+      font: inherit;
+      cursor: pointer;
+      transition: border-color 150ms ease, background-color 150ms ease, color 150ms ease, box-shadow 150ms ease;
+    }
+    .volume-discount-table__tier:hover,
+    .volume-discount-table__tier:focus-visible,
+    .volume-discount-table__tier[aria-pressed='true'] {
+      border-color: #eee5d5;
+      background: #fcfaf6;
+      color: #0a0a0a;
+      box-shadow: none;
+    }
+    .volume-discount-table__tier:focus-visible {
+      outline: 2px solid #0a0a0a;
+      outline-offset: 2px;
+    }
+    .volume-discount-table__badge {
+      position: absolute;
+      inset-block-start: -0.48rem;
+      inset-inline: 50% auto;
+      transform: translateX(-50%);
+      padding: 0.14rem 0.34rem;
+      border-radius: 999px;
+      color: #fff;
+      font-size: 0.48rem;
+      font-weight: 700;
+      letter-spacing: 0.035em;
+      line-height: 1;
+      pointer-events: none;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .volume-discount-table__badge--popular {
+      background: #4b9a85;
+    }
+    .volume-discount-table__badge--value {
+      background: #e59a2f;
+    }
+    @media screen and (min-width: 750px) {
+      .volume-discount-table__badge {
+        font-size: 0.54rem;
+      }
     }
     .volume-discount-table__pct {
       font-size: 0.95rem;
       font-weight: 600;
-      color: #0a0a0a;
+      color: currentColor;
       line-height: 1.2;
     }
     .volume-discount-table__qty {
       font-size: 0.75rem;
-      color: rgb(10 10 10 / 0.5);
+      color: currentColor;
       line-height: 1.2;
+      opacity: 0.5;
+    }
+    .volume-discount-table__tier:is(:hover, :focus-visible, [aria-pressed='true']) .volume-discount-table__qty {
+      opacity: 0.58;
+    }
+    .quick-add-modal__content .product-details .buy-buttons-block {
+      margin-top: 0;
     }
   </style>
   <div class="volume-discount-table">
@@ -103,10 +157,22 @@
           endif
         -%}
 
-        <div class="volume-discount-table__tier">
+        <button
+          type="button"
+          class="volume-discount-table__tier"
+          on:click="/selectVolumeTier?quantity={{ tier_qty }}"
+          data-volume-tier-quantity="{{ tier_qty }}"
+          aria-pressed="false"
+          aria-label="Set quantity to {{ tier_qty }} vials for {{ tier_pct }}% off"
+        >
+          {%- if i == 1 -%}
+            <span class="volume-discount-table__badge volume-discount-table__badge--popular">Most popular</span>
+          {%- elsif i == 3 -%}
+            <span class="volume-discount-table__badge volume-discount-table__badge--value">Best value</span>
+          {%- endif -%}
           <span class="volume-discount-table__pct">{{ tier_qty }}+ vials</span>
           <span class="volume-discount-table__qty">{{ tier_pct }}% off</span>
-        </div>
+        </button>
       {%- endfor -%}
     </div>
   </div>
