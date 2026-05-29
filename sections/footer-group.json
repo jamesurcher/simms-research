@@ -466,7 +466,7 @@
                       "type": "text",
                       "name": "t:names.text",
                       "settings": {
-                        "text": "<p><a href=\"mailto:support@simmsresearch.com\">support@simmsresearch.com</a></p><p>Tampa, United States</p>",
+                        "text": "<p><a href=\"mailto:support@simmsresearch.com\">support@simmsresearch.com</a></p><p>5908 Breckenridge Pkwy, Tampa, FL 33610</p>",
                         "width": "fit-content",
                         "max_width": "normal",
                         "alignment": "left",
