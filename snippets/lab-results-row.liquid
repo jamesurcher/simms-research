@@ -55,51 +55,65 @@
 -%}
 
 <tr>
-  <td>
-    {%- if b_id != blank -%}#{{ b_id | escape }}{%- else -%}—{%- endif -%}
-    {%- if b_is_current == true -%}
-      <span class="lab-results__pill">Latest</span>
-    {%- endif -%}
-  </td>
-  <td class="lab-results__td--purity">
-    {{ b_purity | default: '—' | escape }}
-  </td>
-  <td>{{ b_labeled | default: '—' | escape }}</td>
-  <td>{{ b_vials | default: '—' | escape }}</td>
-  <td>
-    {%- if b_net != blank -%}
-      {{ b_net | escape }}
-      {%- if b_net_delta != blank -%}
-        <span class="lab-results__delta{% if b_net_delta_is_negative %} lab-results__delta--negative{% endif %}">
-          ({{- b_net_delta | escape -}})
-        </span>
+  <td data-label="Batch">
+    <span class="lab-results__cell-value">
+      {%- if b_id != blank -%}#{{ b_id | escape }}{%- else -%}—{%- endif -%}
+      {%- if b_is_current == true -%}
+        <span class="lab-results__pill">Latest</span>
       {%- endif -%}
-    {%- else -%}
-      —
-    {%- endif -%}
+    </span>
   </td>
-  <td class="{% if endo_pass %}lab-results__td--pass{% endif %}">
-    {{ b_endo | default: '—' | escape }}
+  <td class="lab-results__td--purity" data-label="Purity">
+    <span class="lab-results__cell-value">{{ b_purity | default: '—' | escape }}</span>
   </td>
-  <td>{{ b_confirmation | default: '—' | escape }}</td>
-  <td>
-    {%- if b_tested != blank -%}
-      {{ b_tested | date: '%b %-d, %Y' }}
-    {%- else -%}
-      —
-    {%- endif -%}
+  <td data-label="Labeled Content">
+    <span class="lab-results__cell-value">{{ b_labeled | default: '—' | escape }}</span>
   </td>
-  <td>
-    {%- if b_url != blank -%}
-      <button
-        type="button"
-        class="lab-results__td-coa"
-        data-lab-coa
-        data-coa-url="{{ b_url | escape }}"
-        data-coa-title="{{ product.title | escape }} — #{{ b_id | escape }}"
-      >View COA</button>
-    {%- else -%}
-      —
-    {%- endif -%}
+  <td data-label="Vials Tested">
+    <span class="lab-results__cell-value">{{ b_vials | default: '—' | escape }}</span>
+  </td>
+  <td data-label="Net Content">
+    <span class="lab-results__cell-value">
+      {%- if b_net != blank -%}
+        {{ b_net | escape }}
+        {%- if b_net_delta != blank -%}
+          <span class="lab-results__delta{% if b_net_delta_is_negative %} lab-results__delta--negative{% endif %}">
+            ({{- b_net_delta | escape -}})
+          </span>
+        {%- endif -%}
+      {%- else -%}
+        —
+      {%- endif -%}
+    </span>
+  </td>
+  <td class="{% if endo_pass %}lab-results__td--pass{% endif %}" data-label="Endotoxins">
+    <span class="lab-results__cell-value">{{ b_endo | default: '—' | escape }}</span>
+  </td>
+  <td data-label="Confirmation Method">
+    <span class="lab-results__cell-value">{{ b_confirmation | default: '—' | escape }}</span>
+  </td>
+  <td data-label="Test Date">
+    <span class="lab-results__cell-value">
+      {%- if b_tested != blank -%}
+        {{ b_tested | date: '%b %-d, %Y' }}
+      {%- else -%}
+        —
+      {%- endif -%}
+    </span>
+  </td>
+  <td data-label="COA">
+    <span class="lab-results__cell-value">
+      {%- if b_url != blank -%}
+        <button
+          type="button"
+          class="lab-results__td-coa"
+          data-lab-coa
+          data-coa-url="{{ b_url | escape }}"
+          data-coa-title="{{ product.title | escape }} — #{{ b_id | escape }}"
+        >View COA</button>
+      {%- else -%}
+        —
+      {%- endif -%}
+    </span>
   </td>
 </tr>

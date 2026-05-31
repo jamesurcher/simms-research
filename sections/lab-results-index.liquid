@@ -1390,6 +1390,80 @@
       flex-wrap: wrap;
       gap: 0.75rem;
     }
+    .lab-results__detail-title {
+      font-size: 1.5rem;
+      line-height: 1.15;
+    }
+    .lab-results__detail-title-divider {
+      display: none;
+    }
+    .lab-results__detail-title-suffix {
+      display: block;
+      margin-block-start: 0.25rem;
+    }
+    .lab-results__table-wrap {
+      overflow: visible;
+      border: none;
+      border-radius: 0;
+    }
+    .lab-results__table {
+      display: block;
+      min-width: 0;
+      width: 100%;
+      border-collapse: separate;
+    }
+    .lab-results__table thead {
+      display: none;
+    }
+    .lab-results__table tbody {
+      display: grid;
+      gap: 0.75rem;
+    }
+    .lab-results__table tr {
+      display: block;
+      overflow: hidden;
+      border: 1px solid rgb(var(--color-foreground-rgb) / 0.12);
+      border-radius: 12px;
+      background: rgb(var(--color-foreground-rgb) / 0.015);
+    }
+    .lab-results__table th,
+    .lab-results__table td,
+    .lab-results__table td:first-child {
+      text-align: right;
+    }
+    .lab-results__table td {
+      display: grid;
+      grid-template-columns: minmax(0, 8.75rem) minmax(0, 1fr);
+      gap: 0.75rem;
+      align-items: center;
+      white-space: normal;
+      border-block-end: 1px solid rgb(var(--color-foreground-rgb) / 0.08);
+    }
+    .lab-results__table tbody tr:last-child td {
+      border-block-end: 1px solid rgb(var(--color-foreground-rgb) / 0.08);
+    }
+    .lab-results__table td:last-child,
+    .lab-results__table tbody tr:last-child td:last-child {
+      border-block-end: none;
+    }
+    .lab-results__table td::before {
+      content: attr(data-label);
+      font-size: 0.625rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgb(var(--color-foreground-rgb) / 0.5);
+      text-align: left;
+    }
+    .lab-results__cell-value {
+      min-width: 0;
+      justify-self: end;
+      text-align: right;
+      overflow-wrap: anywhere;
+    }
+    .lab-results__td-coa {
+      justify-self: end;
+    }
     .lab-results__dialog {
       width: 100vw;
       height: 100dvh;
