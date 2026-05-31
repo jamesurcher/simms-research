@@ -5,7 +5,7 @@
   - product metafield `coa.batches` as a list of `coa_batch` metaobject references.
   - each metaobject can include: variant_label, batch_id, purity, avg_purity,
     vials_tested, labeled_content, net_content, net_content_delta, endotoxins,
-    heavy_metals, sterility, tested_at, coa_file, coa_url, is_current.
+    test_type, tested_at, coa_file, coa_url, is_current.
 
   @param {object} product_resource - Product to render COA batches for.
   @param {object} [block] - Theme block object for editor attributes.
@@ -172,6 +172,7 @@
   assign current_labeled_content = current_batch.labeled_content.value
   assign current_net_content = current_batch.net_content.value
   assign current_net_delta = current_batch.net_content_delta.value
+  assign current_net_delta_is_negative = false
   assign calculated_net_delta = blank
   assign current_labeled_basis = current_labeled_content
   if current_batch_matches_selected and selected_dosage_label != blank
@@ -204,11 +205,13 @@
       assign current_net_delta = '(' | append: current_net_delta_prefix | append: current_net_delta | append: ')'
     endunless
   endif
+  if current_net_delta contains '-'
+    assign current_net_delta_is_negative = true
+  endif
   assign current_endotoxins = current_batch.endotoxins.value
-  assign current_heavy_metals = current_batch.heavy_metals.value
-  assign current_sterility = current_batch.sterility.value
   assign current_tested_at = current_batch.tested_at.value
-  assign current_test_type = current_batch.test_type.value | default: 'HPLC / Mass Spec'
+  assign current_confirmation_method = current_batch.test_type.value
+  assign current_test_type = current_confirmation_method | default: 'HPLC / Mass Spec'
   assign current_coa_file = current_batch.coa_file.value
   assign current_coa_url = current_coa_file.url
   if current_coa_url == blank and current_coa_file != blank
@@ -277,6 +280,13 @@
             </div>
           {% endif %}
 
+          {% if current_labeled_content != blank %}
+            <div class="batch-verification__metric">
+              <dt>Labeled Content</dt>
+              <dd>{{ current_labeled_content | escape }}</dd>
+            </div>
+          {% endif %}
+
           {% if current_vials_tested != blank %}
             <div class="batch-verification__metric">
               <dt>Vials Tested</dt>
@@ -290,14 +300,11 @@
               <dd class="batch-verification__value">
                 {{ current_net_content -}}
                 {%- if current_net_delta != blank -%}
-                  <span class="batch-verification__delta">{{ current_net_delta }}</span>
+                  <span class="batch-verification__delta{% if current_net_delta_is_negative %} batch-verification__delta--negative{% endif %}">
+                    {{- current_net_delta -}}
+                  </span>
                 {% endif %}
               </dd>
-            </div>
-          {% elsif current_labeled_content != blank %}
-            <div class="batch-verification__metric">
-              <dt>Labeled Content</dt>
-              <dd>{{ current_labeled_content }}</dd>
             </div>
           {% endif %}
 
@@ -313,17 +320,10 @@
             </div>
           {% endif %}
 
-          {% if current_heavy_metals != blank %}
+          {% if current_confirmation_method != blank %}
             <div class="batch-verification__metric">
-              <dt>Heavy Metals</dt>
-              <dd>{{ current_heavy_metals }}</dd>
-            </div>
-          {% endif %}
-
-          {% if current_sterility != blank %}
-            <div class="batch-verification__metric">
-              <dt>Sterility</dt>
-              <dd>{{ current_sterility }}</dd>
+              <dt>Confirmation Method</dt>
+              <dd>{{ current_confirmation_method }}</dd>
             </div>
           {% endif %}
 
@@ -400,6 +400,12 @@
     {% endif %}
   </batch-verification>
 {% endif %}
+
+<style>
+  batch-verification .batch-verification__delta--negative {
+    color: #c24135;
+  }
+</style>
 
 <script>
   if (!customElements.get('batch-verification')) {
