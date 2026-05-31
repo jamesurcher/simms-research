@@ -12,9 +12,9 @@
   assign b_labeled       = batch.labeled_content.value
   assign b_net           = batch.net_content.value | default: b_labeled
   assign b_net_delta     = batch.net_content_delta.value
+  assign b_net_delta_is_negative = false
   assign b_endo          = batch.endotoxins.value
-  assign b_heavy         = batch.heavy_metals.value
-  assign b_sterility     = batch.sterility.value
+  assign b_confirmation  = batch.test_type.value
   assign b_tested        = batch.tested_at.value
   assign b_is_current    = batch.is_current.value
   assign b_file          = batch.coa_file.value
@@ -41,26 +41,15 @@
       assign b_net_delta = delta_prefix | append: delta_pct | append: '%'
     endif
   endif
+  if b_net_delta contains '-'
+    assign b_net_delta_is_negative = true
+  endif
 
   assign endo_pass     = false
-  assign heavy_pass    = false
-  assign sterility_pass = false
   if b_endo != blank
     assign endo_lc = b_endo | downcase
     if endo_lc contains 'pass'
       assign endo_pass = true
-    endif
-  endif
-  if b_heavy != blank
-    assign heavy_lc = b_heavy | downcase
-    if heavy_lc contains 'pass'
-      assign heavy_pass = true
-    endif
-  endif
-  if b_sterility != blank
-    assign sterility_lc = b_sterility | downcase
-    if sterility_lc contains 'pass'
-      assign sterility_pass = true
     endif
   endif
 -%}
@@ -75,12 +64,15 @@
   <td class="lab-results__td--purity">
     {{ b_purity | default: '—' | escape }}
   </td>
+  <td>{{ b_labeled | default: '—' | escape }}</td>
   <td>{{ b_vials | default: '—' | escape }}</td>
   <td>
     {%- if b_net != blank -%}
       {{ b_net | escape }}
       {%- if b_net_delta != blank -%}
-        <span class="lab-results__delta">({{ b_net_delta | escape }})</span>
+        <span class="lab-results__delta{% if b_net_delta_is_negative %} lab-results__delta--negative{% endif %}">
+          ({{- b_net_delta | escape -}})
+        </span>
       {%- endif -%}
     {%- else -%}
       —
@@ -89,12 +81,7 @@
   <td class="{% if endo_pass %}lab-results__td--pass{% endif %}">
     {{ b_endo | default: '—' | escape }}
   </td>
-  <td class="{% if heavy_pass %}lab-results__td--pass{% endif %}">
-    {{ b_heavy | default: '—' | escape }}
-  </td>
-  <td class="{% if sterility_pass %}lab-results__td--pass{% endif %}">
-    {{ b_sterility | default: '—' | escape }}
-  </td>
+  <td>{{ b_confirmation | default: '—' | escape }}</td>
   <td>
     {%- if b_tested != blank -%}
       {{ b_tested | date: '%b %-d, %Y' }}
