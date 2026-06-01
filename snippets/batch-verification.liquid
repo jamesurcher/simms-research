@@ -420,6 +420,10 @@
             const trigger = event.target?.closest?.('[data-coa-open]');
             if (!trigger || !this.dialog) return;
 
+            // Match lab-results behavior: mobile browsers handle PDFs more
+            // reliably in a dedicated tab/OS viewer than inside a dialog iframe.
+            if (window.matchMedia('(max-width: 749px)').matches) return;
+
             event.preventDefault();
             this.openDialog(trigger.href);
           };
