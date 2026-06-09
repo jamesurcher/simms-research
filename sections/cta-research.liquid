@@ -259,6 +259,7 @@
     gap: 0.5rem;
     font-family: var(--font-body--family);
     font-size: 0.8125rem;
+    line-height: 1.25;
     color: rgb(236 230 223 / 0.78);
   }
 
@@ -301,8 +302,19 @@
     }
 
     .cta-research__badges {
+      display: grid;
+      grid-template-columns: max-content;
+      justify-content: center;
+      align-items: center;
       gap: 0.9rem 1.5rem;
       margin-block-start: 2.25rem;
+    }
+
+    .cta-research__badge {
+      display: grid;
+      grid-template-columns: 1rem auto;
+      justify-content: start;
+      text-align: left;
     }
   }
 {% endstylesheet %}
