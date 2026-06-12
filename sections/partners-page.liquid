@@ -1,5 +1,5 @@
 {% liquid
-  assign apply_url = section.settings.apply_url | default: 'mailto:support@simmsresearch.com?subject=Research%20Partners%20Application'
+  assign apply_url = '/pages/apply'
   assign secondary_url = section.settings.secondary_url | default: '/pages/contact'
 %}
 
@@ -219,7 +219,7 @@
     gap: 0.7rem;
     min-width: 12.5rem;
     min-height: 3.6rem;
-    border-radius: 999px;
+    border-radius: var(--style-border-radius-buttons-primary);
     background: var(--color-primary-button-background);
     color: var(--color-primary-button-text);
     white-space: nowrap;
@@ -496,7 +496,7 @@
     }
 
     .partners-page__actions {
-      align-items: stretch;
+      align-items: center;
       flex-direction: column;
       width: 100%;
     }
@@ -541,7 +541,7 @@
       "type": "text",
       "id": "apply_url",
       "label": "Apply URL",
-      "default": "mailto:support@simmsresearch.com?subject=Research%20Partners%20Application"
+      "default": "/pages/apply"
     },
     {
       "type": "header",

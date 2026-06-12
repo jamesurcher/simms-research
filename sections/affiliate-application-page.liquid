@@ -1,0 +1,560 @@
+{% liquid
+  assign form_id = 'AffiliateApplicationForm-' | append: section.id
+  assign back_url = section.settings.back_url | default: '/pages/partners'
+%}
+
+<section
+  class="affiliate-application-page section section--page-width color-{{ section.settings.color_scheme }}"
+  style="
+    --affiliate-application-padding-block-start: {{ section.settings.padding_block_start }}px;
+    --affiliate-application-padding-block-end: {{ section.settings.padding_block_end }}px;
+  "
+>
+  <div class="affiliate-application-page__inner">
+    <a class="affiliate-application-page__back" href="{{ back_url }}">
+      <span aria-hidden="true">&larr;</span>
+      {{ section.settings.back_label }}
+    </a>
+
+    <header class="affiliate-application-page__header">
+      <p class="affiliate-application-page__eyebrow">{{ section.settings.eyebrow }}</p>
+      <h1 class="affiliate-application-page__title">{{ section.settings.heading }}</h1>
+      <div class="affiliate-application-page__intro">
+        {{ section.settings.intro }}
+      </div>
+    </header>
+
+    {%- form 'contact', id: form_id, class: 'affiliate-application-page__form' -%}
+      <input name="contact[id]" type="hidden" value="{{ form_id }}">
+      <input name="contact[tags]" type="hidden" value="affiliate-application">
+      <input name="contact[subject]" type="hidden" value="{{ section.settings.email_subject }}">
+      <input name="contact[Program]" type="hidden" value="Affiliate Program">
+
+      {%- if form.errors -%}
+        <div class="affiliate-application-page__message affiliate-application-page__message--error" tabindex="-1" autofocus>
+          {{- 'icon-error.svg' | inline_asset_content -}}
+          {{- form.errors.translated_fields.email | capitalize }}
+          {{ form.errors.messages.email -}}
+        </div>
+      {%- endif -%}
+
+      {%- if form.posted_successfully? -%}
+        <div
+          class="affiliate-application-page__confirmation"
+          role="status"
+          aria-live="polite"
+          tabindex="-1"
+          autofocus
+        >
+          <span class="affiliate-application-page__confirmation-icon" aria-hidden="true">
+            {{- 'icon-checkmark.svg' | inline_asset_content -}}
+          </span>
+          <div>
+            <h2 class="affiliate-application-page__confirmation-title">{{ section.settings.success_heading }}</h2>
+            <p>{{ section.settings.success_message }}</p>
+            <a
+              class="button affiliate-application-page__confirmation-button"
+              href="{{ page.url | default: '/pages/apply' }}"
+            >
+              Submit another application
+            </a>
+          </div>
+        </div>
+      {%- else -%}
+        <div class="affiliate-application-page__row">
+          <div class="affiliate-application-page__field">
+            <label for="{{ form_id }}-first-name">First Name <span aria-hidden="true">*</span></label>
+            <input
+              type="text"
+              id="{{ form_id }}-first-name"
+              name="contact[First name]"
+              autocomplete="given-name"
+              placeholder="First Name"
+              required
+            >
+          </div>
+
+          <div class="affiliate-application-page__field">
+            <label for="{{ form_id }}-last-name">Last Name <span aria-hidden="true">*</span></label>
+            <input
+              type="text"
+              id="{{ form_id }}-last-name"
+              name="contact[Last name]"
+              autocomplete="family-name"
+              placeholder="Last Name"
+              required
+            >
+          </div>
+        </div>
+
+        <div class="affiliate-application-page__field">
+          <label for="{{ form_id }}-email">Email <span aria-hidden="true">*</span></label>
+          <input
+            type="email"
+            id="{{ form_id }}-email"
+            name="contact[email]"
+            autocomplete="email"
+            spellcheck="false"
+            autocapitalize="off"
+            value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
+            aria-required="true"
+            {% if form.errors contains 'email' %}
+              aria-invalid="true"
+            {% endif %}
+            placeholder="you@example.com"
+            required
+          >
+        </div>
+
+        <div class="affiliate-application-page__field">
+          <label for="{{ form_id }}-phone">Phone Number <span aria-hidden="true">*</span></label>
+          <input
+            type="tel"
+            id="{{ form_id }}-phone"
+            name="contact[phone]"
+            autocomplete="tel"
+            value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}"
+            placeholder="(555) 123-4567"
+            required
+          >
+        </div>
+
+        <div class="affiliate-application-page__field">
+          <label for="{{ form_id }}-social-handles">Social Handle(s) <span aria-hidden="true">*</span></label>
+          <input
+            type="text"
+            id="{{ form_id }}-social-handles"
+            name="contact[Social handles]"
+            autocomplete="off"
+            placeholder="@yourhandle on Instagram, TikTok, etc."
+            required
+          >
+        </div>
+
+        <div class="affiliate-application-page__row">
+          <div class="affiliate-application-page__field">
+            <label for="{{ form_id }}-instagram-followers">Instagram Followers <span aria-hidden="true">*</span></label>
+            <input
+              type="number"
+              id="{{ form_id }}-instagram-followers"
+              name="contact[Instagram followers]"
+              inputmode="numeric"
+              min="0"
+              step="1"
+              placeholder="e.g. 5000"
+              required
+            >
+          </div>
+
+          <div class="affiliate-application-page__field">
+            <label for="{{ form_id }}-tiktok-followers">TikTok Followers <span aria-hidden="true">*</span></label>
+            <input
+              type="number"
+              id="{{ form_id }}-tiktok-followers"
+              name="contact[TikTok followers]"
+              inputmode="numeric"
+              min="0"
+              step="1"
+              placeholder="e.g. 12000"
+              required
+            >
+          </div>
+        </div>
+
+        <div class="affiliate-application-page__field">
+          <label for="{{ form_id }}-total-followers">Total Followers (All Platforms)</label>
+          <select id="{{ form_id }}-total-followers" name="contact[Total followers]">
+            <option value="" selected>Select a range (optional)...</option>
+            <option value="Under 5,000">Under 5,000</option>
+            <option value="5,000 - 25,000">5,000 - 25,000</option>
+            <option value="25,000 - 100,000">25,000 - 100,000</option>
+            <option value="100,000 - 500,000">100,000 - 500,000</option>
+            <option value="500,000+">500,000+</option>
+          </select>
+        </div>
+
+        <div class="affiliate-application-page__field">
+          <label for="{{ form_id }}-audience-info">Platform / Audience Info</label>
+          <textarea
+            rows="5"
+            id="{{ form_id }}-audience-info"
+            name="contact[body]"
+            placeholder="Tell us about your audience, niche, content style, etc."
+          >{{- form.body -}}</textarea>
+        </div>
+
+        <div class="affiliate-application-page__field">
+          <label for="{{ form_id }}-referral-source">How Did You Find Us? <span aria-hidden="true">*</span></label>
+          <select id="{{ form_id }}-referral-source" name="contact[How did you find us]" required>
+            <option value="" selected disabled>Select an option...</option>
+            <option value="Instagram">Instagram</option>
+            <option value="TikTok">TikTok</option>
+            <option value="Google search">Google search</option>
+            <option value="Existing customer">Existing customer</option>
+            <option value="Referred by another partner">Referred by another partner</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <div class="affiliate-application-page__field">
+          <label for="{{ form_id }}-notes">Additional Notes</label>
+          <textarea
+            rows="4"
+            id="{{ form_id }}-notes"
+            name="contact[Additional notes]"
+            placeholder="Anything else you'd like us to know?"
+          ></textarea>
+        </div>
+
+        <button type="submit" class="button affiliate-application-page__submit">
+          Submit Application
+        </button>
+      {%- endif -%}
+    {%- endform -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .affiliate-application-page {
+    padding-block-start: var(--affiliate-application-padding-block-start, 48px);
+    padding-block-end: var(--affiliate-application-padding-block-end, 120px);
+    background:
+      radial-gradient(circle at 50% 0%, rgb(var(--color-foreground-rgb) / 0.026), transparent 30rem),
+      rgb(var(--color-background-rgb));
+  }
+
+  .affiliate-application-page__inner {
+    width: 85%;
+    max-width: 40rem;
+    margin-inline: auto;
+  }
+
+  .affiliate-application-page__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-block-end: clamp(1.5rem, 3vw, 2.4rem);
+    color: rgb(var(--color-foreground-rgb) / 0.56);
+    font-size: 0.9375rem;
+    line-height: 1.3;
+    text-decoration: none;
+  }
+
+  .affiliate-application-page__back:hover {
+    color: var(--color-foreground);
+  }
+
+  .affiliate-application-page__eyebrow,
+  .affiliate-application-page__field label {
+    margin: 0;
+    color: rgb(var(--color-foreground-rgb) / 0.62);
+    font-family: var(--font-body--family);
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 1.25;
+  }
+
+  .affiliate-application-page__eyebrow {
+    color: rgb(var(--color-foreground-rgb) / 0.48);
+    font-family: var(--font-mono--family);
+    font-size: 0.75rem;
+    font-weight: var(--font-mono--weight);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .affiliate-application-page__title {
+    margin: 0.65rem 0 0;
+    color: var(--color-foreground);
+    font-family: var(--font-heading--family);
+    font-size: clamp(2rem, 3.4vw, 2.4rem);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    line-height: 1.05;
+  }
+
+  .affiliate-application-page__intro {
+    max-width: 34rem;
+    margin-block-start: 0.75rem;
+    color: rgb(var(--color-foreground-rgb) / 0.58);
+    font-size: 1.0625rem;
+    line-height: 1.45;
+  }
+
+  .affiliate-application-page__intro p {
+    margin: 0;
+  }
+
+  .affiliate-application-page__form {
+    display: grid;
+    gap: 1.1rem;
+    margin-block-start: clamp(1.8rem, 3vw, 2.4rem);
+  }
+
+  .affiliate-application-page__row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .affiliate-application-page__field {
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .affiliate-application-page__field :is(input, select, textarea) {
+    width: 100%;
+    min-height: 3.4rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid rgb(var(--color-foreground-rgb) / 0.12);
+    border-radius: 12px;
+    background: rgb(var(--color-background-rgb) / 0.74);
+    box-shadow: 0 0 0 1px rgb(var(--color-foreground-rgb) / 0.03);
+    color: var(--color-foreground);
+    font: inherit;
+  }
+
+  .affiliate-application-page__field select {
+    appearance: none;
+    background-image:
+      linear-gradient(45deg, transparent 50%, rgb(var(--color-foreground-rgb) / 0.5) 50%),
+      linear-gradient(135deg, rgb(var(--color-foreground-rgb) / 0.5) 50%, transparent 50%);
+    background-position:
+      calc(100% - 1.25rem) 50%,
+      calc(100% - 0.95rem) 50%;
+    background-size:
+      0.35rem 0.35rem,
+      0.35rem 0.35rem;
+    background-repeat: no-repeat;
+  }
+
+  .affiliate-application-page__field textarea {
+    min-height: 7rem;
+    resize: vertical;
+  }
+
+  .affiliate-application-page__field :is(input, select, textarea)::placeholder {
+    color: rgb(var(--color-foreground-rgb) / 0.36);
+  }
+
+  .affiliate-application-page__field :is(input, select, textarea):focus {
+    border-color: rgb(var(--color-foreground-rgb) / 0.42);
+    outline: 2px solid rgb(var(--color-foreground-rgb) / 0.1);
+    outline-offset: 2px;
+  }
+
+  .affiliate-application-page__submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    width: 100%;
+    min-height: 3.55rem;
+    margin-block-start: 0.35rem;
+    border-radius: 12px;
+    background: var(--color-primary-button-background);
+    color: var(--color-primary-button-text);
+  }
+
+  .affiliate-application-page__submit:hover {
+    background: var(--color-primary-button-hover-background);
+    border-color: var(--color-primary-button-hover-border);
+    color: var(--color-primary-button-hover-text);
+  }
+
+  .affiliate-application-page__submit span {
+    display: inline-flex;
+  }
+
+  .affiliate-application-page__submit svg {
+    width: 1.1rem;
+    height: 1.1rem;
+    --icon-stroke-width: 2;
+    transform: rotate(-35deg);
+  }
+
+  .affiliate-application-page__message {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1rem;
+    border-radius: 12px;
+    font-size: 0.9375rem;
+  }
+
+  .affiliate-application-page__message--error {
+    background: rgb(190 18 60 / 0.08);
+    color: rgb(136 19 55);
+  }
+
+  .affiliate-application-page__message svg {
+    width: 1rem;
+    height: 1rem;
+    flex: 0 0 auto;
+  }
+
+  .affiliate-application-page__confirmation {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+    margin-block-start: clamp(1.8rem, 3vw, 2.4rem);
+    padding: clamp(1.35rem, 3vw, 2rem);
+    border: 1px solid rgb(0 122 70 / 0.28);
+    border-radius: 14px;
+    background:
+      linear-gradient(rgb(0 155 87 / 0.08), rgb(0 155 87 / 0.08)),
+      rgb(var(--color-background-rgb));
+  }
+
+  .affiliate-application-page__confirmation:focus {
+    outline: 2px solid rgb(0 122 70 / 0.32);
+    outline-offset: 3px;
+  }
+
+  .affiliate-application-page__confirmation-icon {
+    display: inline-grid;
+    place-items: center;
+    width: 2.35rem;
+    height: 2.35rem;
+    border-radius: 50%;
+    background: #007a46;
+    color: #fff;
+  }
+
+  .affiliate-application-page__confirmation-icon svg {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .affiliate-application-page__confirmation-title {
+    margin: 0;
+    color: rgb(var(--color-foreground-rgb) / 0.9);
+    font-size: clamp(1.65rem, 3vw, 2.2rem);
+    letter-spacing: 0;
+    line-height: 1.05;
+  }
+
+  .affiliate-application-page__confirmation p {
+    max-width: 29rem;
+    margin: 0.7rem 0 0;
+    color: rgb(var(--color-foreground-rgb) / 0.64);
+    font-size: 1rem;
+    line-height: 1.45;
+  }
+
+  .affiliate-application-page__confirmation-button {
+    width: fit-content;
+    min-height: 3rem;
+    margin-block-start: 1.4rem;
+    border-radius: 999px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .affiliate-application-page__inner {
+      width: 100%;
+    }
+
+    .affiliate-application-page__row {
+      grid-template-columns: 1fr;
+    }
+
+    .affiliate-application-page__title {
+      font-size: clamp(2rem, 10vw, 2.5rem);
+    }
+
+    .affiliate-application-page__confirmation {
+      grid-template-columns: 1fr;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Affiliate application",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Section padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_block_start",
+      "label": "Top padding",
+      "min": 0,
+      "max": 200,
+      "step": 8,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_block_end",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 240,
+      "step": 8,
+      "unit": "px",
+      "default": 120
+    },
+    {
+      "type": "url",
+      "id": "back_url",
+      "label": "Back link URL"
+    },
+    {
+      "type": "text",
+      "id": "back_label",
+      "label": "Back link label",
+      "default": "Back to Affiliate Program"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Affiliate Program"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Affiliate Application"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Intro",
+      "default": "<p>Fill out the form below. We'll review your application and get back to you shortly.</p>"
+    },
+    {
+      "type": "text",
+      "id": "email_subject",
+      "label": "Email subject",
+      "default": "Affiliate Program Application"
+    },
+    {
+      "type": "text",
+      "id": "success_heading",
+      "label": "Success heading",
+      "default": "Application sent"
+    },
+    {
+      "type": "textarea",
+      "id": "success_message",
+      "label": "Success message",
+      "default": "We received your affiliate application and will review it shortly."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Affiliate application"
+    }
+  ]
+}
+{% endschema %}

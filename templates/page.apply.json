@@ -1,0 +1,31 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "affiliate_application_page": {
+      "type": "affiliate-application-page",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "padding_block_start": 48,
+        "padding_block_end": 120,
+        "back_label": "Back to Affiliate Program",
+        "eyebrow": "Affiliate Program",
+        "heading": "Affiliate Application",
+        "intro": "<p>Fill out the form below. We'll review your application and get back to you shortly.</p>",
+        "email_subject": "Affiliate Program Application",
+        "success_heading": "Application sent",
+        "success_message": "We received your affiliate application and will review it shortly."
+      }
+    }
+  },
+  "order": [
+    "affiliate_application_page"
+  ]
+}

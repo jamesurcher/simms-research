@@ -16,21 +16,52 @@
   {{ text | t }}
 </a>
 
-{% stylesheet %}
+{% style %}
   .skip-to-content-link {
     position: absolute;
-    left: -99999px;
+    overflow: hidden;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 
-  .skip-to-content-link:focus {
+  .skip-to-content-link:focus-visible {
+    position: fixed;
     z-index: var(--layer-temporary);
+    inset-block-start: var(--margin-lg);
+    inset-inline-start: var(--margin-lg);
     overflow: auto;
     width: auto;
     height: auto;
     padding: var(--padding-lg) var(--padding-4xl);
-    left: var(--margin-lg);
-    top: var(--margin-lg);
+    margin: 0;
+    clip: auto;
+    clip-path: none;
+    white-space: normal;
     background-color: var(--color-background);
     box-shadow: 0 0 0 var(--focus-outline-offset) var(--color-background);
   }
-{% endstylesheet %}
+
+  @supports not selector(:focus-visible) {
+    .skip-to-content-link:focus {
+      position: fixed;
+      z-index: var(--layer-temporary);
+      inset-block-start: var(--margin-lg);
+      inset-inline-start: var(--margin-lg);
+      overflow: auto;
+      width: auto;
+      height: auto;
+      padding: var(--padding-lg) var(--padding-4xl);
+      margin: 0;
+      clip: auto;
+      clip-path: none;
+      white-space: normal;
+      background-color: var(--color-background);
+      box-shadow: 0 0 0 var(--focus-outline-offset) var(--color-background);
+    }
+  }
+{% endstyle %}
