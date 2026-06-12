@@ -16,7 +16,7 @@
           "type": "faq",
           "settings": {
             "question": "What is the commission rate?",
-            "answer": "Research partners start at 20% commission on every referred sale."
+            "answer": "Research partners start at 15% commission on every referred sale."
           }
         },
         "faq_payout": {
@@ -63,7 +63,57 @@
         "faq_approval",
         "faq_social"
       ],
-      "settings": {}
+      "settings": {
+        "color_scheme": "",
+        "padding_block_start": 48,
+        "padding_block_end": 120,
+        "apply_url": "/pages/apply",
+        "hero_eyebrow": "Referral Partners",
+        "hero_heading": "Earn With Simms Research",
+        "hero_subhead": "<p>Refer researchers to a trusted source of premium research compounds and earn 15% commission on every sale — paid out bi-weekly.</p>",
+        "hero_button_label": "Apply Now",
+        "secondary_label": "Questions? Contact",
+        "secondary_url": "",
+        "hero_microcopy": "For research use only",
+        "stat_1_value": "15%",
+        "stat_1_label": "Starting commission",
+        "stat_2_value": "10%",
+        "stat_2_label": "Lifetime recurring",
+        "stat_3_value": "Bi-Weekly",
+        "stat_3_label": "Payout schedule",
+        "stat_4_value": "30 Days",
+        "stat_4_label": "Attribution window",
+        "steps_eyebrow": "Simple Process",
+        "steps_heading": "How It Works",
+        "step_1_title": "Apply & get approved",
+        "step_1_body": "Fill out a quick application. We review every research partner to keep the program high-quality and well-supported.",
+        "step_2_title": "Get your unique link",
+        "step_2_body": "Once approved, you receive a personal tracking link to share with your research audience.",
+        "step_3_title": "Drive traffic",
+        "step_3_body": "Refer researchers and scientists to Simms Research. Our product pages and COA visibility support conversion.",
+        "step_4_title": "Get paid bi-weekly",
+        "step_4_body": "Commissions are attributed through the partner window, with payouts processed on a bi-weekly cadence.",
+        "benefits_eyebrow": "Why Join",
+        "benefits_heading": "Built For Serious Research Partners",
+        "benefit_1_title": "Commission from day one",
+        "benefit_1_body": "Start earning 15% on every referred sale immediately — no ramp-up period, no tiers to unlock.",
+        "benefit_2_title": "Products people trust",
+        "benefit_2_body": "Promote research compounds backed by product specifications, batch verification, and Certificates of Analysis.",
+        "benefit_3_title": "Bi-weekly payouts",
+        "benefit_3_body": "Payouts are processed on a clear bi-weekly schedule, so partners know when commissions move.",
+        "benefit_4_title": "30-day attribution",
+        "benefit_4_body": "Referrals remain attributed for 30 days, giving qualified traffic time to convert.",
+        "benefit_5_title": "No cap on earnings",
+        "benefit_5_body": "There is no ceiling. Drive more qualified traffic and your commission scales with your effort.",
+        "benefit_6_title": "Long cookie window",
+        "benefit_6_body": "Referral attribution remains active for returning customers within the program cookie window.",
+        "faq_eyebrow": "Questions",
+        "faq_heading": "Common Questions",
+        "cta_eyebrow": "Ready to earn",
+        "cta_heading": "Start earning 15% from your first sale",
+        "cta_body": "<p>Apply to become a Simms Research partner, get your tracking link, and start earning bi-weekly commissions on every research compound sale you refer.</p>",
+        "cta_button_label": "Apply Now"
+      }
     }
   },
   "order": [
