@@ -42,10 +42,6 @@
         <p>{{ section.settings.stat_3_value }}</p>
         <span>{{ section.settings.stat_3_label }}</span>
       </div>
-      <div class="partners-page__stat">
-        <p>{{ section.settings.stat_4_value }}</p>
-        <span>{{ section.settings.stat_4_label }}</span>
-      </div>
     </div>
 
     <section class="partners-page__section" aria-labelledby="PartnersHowItWorks">
@@ -255,7 +251,7 @@
 
   .partners-page__stats {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     border-block: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
   }
 
@@ -452,19 +448,9 @@
   }
 
   @media screen and (max-width: 989px) {
-    .partners-page__stats,
     .partners-page__steps,
     .partners-page__benefits {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .partners-page__stat:nth-child(3) {
-      border-inline-start: 0;
-      border-block-start: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
-    }
-
-    .partners-page__stat:nth-child(4) {
-      border-block-start: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
     }
   }
 
@@ -489,8 +475,7 @@
     }
 
     .partners-page__stat + .partners-page__stat,
-    .partners-page__stat:nth-child(3),
-    .partners-page__stat:nth-child(4) {
+    .partners-page__stat:nth-child(3) {
       border-inline-start: 0;
       border-block-start: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
     }
@@ -608,36 +593,24 @@
       "type": "text",
       "id": "stat_2_value",
       "label": "Stat 2 value",
-      "default": "10%"
+      "default": "Bi-Weekly"
     },
     {
       "type": "text",
       "id": "stat_2_label",
       "label": "Stat 2 label",
-      "default": "Lifetime recurring"
+      "default": "Payout schedule"
     },
     {
       "type": "text",
       "id": "stat_3_value",
       "label": "Stat 3 value",
-      "default": "Bi-Weekly"
+      "default": "30 Days"
     },
     {
       "type": "text",
       "id": "stat_3_label",
       "label": "Stat 3 label",
-      "default": "Payout schedule"
-    },
-    {
-      "type": "text",
-      "id": "stat_4_value",
-      "label": "Stat 4 value",
-      "default": "30 Days"
-    },
-    {
-      "type": "text",
-      "id": "stat_4_label",
-      "label": "Stat 4 label",
       "default": "Attribution window"
     },
     {
